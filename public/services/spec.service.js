@@ -4,8 +4,8 @@
 angular.module('scheduler')
 .service('SpecService', SpecService);
 
-SpecService.$inject = ['$http', 'ApiPath'];
-function SpecService($http, ApiPath) {
+SpecService.$inject = ['$http', 'ApiPath', '$q'];
+function SpecService($http, ApiPath, $q) {
   var service = this;
 
   service.getSpecByPart = function(part) {
@@ -14,15 +14,17 @@ function SpecService($http, ApiPath) {
     });
   };
 
-  // service.addSpecToOrder = function(order) {
-  //   var result = $q.defer();
-  //
-  //   return deferred.promise;
-  // };
-
+  service.addSpecToOrder = function(order) {
+    var result = $q.defer();
+    service.getSpecByPart(order.part).then( function (data) {
+      order.spec = data.spec;
+      result.resolve(order);
+    }, function(err) {
+      result.reject(err);
+    });
+    return result.promise;
+  };
 
 }
-
-
 
 })();

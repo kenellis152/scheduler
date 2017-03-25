@@ -12,20 +12,26 @@ angular.module('scheduler')
  */
   agileBoard.$inject = ['$scope', 'PlantService'];
   function agileBoard($scope, PlantService) {
-      this.test = 'Line 1 Orders';
-      this.currentState = PlantService.getState();
-      $scope.lines = [];
-      $scope.test1 = 'asdf';
-      this.currentState.plants[0].lines.forEach( (element) => {
-        $scope.lines.push(element.orders);
+
+      var $ctrl = this;
+      $scope.lines = []; // for .connectWith to connect the separate ui-sortable lists
+      $ctrl.changes = {}; // stores local changes to be saved if user decides to save
+
+      $ctrl.$onInit = PlantService.getPlant(1).then( function (result) {
+        $ctrl.plant = result;
+        console.log($ctrl.plant);
+        $ctrl.plant.lines.forEach( (element) => {
+          $scope.lines.push(element.orders);
+        });
+        $scope.sortableOptions = {
+            connectWith: ".connectList"
+        };
       });
 
-      $scope.sortableOptions = {
-          connectWith: ".connectList"
-      };
 
-      this.addOrder = function (order) {
-        // console.log ('going to add this order', order);
+      // Takes an order object and adds it to the database
+      // Called by the "newOrder" component when the button is clicked
+      $ctrl.addOrder = function (order) {
         PlantService.createOrder(order);
       }
 

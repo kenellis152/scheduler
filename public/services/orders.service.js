@@ -4,16 +4,55 @@
 angular.module('scheduler')
 .service('OrdersService', OrdersService);
 
-OrdersService.$inject = ['$http', 'ApiPath', 'SpecService'];
-function OrdersService($http, ApiPath) {
+OrdersService.$inject = ['$http', 'ApiPath', 'SpecService', '$q'];
+function OrdersService($http, ApiPath, SpecService, $q) {
   var service = this;
 
-  service.getOpenOrders = function () {
-    return $http.get(ApiPath + '/orders/open').then(function (response) {
-      service.openOrders = response.data;
-      // console.log(response.data);
+  service.getOpenOrders = function (plantid) {
+    config = {
+      params: {
+        plant: plantid
+      }
+    };
+    return $http.get(ApiPath + '/orders/open', config).then(function (response) {
       return response.data;
     });
+  };
+
+  // Returns promise with array of open orders
+  service.getOpenOrderIds = function (plantid) {
+    config = {
+      params: {
+        plant: plantid
+      }
+    };
+    return $http.get(ApiPath + '/orders/open/id', config).then( function (response) {
+      return response.data;
+    });
+  };
+
+  // Attaches array of open order ids to plant object
+  service.addOpenOrderIdsToPlant = function(plant) {
+    var result = $q.defer();
+    service.getOpenOrderIds(plant.id).then( function (data) {
+      plant.openOrderIds = data;
+      result.resolve(plant);
+    }, function(err) {
+      result.reject(err);
+    });
+    return result.promise;
+  };
+
+  // Attaches array of open orders to plant object
+  service.addOpenOrdersToPlant = function(plant) {
+    var result = $q.defer();
+    service.getOpenOrders(plant.id).then( function (data) {
+      plant.openOrders = data;
+      result.resolve(plant);
+    }, function(err) {
+      result.reject(err);
+    });
+    return result.promise;
   };
 
   service.getOrders = function () {
@@ -22,8 +61,10 @@ function OrdersService($http, ApiPath) {
 
   service.getOrderById = function(id) {
     return $http.get(ApiPath + `/orders/${id}`).then( function (response) {
-      return response.data;
-    });
+      return response.data.order;
+    }).then( function (order) {
+      return SpecService.addSpecToOrder(order);
+    })
   };
 
   service.addOrder = function (order) {
@@ -35,20 +76,3 @@ function OrdersService($http, ApiPath) {
 
 }
 })();
-
-//Order Schema
-/*
-OrderSchema
-  part: {type: Number, required: true, minlength: 1,},
-  quantity: {type: Number, required: true, minlength: 1},
-  plant: {type: Number, default: 1},
-  createDate: {type: Date, default: Date.now},
-  dueDate: {type: Date, default: Date.now // required: true},
-  completed: {type: Boolean, default: false},
-  completedDate: {type: Date, default: Date.now},
-  customerId: {type: Number},
-  shipTo: {type: String},
-  cancelled: {type: Boolean},
-  cancelledReason: {type: String},
-  coNumber: {type: Number, required: true}
-});*/

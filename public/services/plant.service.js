@@ -5,25 +5,11 @@ angular.module('scheduler')
 .service('PlantService', PlantService);
 
 // '$http', 'ApiPath'
-PlantService.$inject = ['OrdersService'];
-function PlantService(OrdersService) {
+PlantService.$inject = ['OrdersService', '$http', 'ApiPath', 'LineService'];
+function PlantService(OrdersService, $http, ApiPath, LineService) {
   var plantService = this;
   plantService.currentState = {};
-  plantService.currentState.plants = [{
-    name: 'Georgetown',
-    id: 1,
-    numlines: 4,
-    lines: [
-      { _id: 1, plant: 1, active: true, largeDiam: false, toospeedie: false, orders: ['58cf3995ec1bba2facc57531', '58cf39e85588642ca82c4b5f'] },
-      { _id: 2, plant: 1, active: true, largeDiam: true, toospeedie: false, orders: ['58d0997d7d641b064036f4ac', '58d31e1d6e64232ce88218fd'] },
-      { _id: 3, plant: 1, active: false, largeDiam: false, toospeedie: false, orders: [] },
-      { _id: 4, plant: 1, active: false, largeDiam: true, toospeedie: false, orders: ['58d31e296e64232ce88218fe'] }
-    ]
-  }];
-
-  OrdersService.getOrderById('58cf3995ec1bba2facc57531').then( function (response) {
-    // console.log('order by id test', response);
-  })
+  plantService.currentState.plants = [];
 
   //*****************************
   // GET OPEN ORDERS, INIT LINE STATES
@@ -36,25 +22,67 @@ function PlantService(OrdersService) {
     // INITIALIZE PLANT STATES HERE, HAVING RETRIEVED OPEN ORDERS
   });
 
+  plantService.getPlant = function(id) {
+    //grab the plant from Api
+    return $http.get(ApiPath + `/plants/${id}`)
+    .then( function (response) {
+      //grab the lines from Api and attach to the plant object
+      return LineService.addLinesToPlant(response.data.plant);
+    }).then( function (plant) {
+      //grab the open orders, and attach any that aren't attached to a line to the floaters line
+      return OrdersService.addOpenOrderIdsToPlant(plant);
+    })
+    .then( function (plant) {
+      //grab the open orders, and attach any that aren't attached to a line to the floaters line
+      return OrdersService.addOpenOrdersToPlant(plant);
+    })
+    .then( function (plant) {
+      // *** INIT LINE STATES
+
+      //make a list of all the orders already scheduled
+      var scheduled = []; //make a list of all the orders already scheduled
+      plant.lines.forEach( function (line) {
+        line.orders.forEach(function (order) {
+          scheduled.push(order);
+        });
+      });
+
+      // Create a line with unscheduled orders and push it on to line arrays
+      var floaters = getFloaters(scheduled, plant.openOrders);
+      console.log("floaters", floaters);
+      plant.lines.push(floaters);
+      return plant;
+    });
+  };
+
   plantService.createOrder = function (order) {
     OrdersService.addOrder(order).then( function(response) {
       if (response._id) {
         plantService.currentState.plants[0].lines[3].orders.push(response._id);
-        console.log(response);
       }
     });
-  }
+  };
 
   plantService.currentState.orders = OrdersService.getOrders();
 
   plantService.getState = function () {
     return plantService.currentState;
-  }
+  };
 
+  // take in array of scheduled orders and all open orders
+  // return array of unscheduled order ids, sorted by order due dates
+  var getFloaters = function (scheduled, orders) {
+    var floaters = {orders: []};
+    var unscheduled = [];
+    orders.forEach( function (element) {
+      if( scheduled.indexOf(element._id) === -1) {
+        floaters.orders.push(element._id);
+      }
+    });
+    return floaters;
+  };
 
-
-
-} // End Plant Service
+}; // End Plant Service
 
 
 
