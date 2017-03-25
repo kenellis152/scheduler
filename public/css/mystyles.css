@@ -47,6 +47,30 @@ div.resinline {
 .success-element.cardwrapper {
 
 }
+.cardcolumn {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.fivespeed {
+  background-color: #F012BE;
+  color: white;
+}
+.tenspeed {
+  background-color: #FF4136;
+  color: white;
+}
+.twentyspeed {
+  background-color: #FF851B;
+  color: white;
+}
+.thirtyfivespeed {
+  background-color: #007fff;
+  color: white;
+}
+.fiftyspeed {
+  background-color: #2ECC40;
+  color: white;
+}
 
 /*MD-DATEPICKER*/
 .md-datepicker-calendar-pane {

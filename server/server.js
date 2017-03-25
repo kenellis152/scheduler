@@ -52,7 +52,7 @@ app.post('/orders', (req, res) => {
 app.get('/orders/open', (req, res) => {
   var {plant} = req.query;
   // console.log(req);
-  console.log(plant);
+  // console.log(plant);
   if (plant) {
     Order.find({'completed': false, 'plant': plant}).then( (openOrders) => {
       res.send(openOrders);
@@ -169,6 +169,27 @@ app.get('/resinspecs/:pn', (req, res) => {
     res.status(400).send();
   });
 });// End get resin spec by part number
+
+// ** Get spec array by part # array
+// Take an array of part numbers, return array of specs for the part numbers
+// app.post('/resinspecs/partarray', (req, res) => {
+//   var parts = req.body;
+//   // console.log(req.body);
+//   var result = [];
+//   parts.forEach( (part) => {
+//     Spec.findOne({part}).then( (spec) => {
+//       if (!spec) {
+//         res.status(404).send();
+//       }
+//       console.log(spec.description)
+//       result.push(spec);
+//     }).catch((err) => {
+//       res.status(400).send();
+//     });
+//   })
+//   console.log(result.length);
+//   res.send(result);
+// });// End get resin spec by part number
 
 
 //*****************************

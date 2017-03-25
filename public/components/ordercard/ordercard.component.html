@@ -1,20 +1,30 @@
-<div class="agile-detail">
+<div class="agile-detail ">
   <div class="wrapper">
     <div class="row">
-      <div class="col-md-6 cardcolumn">
-        {{$ctrl.order.part}}
-      </div>
-      <div class="col-md-6 cardcolumn">
-        <span class="pull-right">{{$ctrl.order.date}}</span>
+      <div class="col-md-12 cardcolumn {{$ctrl.speedClass}}">
+        <span class="text-center"><h4>{{$ctrl.spec.description}}</h4></span>
       </div>
     </div>
-
     <div class="row">
-      <div class="col-md-8 cardcolumn">
-        {{$ctrl.order.spec.description}}
+      <div class="col-md-4 cardcolumn {{$ctrl.boxClass}}">
+        Part #
       </div>
       <div class="col-md-4 cardcolumn">
-        <span class="pull-right">Qty:{{ $ctrl.order.quantity }}</span>
+        <span class="text-centered">Due Date:</span>
+      </div>
+      <div class="col-md-4 cardcolumn {{$ctrl.palletClass}}">
+        <span class="pull-right">Quantity:</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 cardcolumn">
+        <h5>{{$ctrl.order.part}}</h5>
+      </div>
+      <div class="col-md-4 cardcolumn">
+        <span class="text-centered"><h5>{{$ctrl.order.date}}</h5></span>
+      </div>
+      <div class="col-md-4 cardcolumn {{$ctrl.palletClass}}">
+        <span class="text-center"><h5>  {{$ctrl.order.quantity}}</h5></span>
       </div>
     </div>
   </div>

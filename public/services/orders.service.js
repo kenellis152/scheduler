@@ -17,30 +17,9 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     return $http.get(ApiPath + '/orders/open', config).then(function (response) {
       return response.data;
     });
-  };
-
-  // Returns promise with array of open orders
-  service.getOpenOrderIds = function (plantid) {
-    config = {
-      params: {
-        plant: plantid
-      }
-    };
-    return $http.get(ApiPath + '/orders/open/id', config).then( function (response) {
-      return response.data;
-    });
-  };
-
-  // Attaches array of open order ids to plant object
-  service.addOpenOrderIdsToPlant = function(plant) {
-    var result = $q.defer();
-    service.getOpenOrderIds(plant.id).then( function (data) {
-      plant.openOrderIds = data;
-      result.resolve(plant);
-    }, function(err) {
-      result.reject(err);
-    });
-    return result.promise;
+    // .then( function(orders) {
+    //   return SpecService.addSpecsToOrdersArray(orders);
+    // });
   };
 
   // Attaches array of open orders to plant object
@@ -48,15 +27,15 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     var result = $q.defer();
     service.getOpenOrders(plant.id).then( function (data) {
       plant.openOrders = data;
+      plant.openOrderIds = [];
+      data.forEach( function (elem) {
+        plant.openOrderIds.push(elem._id);
+      });
       result.resolve(plant);
     }, function(err) {
       result.reject(err);
     });
     return result.promise;
-  };
-
-  service.getOrders = function () {
-    return service.orders;
   };
 
   service.getOrderById = function(id) {
