@@ -5,7 +5,8 @@ angular.module('scheduler')
 .component('orderCard', {
   templateUrl: 'components/ordercard/ordercard.component.html',
   bindings: {
-    orderid: '='
+    orderid: '=',
+    resolve: '<'
   },
   controller: orderCardController
 });
@@ -13,7 +14,11 @@ angular.module('scheduler')
 orderCardController.$inject = ['OrdersService'];
 function orderCardController (OrdersService) {
   var $ctrl = this;
-  this.order = OrdersService.getOrderById(this.orderid);
+
+  this.$onInit = OrdersService.getOrderById(this.orderid).then( function (response) {
+      $ctrl.order = response.order;
+      $ctrl.order.date = moment($ctrl.order.dueDate).format('MMMM D');
+  });
 }
 
 

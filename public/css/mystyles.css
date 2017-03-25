@@ -47,3 +47,8 @@ div.resinline {
 .success-element.cardwrapper {
 
 }
+
+/*MD-DATEPICKER*/
+.md-datepicker-calendar-pane {
+  z-index: 9999;
+}

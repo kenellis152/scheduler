@@ -4,28 +4,22 @@
 angular.module('scheduler')
 .service('SpecService', SpecService);
 
+SpecService.$inject = ['$http', 'ApiPath'];
+function SpecService($http, ApiPath) {
+  var service = this;
 
-// PlantService.$inject = ['$http', 'ApiPath'];
-function SpecService() {
-  // var service = this;
+  service.getSpecByPart = function(part) {
+    return $http.get(ApiPath + `/resinspecs/${part}`).then( function (response) {
+      return response.data;
+    });
+  };
+
+  // service.addSpecToOrder = function(order) {
+  //   var result = $q.defer();
   //
-  // service.getCategories = function () {
-  //   return $http.get(ApiPath + '/categories.json').then(function (response) {
-  //     return response.data;
-  //   });
+  //   return deferred.promise;
   // };
-  //
-  //
-  // service.getMenuItems = function (category) {
-  //   var config = {};
-  //   if (category) {
-  //     config.params = {'category': category};
-  //   }
-  //
-  //   return $http.get(ApiPath + '/menu_items.json', config).then(function (response) {
-  //     return response.data;
-  //   });
-  // };
+
 
 }
 

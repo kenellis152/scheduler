@@ -16,6 +16,7 @@
     "express": "^4.14.0",
     "jsonwebtoken": "^7.3.0",
     "lodash": "^4.15.0",
+    "moment": "^2.18.1",
     "mongodb": "^2.2.5",
     "mongoimport": "^1.0.6",
     "mongoose": "^4.5.9"

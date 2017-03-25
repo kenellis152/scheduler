@@ -45,8 +45,7 @@ var OrderSchema =  new mongoose.Schema({
     type: String
   },
   coNumber: {
-    type: Number,
-    required: true
+    type: Number
   }
 });
 

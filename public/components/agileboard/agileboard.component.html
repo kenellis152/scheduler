@@ -3,9 +3,12 @@
 
     <!-- Display each resin line -->
     <resin-line ng-repeat="line in lines" orderids="line" linenumber="$index"></resin-line>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addOrderModal">Add order</button>
 
-    <!-- Serialized output, mainly for debugging -->
-    <div class="row">
+    <!-- New Order Modal -->
+    <new-order add="$ctrl.addOrder(order)" />
+    <!-- Serialized output for debugging -->
+    <!-- <div class="row">
         <div class="col-lg-12">
             <h4>Serialised Output</h4>
             <div class="output p-m m white-bg" ng-repeat="line in lines">
@@ -13,60 +16,6 @@
                 {{line}}
             </div>
         </div>
-    </div>
+    </div> -->
 
 </div>
-
-<!-- Agile Board Template -->
-
-<!-- <div class="row">
-    <div class="col-lg-4">
-        <div class="ibox">
-            <div class="ibox-content resinline">
-                <h3>{{$ctrl.test}}</h3>
-                <ul ui-sortable="sortableOptions" class="sortable-list connectList agile-list" ng-model="todoList">
-                    <li class="{{task.statusClass}}-element" ng-repeat="task in todoList">
-                        {{task.content}}
-                        <div class="agile-detail">
-                            <a href="#" class="pull-right btn btn-xs btn-white">{{task.tagName}}</a>
-                            <i class="fa fa-clock-o"></i> {{task.date}}
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="ibox">
-            <div class="ibox-content">
-                <h3>In Progress</h3>
-                <p class="small"><i class="fa fa-hand-o-up"></i> Drag task between list</p>
-                <ul ui-sortable="sortableOptions" class="sortable-list connectList agile-list" ng-model="inProgressList">
-                    <li class="{{task.statusClass}}-element" ng-repeat="task in inProgressList">
-                        {{task.content}}
-                        <div class="agile-detail">
-                            <a href="#" class="pull-right btn btn-xs btn-white">{{task.tagName}}</a>
-                            <i class="fa fa-clock-o"></i> {{task.date}}
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="ibox">
-            <div class="ibox-content">
-                <h3>Completed</h3>
-                <p class="small"><i class="fa fa-hand-o-up"></i> Drag task between list</p>
-                <ul ui-sortable="sortableOptions" class="sortable-list connectList agile-list" ng-model="completedList">
-                    <li class="{{task.statusClass}}-element" ng-repeat="task in completedList">
-                        {{task.content}}
-                        <div class="agile-detail">
-                            <a href="#" class="pull-right btn btn-xs btn-white">{{task.tagName}}</a>
-                            <i class="fa fa-clock-o"></i> {{task.date}}
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div> -->
