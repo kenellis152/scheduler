@@ -173,3 +173,19 @@ describe('GET /resinspecs/:pn', (done) => {
 //*****************************
 //        Line API
 //*****************************
+
+// Save new line
+// app.post('/lines', (req, res) => {
+describe('POST /lines -- add new line', (done) => {
+  it('should save a new line', (done) => {
+
+  });
+});
+
+// Get all lines
+// app.get('/lines/all', (req, res) => {
+describe('GET /lines/all', (done) => {
+  it('should get all lines', (done) => {
+
+  });
+});

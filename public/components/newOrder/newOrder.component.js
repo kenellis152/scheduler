@@ -10,7 +10,8 @@ angular.module('scheduler')
   controller: newOrderController
 });
 
-function newOrderController () {
+newOrderController.$inject = ['SpecService']
+function newOrderController (SpecService) {
   var $ctrl = this;
   $ctrl.mindate = new Date();
 
@@ -26,6 +27,8 @@ function newOrderController () {
     $ctrl.date = "";
     $ctrl.coNumber = "";
     $ctrl.quantity = "";
+    $ctrl.comments = "";
+    $ctrl.shipTo = "";
     $('#addOrderModal').modal('toggle');
   } // End Submit
 

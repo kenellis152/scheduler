@@ -7,8 +7,8 @@ angular.module('scheduler')
 //*****************************
 //       Plant Service
 //*****************************
-PlantService.$inject = ['OrdersService', '$http', 'ApiPath', 'LineService', '$q'];
-function PlantService(OrdersService, $http, ApiPath, LineService, $q) {
+PlantService.$inject = ['OrdersService', '$http', 'ApiPath', 'LineService', '$q', '$rootScope'];
+function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope) {
   var plantService = this;
   plantService.plants = [];
 
@@ -27,6 +27,25 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q) {
     }
     // INITIALIZE PLANT
     //grab the plant from Api
+    return fetchPlant(id);
+  };
+
+  plantService.createOrder = function (order) {
+    OrdersService.addOrder(order).then( function(response) {
+      if (response._id) {
+        plantService.currentState.plants[0].lines[3].orders.push(response._id);
+      }
+    });
+  };
+
+
+  //*****************************
+  //       Helper functions
+  //*****************************
+
+  // *** FETCH PLANT ***
+  //grab the plant from Api
+  var fetchPlant = function (id) {
     return $http.get(ApiPath + `/plants/${id}`)
     .then( function (response) {
       //grab the lines from Api and attach to the plant object
@@ -39,7 +58,6 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q) {
     // *** INIT LINE STATES
     .then( function (plant) {
       // make a list of all the orders already scheduled
-      // replace
       var scheduled = [];
       plant.lines.forEach( function (line) {
         var orders = []; //stores actual orders
@@ -57,22 +75,10 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q) {
       plant.lines.push(floaters);
       // save plant to
       plantService.plants[id] = plant;
+      broadcastPlants(plantService.plants);
       return plant;
     });
   };
-
-  plantService.createOrder = function (order) {
-    OrdersService.addOrder(order).then( function(response) {
-      if (response._id) {
-        plantService.currentState.plants[0].lines[3].orders.push(response._id);
-      }
-    });
-  };
-
-
-  //*****************************
-  //       Helper functions
-  //*****************************
 
   // take in array of scheduled orders and all open orders
   // return array of unscheduled order ids, sorted by order due dates
@@ -102,7 +108,11 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q) {
     } else {
       return -1;
     }
-  }
+  };
+
+  var broadcastPlants = function (plants) {
+    $rootScope.$broadcast( 'namespace:plantinfo', {plants});
+  };
 
 }; // End Plant Service
 

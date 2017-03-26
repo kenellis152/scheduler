@@ -20,6 +20,7 @@ function orderCardController (SpecService, SelectionService) {
 
   this.$onInit = SpecService.getSpecByPart($ctrl.order.part).then( function (result) {
       $ctrl.spec = result.spec;
+      $ctrl.order.spec = result.spec;
       if( SelectionService.getSelected() === $ctrl.order._id ) {$ctrl.clickProcess();}
       $ctrl.updateCard();
   }); // End $onInit()
