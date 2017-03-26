@@ -9,6 +9,9 @@ var LineSchema =  new mongoose.Schema({
     type: Number,
     default: 1
   },
+  name: {
+    type: String
+  },
   largeDiam: {
     type: Boolean,
     default: false

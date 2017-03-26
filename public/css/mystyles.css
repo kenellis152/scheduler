@@ -44,6 +44,10 @@ div.resinline {
 
 /*ORDER CARDS*/
 
+.selected {
+  opacity: .5;
+}
+
 .success-element.cardwrapper {
 
 }
@@ -52,7 +56,7 @@ div.resinline {
   padding-right: 5px;
 }
 .fivespeed {
-  background-color: #F012BE;
+  background-color: #ff6699;
   color: white;
 }
 .tenspeed {
@@ -68,7 +72,7 @@ div.resinline {
   color: white;
 }
 .fiftyspeed {
-  background-color: #2ECC40;
+  background-color: #5b965b;
   color: white;
 }
 

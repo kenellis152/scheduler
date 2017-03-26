@@ -26,6 +26,15 @@ angular.module('scheduler')
         $scope.sortableOptions = {
             connectWith: ".connectList"
         };
+      }).catch( function(plant) {
+        console.log("caught", plant);
+        $ctrl.plant = plant;
+        $ctrl.plant.lines.forEach( (element) => {
+          $scope.lines.push(element.orders);
+        });
+        $scope.sortableOptions = {
+            connectWith: ".connectList"
+        };
       });
 
 

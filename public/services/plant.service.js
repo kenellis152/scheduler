@@ -4,25 +4,40 @@
 angular.module('scheduler')
 .service('PlantService', PlantService);
 
-// '$http', 'ApiPath'
-PlantService.$inject = ['OrdersService', '$http', 'ApiPath', 'LineService'];
-function PlantService(OrdersService, $http, ApiPath, LineService) {
+//*****************************
+//       Plant Service
+//*****************************
+PlantService.$inject = ['OrdersService', '$http', 'ApiPath', 'LineService', '$q'];
+function PlantService(OrdersService, $http, ApiPath, LineService, $q) {
   var plantService = this;
+  plantService.plants = [];
 
+  //*****************************
+  //       getPlant(id)
+  //*****************************
+  // returns promise w/ plant object with given id
+  // if it's not initialized, fetch from database, add orders to it, and populate lines
+  // if it's initialized (exists on plantService.plants[]), then just return that
   plantService.getPlant = function(id) {
+    //see if this plant already initialized, if so, return promise containing result
+    if(plantService.plants[id]) {
+      var result = $q.defer();
+      result.resolve(plantService.plants[id]);
+      return result.promise;
+    }
+    // INITIALIZE PLANT
     //grab the plant from Api
     return $http.get(ApiPath + `/plants/${id}`)
     .then( function (response) {
       //grab the lines from Api and attach to the plant object
       return LineService.addLinesToPlant(response.data.plant);
     })
+    //grab the open orders, and attach any that aren't attached to a line to the floaters line
     .then( function (plant) {
-      //grab the open orders, and attach any that aren't attached to a line to the floaters line
       return OrdersService.addOpenOrdersToPlant(plant);
     })
+    // *** INIT LINE STATES
     .then( function (plant) {
-      // *** INIT LINE STATES
-
       // make a list of all the orders already scheduled
       // replace
       var scheduled = [];
@@ -36,14 +51,12 @@ function PlantService(OrdersService, $http, ApiPath, LineService) {
         //replace each array of order ids with an array of the actual orders
         line.orders = orders;
       });
-
       // Create a line with unscheduled orders and push it on to line arrays
       var floaters = getFloaters(scheduled, plant.openOrders);
       floaters.name = "Unscheduled";
       plant.lines.push(floaters);
-
-      console.log("new plant" , plant);
-
+      // save plant to
+      plantService.plants[id] = plant;
       return plant;
     });
   };
@@ -56,13 +69,14 @@ function PlantService(OrdersService, $http, ApiPath, LineService) {
     });
   };
 
-  plantService.getState = function () {
-    return plantService.currentState;
-  };
+
+  //*****************************
+  //       Helper functions
+  //*****************************
 
   // take in array of scheduled orders and all open orders
   // return array of unscheduled order ids, sorted by order due dates
-  // ** DOESNT SORT YET ** FIX THAT
+  // ** DOESNT SORT YET ** FIX IT
   var getFloaters = function (scheduled, orders) {
     var floaters = {orders: []};
     var unscheduled = [];
@@ -89,7 +103,6 @@ function PlantService(OrdersService, $http, ApiPath, LineService) {
       return -1;
     }
   }
-
 
 }; // End Plant Service
 

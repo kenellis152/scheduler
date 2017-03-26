@@ -1,4 +1,4 @@
-<div class="agile-detail ">
+<div class="agile-detail" id="{{$ctrl.order._id}}" ng-click="$ctrl.clickProcess()">
   <div class="wrapper">
     <div class="row">
       <div class="col-md-12 cardcolumn {{$ctrl.speedClass}}">
@@ -24,7 +24,7 @@
         <span class="text-centered"><h5>{{$ctrl.order.date}}</h5></span>
       </div>
       <div class="col-md-4 cardcolumn {{$ctrl.palletClass}}">
-        <span class="text-center"><h5>  {{$ctrl.order.quantity}}</h5></span>
+        <span class="text-center"><h5>  {{$ctrl.quantityString}}</h5></span>
       </div>
     </div>
   </div>
