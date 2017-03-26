@@ -121,7 +121,7 @@ app.patch('/orders/:id', (req, res) => {
   if(!ObjectID.isValid(id)) {
     res.status(404).send();
   }
-  var body = _.pick(req.body, ['part', 'quantity', 'plant', 'createDate', 'dueDate', 'completed',
+  var body = _.pick(req.body, ['part', 'quantity', 'plant', 'createDate', 'dueDate', 'completed', 'comments',
                                 'completedDate', 'customerId', 'shipTo', 'cancelled', 'cancelledReason', 'coNumber']);
   Order.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).then( (order) => {
     if(!order) {
@@ -265,6 +265,23 @@ app.get('/lines/:id', (req, res) => {
       res.status(404).send();
     }
     res.send({lines});
+  }).catch((err) => {
+    res.status(400).send(err);
+  });
+});
+// End Get lines by plant id
+
+// Update Line Orders
+// id param denotes the line to Update
+// update the
+app.patch('/lines/:id', (req, res) => {
+  var {id} = req.params;
+  var body = _.pick(req.body, ['activeShifts', 'name', 'largeDiam', 'tooSpeedie', 'orders']);
+  Line.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).then( (line) => {
+    if (!line) {
+      res.status(404).send();
+    }
+    res.send({line});
   }).catch((err) => {
     res.status(400).send(err);
   });

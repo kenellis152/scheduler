@@ -76,6 +76,11 @@ div.resinline {
   color: white;
 }
 
+/*ORDER DETAIL VIEW*/
+.orderdetailparent {
+  font-size: 1.3em;
+}
+
 /*MD-DATEPICKER*/
 .md-datepicker-calendar-pane {
   z-index: 9999;

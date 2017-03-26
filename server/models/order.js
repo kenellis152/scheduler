@@ -15,6 +15,9 @@ var OrderSchema =  new mongoose.Schema({
     type: Number,
     default: 1
   },
+  comments: {
+    type: String
+  },
   createDate: {
     type: Date,
     default: Date.now
