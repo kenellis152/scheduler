@@ -28,6 +28,14 @@ function LineService($http, ApiPath, $q) {
     return result.promise;
   };//End addLinesToPlant
 
+  service.updateLine = function(lineid, changebody) {
+    return $http.patch(ApiPath + `/lines/${lineid}`, changebody).then( function (data) {
+      return data.line;
+    }).catch( function (err) {
+      console.log('failed to update line:', err);
+    });
+  }
+
   //*****************************
   //       Helper functions
   //*****************************

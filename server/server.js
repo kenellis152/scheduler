@@ -139,8 +139,20 @@ app.patch('/orders/:id', (req, res) => {
 // End update order by id
 
 // Delete Order
-// *** TO DO ***
-//End Delete order
+app.delete('/orders/:id', (req, res) => {
+  var {id} = req.params;
+  if(!ObjectID.isValid(id)) {
+    res.status(404).send();
+  }
+  Order.findOneAndRemove({_id: id}).then( (order) => {
+    if (!order) {
+      res.status(404).send();
+    }
+    res.send({order});
+  }).catch( (err) => {
+    res.status(404).send();
+  });
+});// End Delete order
 
 //*****************************
 //       ResinSpec API

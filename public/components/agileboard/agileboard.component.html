@@ -20,14 +20,14 @@
         <md-button class="md-raised md-warn">Revert Changes (todo)</md-button>
       </div>
       <div layout="row">
-        <md-button class="md-raised md-warn">Delete Order (todo)</md-button>
+        <md-button class="md-raised md-warn" data-toggle="modal" data-target="#confirmDeleteModal">Delete Order</md-button>
       </div>
     </div>
 
-    <!-- New Order Modal -->
+    <!-- Modals -->
     <new-order add="$ctrl.addOrder(order)" plant="$ctrl.plant.id" />
-    <save-changes add="$ctrl.saveChanges()" plant="$ctrl.plant.id" />
-
+    <save-changes plant="$ctrl.plant.id" />
+    <confirm-delete plant="$ctrl.plant.id" />
 
     <!-- Serialized output for debugging -->
     <!-- <div class="row">

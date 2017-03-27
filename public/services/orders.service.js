@@ -52,6 +52,14 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     });
   };
 
+  service.deleteOrder = function (orderId) {
+    return $http.delete(ApiPath + `/orders/${orderId}`).then( function(response) {
+      console.log(`Order ${orderId} Deleted`);
+    }).catch( function (err) {
+      console.log('Failed to delete order', err);
+    })
+  }
+
 
 }
 })();

@@ -34,9 +34,42 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   //       addOrder (order)
   //*****************************
   // takes an order as a parameter and pushes it onto the unscheduled line for the plant it's assigned to
+  // DOES NOT INTERACT WITH API. ONLY ADDS AN EXISTING ORDER THAT (presumably) IS NOT ON THE BOARD YET
+  // ORDER SERVICE ACTUALLY ADDS/REMOVES, not plant service
   plantService.addOrder = function (order) {
     var unscheduledlineindex = plantService.plants[order.plant].lines.length - 1;
     plantService.plants[order.plant].lines[unscheduledlineindex].orders.push(order);
+  }
+
+  //*****************************
+  //       removeOrder (orderid, plantid)
+  //*****************************
+  // takes order id and plant id
+  // remove order from the run BOARD
+  // DOES NOT INTERACT WITH THE API. ONLY REMOVES IT FROM THE RUN BOARD
+  // ORDER SERVICE ACTUALLY ADDS/REMOVES, not plant service
+  plantService.removeOrder = function (id, plant) {
+    plantService.plants[plant].lines.forEach( function (line) {
+      var result = findOrder(id, line.orders);
+      if (result !== -1) {
+        // then the order was found and result has the index
+        // FIRST REMOVE IT FROM THE LINE AND SAVE IT OR ELSE ALL THE LINES GET FUCKED
+        // copy to new array
+        var newOrders = line.orders.slice();
+        // delete the order off the new array
+        newOrders.splice(result, 1);
+        var changeBody = {orders: newOrders};
+        // delete from database, then remove from local order list if successfull
+        LineService.updateLine(line._id, changeBody).then( function (newline) {
+          
+        })
+        .catch( function (err) {
+          console.log('failed to delete order:', err);
+        });
+        // remove it locally now that we've removed it from the line and calmed down a little
+        line.orders.splice(result, 1);
+      }
+    });
   }
 
   //*****************************
@@ -83,7 +116,8 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
       var scheduled = [];
       plant.lines.forEach( function (line) {
         var orders = []; //stores actual orders
-        //make a list of all the orders already scheduled
+        // make a list of all the orders already scheduled
+        // note that 'orders' at this point are still ids, not order objects
         line.orders.forEach(function (order) {
           scheduled.push(order);
           orders.push(findOrder(order, plant.openOrders));
@@ -118,8 +152,9 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
     return floaters;
   };
 
-  // takes an id and an array of orders
+  // takes an order id and an array of orders
   // Returns the object from the array with matching id
+  // Return -1 if not found
   var findOrder = function (id, orders) {
     var result;
     orders.forEach( function (order) {

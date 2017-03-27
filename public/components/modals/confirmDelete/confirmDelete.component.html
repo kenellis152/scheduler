@@ -1,0 +1,17 @@
+<div class="modal inmodal in" id="confirmDeleteModal" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <h2>Confirm Order Delete</h2>
+      </div>
+      <div class="modal-body text-center">
+        <strong>Are you sure you want to delete this order?<br>
+                This cannot be undone<br><br>
+        </strong>
+        <form role="form" name="newOrderForm" novalidate>
+          <md-button class="md-raised md-warn" ng-click="$ctrl.submit()">Delete</md-button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
