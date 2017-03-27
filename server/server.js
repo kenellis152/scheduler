@@ -240,7 +240,8 @@ app.post('/lines', (req, res) => {
     activeShifts: req.body.activeShifts,
     largeDiam: req.body.largeDiam,
     tooSpeedie: req.body.tooSpeedie,
-    orders: req.body.orders
+    orders: req.body.orders,
+    name: req.body.name
   });
   line.save().then( (doc) => {
     res.send(doc);
@@ -280,7 +281,7 @@ app.get('/lines/:id', (req, res) => {
 app.patch('/lines/:id', (req, res) => {
   var {id} = req.params;
   var body = _.pick(req.body, ['activeShifts', 'name', 'largeDiam', 'tooSpeedie', 'orders']);
-  console.log(body);
+  // console.log(body);
   Line.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).then( (line) => {
     if (!line) {
       res.status(404).send();

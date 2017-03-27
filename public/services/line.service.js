@@ -18,15 +18,32 @@ function LineService($http, ApiPath, $q) {
     var result = $q.defer();
     service.getLinesByPlantId(plant.id).then( function (data) {
       for (var i = 0; i < data.lines.length; i++) {
-        plant.lines[i] = data.lines[i];
+        var linename = "Line " + JSON.stringify(i + 1);
+        plant.lines[i] = findLineByName(data.lines, linename);
       }
       result.resolve(plant);
     }, function(err) {
       result.reject(err);
     });
     return result.promise;
-  };
+  };//End addLinesToPlant
 
+  //*****************************
+  //       Helper functions
+  //*****************************
+var findLineByName = function (lines, name) {
+  var result;
+  lines.forEach( function (line) {
+    if (line.name === name) { result = line;}
+  });
+  if (result) {
+    return result;
+  } else {
+    return -1;
+  }
 }
+
+
+}// End Line Service
 
 })();

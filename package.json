@@ -1,7 +1,6 @@
 {
   "name": "scheduler",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
@@ -27,5 +26,14 @@
     "mocha": "^3.0.2",
     "nodemon": "^1.10.2",
     "supertest": "^2.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kenellis152/scheduler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kenellis152/scheduler/issues"
+  },
+  "homepage": "https://github.com/kenellis152/scheduler#readme",
+  "description": ""
 }
