@@ -54,6 +54,10 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {
               'topnav': {
                 templateUrl: 'views/georgetown/georgetown.topbar.html'
               },
+              'dashboard': {
+                templateUrl: 'views/georgetown/georgetown.dashboard.html',
+                controller: 'gtDashController'
+              },
               'mainview': {
                 templateUrl: 'views/georgetown/georgetown.mainview.html',
               }

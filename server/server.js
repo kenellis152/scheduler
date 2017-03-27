@@ -38,7 +38,10 @@ app.post('/orders', (req, res) => {
     quantity: req.body.quantity,
     dueDate: req.body.date,
     coNumber: req.body.coNumber,
-    plant: req.body.plant
+    plant: req.body.plant,
+    shipTo: req.body.shipTo,
+    comments: req.body.comments,
+    createDate: req.body.createDate
   });
   order.save().then( (doc) => {
     res.send(doc);
@@ -271,12 +274,13 @@ app.get('/lines/:id', (req, res) => {
 });
 // End Get lines by plant id
 
-// Update Line Orders
+
+// Update Line
 // id param denotes the line to Update
-// update the
 app.patch('/lines/:id', (req, res) => {
   var {id} = req.params;
   var body = _.pick(req.body, ['activeShifts', 'name', 'largeDiam', 'tooSpeedie', 'orders']);
+  console.log(body);
   Line.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).then( (line) => {
     if (!line) {
       res.status(404).send();

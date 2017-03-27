@@ -24,12 +24,12 @@ function SelectionService($rootScope, SpecService) {
     if (service.selection === 0) {
       select(id);
       broadcastOrder(order, spec);
-      $('#orderdetails').slideDown();
+      showOrderDetails();
       return service.selection = id;
     }
     if (service.selection === id) {
       deselect(id);
-      $('#orderdetails').slideUp();
+      showDash();
       return service.selection = 0;
     }
     deselect(service.selection);
@@ -44,17 +44,26 @@ function SelectionService($rootScope, SpecService) {
   }
 
   var select = function (id) {
-    var target = "#" + id;
-    $(target).addClass("selected");
+    $("#" + id).addClass("selected");
   } // End select()
 
   var deselect = function (id) {
-    var target = "#" + id;
-    $(target).removeClass("selected");
+    $("#" + id).removeClass("selected");
   } // End deselect()
 
+  // broadcasts
   var broadcastOrder = function (order, spec) {
     $rootScope.$broadcast( 'namespace:changeOrderDetail', {order, spec});
+  }
+
+  var showOrderDetails = function () {
+    $('#resindash').css('display', 'none');
+    $('#orderdetail').css('display', 'block');
+  }
+
+  var showDash = function () {
+    $('#orderdetail').css('display', 'none');
+    $('#resindash').css('display', 'block');
   }
 
 

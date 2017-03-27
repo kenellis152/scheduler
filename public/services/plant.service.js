@@ -30,14 +30,36 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
     return fetchPlant(id);
   };
 
-  plantService.createOrder = function (order) {
-    OrdersService.addOrder(order).then( function(response) {
-      if (response._id) {
-        plantService.currentState.plants[0].lines[3].orders.push(response._id);
-      }
-    });
-  };
+  //*****************************
+  //       addOrder (order)
+  //*****************************
+  // takes an order as a parameter and pushes it onto the unscheduled line for the plant it's assigned to
+  plantService.addOrder = function (order) {
+    var unscheduledlineindex = plantService.plants[order.plant].lines.length - 1;
+    plantService.plants[order.plant].lines[unscheduledlineindex].orders.push(order);
+  }
 
+  //*****************************
+  //       saveChanges (plantid)
+  //*****************************
+  // saves the displayed line state (orders assigned to each line) to the REST API
+  plantService.saveChanges = function (plantid) {
+    var promises = [];
+    console.log(plantid, plantService.plants[plantid])
+    plantService.plants[plantid].lines.forEach( function (line) {
+      var body = {};
+      body.orders = [];
+      line.orders.forEach( function (order) {
+        body.orders.push(order._id);
+      });
+      if (line.name !== 'Unscheduled') {promises.push($http.patch(ApiPath + `/lines/${line._id}`, body))};
+    });
+    $q.all(promises).then( function (results) {
+      console.log('successfully saved');
+    }).catch( function (err) {
+      console.log('error saving', err);
+    });
+  }
 
   //*****************************
   //       Helper functions
@@ -73,9 +95,11 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
       var floaters = getFloaters(scheduled, plant.openOrders);
       floaters.name = "Unscheduled";
       plant.lines.push(floaters);
-      // save plant to
+      // save plant to service
       plantService.plants[id] = plant;
+      //broadcast the loaded plant info
       broadcastPlants(plantService.plants);
+      // console.log(plant);
       return plant;
     });
   };

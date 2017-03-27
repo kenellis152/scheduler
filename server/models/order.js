@@ -33,7 +33,6 @@ var OrderSchema =  new mongoose.Schema({
   },
   completedDate: {
     type: Date,
-    default: Date.now
   },
   customerId: {
     type: Number

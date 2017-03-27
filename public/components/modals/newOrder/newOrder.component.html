@@ -1,0 +1,67 @@
+<div class="modal inmodal in" id="addOrderModal" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <h2>Create New Order for plant {{$ctrl.plant.id}}</h2>
+      </div>
+      <div class="modal-body">
+        <form role="form" name="newOrderForm" novalidate>
+          <div layout="row">
+            <div flex="50">
+              <md-input-container class="md-block">
+                <label>Part Number</label>
+                <input type="text" ng-model="$ctrl.part" required min-length="6"
+                autofocus id="partnumberinput" ng-blur="$ctrl.validate();">
+              </md-input-container>
+            </div>
+            <div flex="50">
+              <md-input-container class="md-block">
+                <label>Quantity</label>
+                <input type="text" ng-model="$ctrl.quantity" required>
+              </md-input-container>
+            </div>
+          </div>
+          <div layout="row">
+            <div flex="50">
+              <md-input-container class="md-block">
+                <label>CO Number</label>
+                <input type="text" ng-model="$ctrl.coNumber">
+              </md-input-container>
+            </div>
+            <div flex="50">
+              <md-input-container class="md-block">
+                <label>Ship to</label>
+                <input type="text" ng-model="$ctrl.shipTo" required>
+              </md-input-container>
+            </div>
+          </div>
+          <div layout="row">
+            <div class="form-group">
+              <label for="">Due Date:</label>
+              <md-datepicker ng-model="$ctrl.date" md-placeholder="Enter date" md-open-on-focus
+              required md-autofocus required md-min-date="$ctrl.mindate;"></md-datepicker>
+            </div>
+            <div flex="15">
+            </div>
+            <div flex=>
+              <md-input-container class="md-block">
+                <label>Plant</label>
+                <input type="text" ng-model="$ctrl.plant" required min-length="6" id="partnumberinput">
+              </md-input-container>
+            </div>
+          </div>
+          <div class="row">
+            <div flex="100">
+              <md-input-container class="md-block">
+                <label>Comments/Special Instructions</label>
+                <input type="text" ng-model="$ctrl.comments">
+              </md-input-container>
+            </div>
+          </div>
+          <md-button class="md-raised md-primary" ng-disabled="newOrderForm.$invalid"
+          ng-click="$ctrl.submit()">Create</md-button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

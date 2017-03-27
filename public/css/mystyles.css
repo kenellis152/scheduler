@@ -75,9 +75,17 @@ div.resinline {
   background-color: #5b965b;
   color: white;
 }
+.ordercardcomment {
+  color: red;
+}
 
 /*ORDER DETAIL VIEW*/
 .orderdetailparent {
+  font-size: 1.3em;
+}
+
+/*RESIN DASH VIEW*/
+.resindashparent {
   font-size: 1.3em;
 }
 

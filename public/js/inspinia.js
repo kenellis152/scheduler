@@ -32,6 +32,10 @@ $(document).ready(function () {
             }
         }
 
+        //need to fix this to dynamically resize height with the max resin line height
+        $('#side-menu').css("min-height", 1500 + "px");
+        $('#page-wrapper').css("min-height", 1500 + "px");
+
     }
 
     $(window).bind("load resize scroll", function() {

@@ -3,9 +3,10 @@
 
 angular.module('scheduler')
 .component('newOrder', {
-  templateUrl: 'components/newOrder/newOrder.component.html',
+  templateUrl: 'components/modals/newOrder/newOrder.component.html',
   bindings: {
-    add: '&'
+    add: '&',
+    plant: '<'
   },
   controller: newOrderController
 });
@@ -15,22 +16,35 @@ function newOrderController (SpecService) {
   var $ctrl = this;
   $ctrl.mindate = new Date();
 
+  $('#addOrderModal').on('shown.bs.modal', function() {
+    $('[autofocus]').focus();
+  });
+
   $ctrl.submit = function() {
     var order = {
       part: $ctrl.part,
       date: $ctrl.date,
       coNumber: $ctrl.coNumber,
-      quantity: $ctrl.quantity
+      quantity: $ctrl.quantity,
+      shipTo: $ctrl.shipTo,
+      comments: $ctrl.comments,
+      plant: $ctrl.plant,
+      createDate: new Date()
     }
     $ctrl.add({order});
     $ctrl.part = "";
     $ctrl.date = "";
     $ctrl.coNumber = "";
     $ctrl.quantity = "";
+    $ctrl.shipTo = "";
     $ctrl.comments = "";
     $ctrl.shipTo = "";
     $('#addOrderModal').modal('toggle');
   } // End Submit
+
+  $ctrl.validate = function () {
+    console.log('validating');
+  }
 
 }
 
