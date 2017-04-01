@@ -1,5 +1,5 @@
 <!-- This is a container for each line, and the floaters section -->
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeIn">
 
     <!-- Display each resin line -->
     <resin-line ng-repeat="line in lines" orderids="line" linenumber="$index"></resin-line>
@@ -8,7 +8,7 @@
         <md-button class="md-raised md-primary" data-toggle="modal" data-target="#addOrderModal">Create Order</md-button><br>
       </div>
       <div layout="row">
-        <md-button class="md-raised md-primary">Modify Order (todo)</md-button><br>
+        <md-button class="md-raised md-primary" data-toggle="modal" data-target="#changeOrderModal">Modify Order (todo)</md-button><br>
       </div>
       <div layout="row">
         <md-button class="md-raised md-primary">Mark Complete (todo)</md-button><br>
@@ -28,6 +28,7 @@
     <new-order add="$ctrl.addOrder(order)" plant="$ctrl.plant.id" />
     <save-changes plant="$ctrl.plant.id" />
     <confirm-delete plant="$ctrl.plant.id" />
+    <change-order />
 
     <!-- Serialized output for debugging -->
     <!-- <div class="row">

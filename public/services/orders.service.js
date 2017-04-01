@@ -60,6 +60,14 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     })
   }
 
+  service.changeOrder = function (order) {
+    return $http.patch(ApiPath + `/orders/${orderId}`, order).then( function(response) {
+      console.log(`Order ${orderId} updated`);
+    }).catch( function (err) {
+      console.log('Failed to update order', err);
+    })
+  }
+
 
 }
 })();

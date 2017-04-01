@@ -14,7 +14,7 @@ orderDetailController.$inject = ['$scope'];
 function orderDetailController ($scope) {
   var $ctrl = this;
 
-  $scope.$on('namespace:changeOrderDetail', function (event, data) {
+  $scope.$on('namespace:selectedOrder', function (event, data) {
     $ctrl.order = data.order;
     $ctrl.spec = data.spec;
     updateValues();

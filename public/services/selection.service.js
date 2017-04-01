@@ -53,7 +53,7 @@ function SelectionService($rootScope, SpecService) {
 
   // broadcasts
   var broadcastOrder = function (order, spec) {
-    $rootScope.$broadcast( 'namespace:changeOrderDetail', {order, spec});
+    $rootScope.$broadcast( 'namespace:selectedOrder', {order, spec});
   }
 
   var showOrderDetails = function () {

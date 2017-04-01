@@ -1,0 +1,38 @@
+(function () {
+'use strict';
+
+angular.module('scheduler')
+.component('changeOrder', {
+  templateUrl: 'components/modals/changeOrder/changeOrder.component.html',
+  controller: changeOrderController
+});
+
+changeOrderController.$inject = ['OrdersService', '$scope']
+function changeOrderController (OrdersService, $scope) {
+  var $ctrl = this;
+  $ctrl.mindate = new Date();
+
+  $('#changeOrderModal').on('shown.bs.modal', function() {
+    $('[autofocus]').focus();
+    $ctrl.params = _.pick($ctrl.order, ['_id', 'part', 'quantity', 'coNumber', 'shipTo', 'plant', 'comments']);
+    $ctrl.params.dueDate = new moment($ctrl.order.dueDate).toDate();
+    // don't forget to include cancelled and cancelledReason
+  });
+
+  $scope.$on('namespace:selectedOrder', function (event, data) {
+    $ctrl.order = data.order;
+    $ctrl.spec = data.spec;
+  });
+
+  $ctrl.submit = function() {
+    OrdersService.changeOrder($ctrl.params);
+    $('#addOrderModal').modal('toggle');
+  } // End Submit
+
+  $ctrl.validate = function () {
+    console.log('validating');
+  }
+
+}
+
+})();

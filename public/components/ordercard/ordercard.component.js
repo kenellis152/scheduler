@@ -56,10 +56,11 @@ function orderCardController (SpecService, SelectionService) {
     //create order quantity string
     $ctrl.plts = Math.floor($ctrl.order.quantity / $ctrl.spec.palletCount);
     $ctrl.bxs = Math.floor(($ctrl.order.quantity - $ctrl.plts * $ctrl.spec.palletCount) / $ctrl.spec.piecesPerBundle);
-    $ctrl.pcs = ($ctrl.order.quantity - $ctrl.plts * $ctrl.spec.palletcount - $ctrl.bxs * $ctrl.spec.piecesPerBundle)
+    $ctrl.pcs = ($ctrl.order.quantity - $ctrl.plts * $ctrl.spec.palletCount - $ctrl.bxs * $ctrl.spec.piecesPerBundle);
     $ctrl.quantityString = "";
     if($ctrl.plts) {$ctrl.quantityString += $ctrl.plts + ' plts ';}
-    if($ctrl.bxs) {$ctrl.quantityString += $ctrl.bxs + ' bxs ';}
+    if($ctrl.bxs && $ctrl.spec.boxSw[0] === 'B') {$ctrl.quantityString += $ctrl.bxs + ' bxs ';}
+    else if ($ctrl.bxs) {$ctrl.quantityString += $ctrl.bxs + ' bndl ';}
     if($ctrl.pcs) {$ctrl.quantityString += $ctrl.pcs + ' pcs';}
 
   }// end update class function

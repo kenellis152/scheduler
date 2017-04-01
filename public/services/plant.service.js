@@ -42,6 +42,17 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   }
 
   //*****************************
+  //       changeOrder (order)
+  //*****************************
+  // takes an order object with the intention of updating the views (by modifying the state on this service)
+  // if order change is valid and view is updated, submit to Orders service to update the database
+  // DOES NOT DIRECTLY MODIFY THE DATABASE
+    plantService.changeOrder = function (order) {
+    // first fetch the existing order
+    plantService.plants[order.plant].lines[unscheduledlineindex].orders.push(order);
+  }
+
+  //*****************************
   //       removeOrder (orderid, plantid)
   //*****************************
   // takes order id and plant id
@@ -59,9 +70,9 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
         // delete the order off the new array
         newOrders.splice(result, 1);
         var changeBody = {orders: newOrders};
-        // delete from database, then remove from local order list if successfull
+        // delete from line database, then remove from local order list if successfull
         LineService.updateLine(line._id, changeBody).then( function (newline) {
-          
+
         })
         .catch( function (err) {
           console.log('failed to delete order:', err);
