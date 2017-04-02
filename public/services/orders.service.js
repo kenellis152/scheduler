@@ -18,9 +18,6 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     return $http.get(ApiPath + '/orders/open', config).then(function (response) {
       return response.data;
     });
-    // .then( function(orders) {
-    //   return SpecService.addSpecsToOrdersArray(orders);
-    // });
   };
 
   // Attaches array of open orders to plant object
@@ -31,7 +28,7 @@ function OrdersService($http, ApiPath, SpecService, $q) {
       plant.openOrderIds = [];
       data.forEach( function (elem) {
         plant.openOrderIds.push(elem._id);
-        storeOrder(elem);
+        service.storeOrder(elem);
       });
       result.resolve(plant);
     }, function(err) {
@@ -78,28 +75,31 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     //*****************************
 
   // Take an order, store it if it isn't found, replace the existing order if it already exists
-  var storeOrder = function (order) {
-    var retrieveResult = retrieveOrder(order._id);
+  service.storeOrder = function (order) {
+    var retrieveResult = service.retrieveOrder(order._id);
     if (retrieveResult === -1) {
       service.orders.push(order);
-    } else if (!_.isEqual(order, retrieveResult)) {
-      retrieveResult = order;
+    } else {
+      // retrieveResult = order;
+      service.copyOrder(retrieveResult, order);
     }
   }
 
   // Take an order id, return the order if the id is found locally, else return -1
-  var retrieveOrder = function (id) {
-    var result;
-    service.orders.forEach( function (order) {
-      if (order._id === id) {
-        result = order;
-      }
+  service.retrieveOrder = function (id) {
+    var result = service.orders.find( function(order) {
+      return order._id === id;
     });
     if (result) {
       return result;
     } else {
       return -1;
     }
+  }
+
+  // Copy the source object key values into the destination object
+  service.copyOrder = function (destination, source) {
+    for(var k in source) destination[k] = source[k];
   }
 
 }

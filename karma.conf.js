@@ -34,7 +34,8 @@ module.exports = function(config) {
       './public/services/plant.service.js',
       './public/services/selection.service.js',
       './public/services/spec.service.js',
-      './public/services/orders.service.spec.js'
+      './public/test/testseed.js',
+      './public/test/orders.service.spec.js'
     ],
 
 
