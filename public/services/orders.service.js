@@ -62,8 +62,10 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   }
 
   service.changeOrder = function (order) {
+    var oldOrder = service.retrieveOrder(order._id);
     return $http.patch(ApiPath + `/orders/${order._id}`, order).then( function(response) {
       console.log(`Order ${order._id} updated`, response);
+      service.copyOrder(oldOrder, order);
       return response.data.order;
     }).catch( function (err) {
       console.log('Failed to update order', err);

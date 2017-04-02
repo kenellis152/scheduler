@@ -20,11 +20,11 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // if it's initialized (exists on plantService.plants[]), then just return that
   plantService.getPlant = function(id) {
     //see if this plant already initialized, if so, return promise containing result
-    // if(plantService.plants[id]) {
-    //   var result = $q.defer();
-    //   result.resolve(plantService.plants[id]);
-    //   return result.promise;
-    // }
+    if(plantService.plants[id]) {
+      var result = $q.defer();
+      result.resolve(plantService.plants[id]);
+      return result.promise;
+    }
     // INITIALIZE PLANT
     //grab the plant from Api
     return fetchPlant(id);
