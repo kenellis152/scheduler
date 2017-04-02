@@ -1,6 +1,12 @@
 <!-- This is a container for each line, and the floaters section -->
 <div class="wrapper wrapper-content animated fadeIn">
 
+    <!-- <div layout="row">
+      <div flex="100">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+      </div>
+    </div> -->
+
     <!-- Display each resin line -->
     <resin-line ng-repeat="line in lines" orderids="line" linenumber="$index"></resin-line>
     <div class="col-md-2">

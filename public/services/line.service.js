@@ -7,12 +7,20 @@ angular.module('scheduler')
 LineService.$inject = ['$http', 'ApiPath', '$q'];
 function LineService($http, ApiPath, $q) {
   var service = this;
+  service.lines = [];
 
   service.getLinesByPlantId = function(plantid) {
     return $http.get(ApiPath + `/lines/${plantid}`).then( function (response) {
+      response.data.lines.forEach( function (line) {
+        storeLine(line);
+      });
       return response.data;
     });
   };
+
+  service.removeOrder = function (orderid) {
+
+  }
 
   service.addLinesToPlant = function(plant) {
     var result = $q.defer();
@@ -48,6 +56,26 @@ var findLineByName = function (lines, name) {
     return result;
   } else {
     return -1;
+  }
+}
+
+var getLineById = function (id) {
+  var result;
+  service.lines.forEach( function (line) {
+    if (line._id === id) {
+      result = line;
+    }
+  });
+  if (result) {
+    return result;
+  } else {
+    return -1;
+  }
+}
+
+var storeLine = function (line) {
+  if (getLineById === -1) {
+    service.lines.push(line);
   }
 }
 

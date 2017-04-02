@@ -6,7 +6,7 @@ angular.module('scheduler')
   templateUrl: 'components/agileboard/agileboard.component.html',
   controller: agileBoard,
   bindings: {
-    plant: '<',
+    plantid: '<',
   }
 });
 
@@ -21,21 +21,26 @@ angular.module('scheduler')
       $ctrl.linenames = []; // convoluted, but for some reason if i referenced $ctrl.order.lines[$index].name
                             // on the controller, the line name would show on initial load, but not after changing pages
 
-
-      $ctrl.$onInit = PlantService.getPlant($ctrl.plant).then( function (result) {
-        $ctrl.plant = result;
-        // console.log($ctrl.plant.id);
-        // console.log($ctrl.plant.lines[1].name);
-        $ctrl.plant.lines.forEach( (element) => {
-          $scope.lines.push(element.orders);
-          $ctrl.linenames.push(element.name);
+      $ctrl.updateBoard = function () {
+        PlantService.getPlant($ctrl.plantid).then( function (result) {
+          $scope.lines = []; $ctrl.changes = {}; $ctrl.linenames = [];
+          $ctrl.plant = result;
+          $ctrl.plant.lines.forEach( (element) => {
+            $scope.lines.push(element.orders);
+            $ctrl.linenames.push(element.name);
+          });
+          $scope.sortableOptions = {
+              connectWith: ".connectList"
+          };
+        }).catch( function(plant) {
+          console.log('catastrophic error with agileboard loading plant', plant)
         });
-        $scope.sortableOptions = {
-            connectWith: ".connectList"
-        };
-      }).catch( function(plant) {
-        console.log('catastrophic error with agileboard loading plant')
-      });
+      }
+
+      $ctrl.$onInit = $ctrl.updateBoard();
+
+      $scope.$on('namespace:updateboard', $ctrl.updateBoard);
+
 
 
       // Takes an order object and adds it to the database

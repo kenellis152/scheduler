@@ -20,11 +20,11 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // if it's initialized (exists on plantService.plants[]), then just return that
   plantService.getPlant = function(id) {
     //see if this plant already initialized, if so, return promise containing result
-    if(plantService.plants[id]) {
-      var result = $q.defer();
-      result.resolve(plantService.plants[id]);
-      return result.promise;
-    }
+    // if(plantService.plants[id]) {
+    //   var result = $q.defer();
+    //   result.resolve(plantService.plants[id]);
+    //   return result.promise;
+    // }
     // INITIALIZE PLANT
     //grab the plant from Api
     return fetchPlant(id);
@@ -47,9 +47,10 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // takes an order object with the intention of updating the views (by modifying the state on this service)
   // if order change is valid and view is updated, submit to Orders service to update the database
   // DOES NOT DIRECTLY MODIFY THE DATABASE
-    plantService.changeOrder = function (order) {
+    plantService.updateOrder = function (order) {
     // first fetch the existing order
-    plantService.plants[order.plant].lines[unscheduledlineindex].orders.push(order);
+
+    broadcastUpdateBoard();
   }
 
   //*****************************
@@ -130,8 +131,11 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
         // make a list of all the orders already scheduled
         // note that 'orders' at this point are still ids, not order objects
         line.orders.forEach(function (order) {
-          scheduled.push(order);
-          orders.push(findOrder(order, plant.openOrders));
+          var thisOrder = findOrder(order, plant.openOrders);
+          if (thisOrder !== -1) {
+            scheduled.push(order);
+            orders.push(thisOrder);
+          }
         });
         //replace each array of order ids with an array of the actual orders
         line.orders = orders;
@@ -180,8 +184,31 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
     }
   };
 
+  // Finds order among all locally stored orders.
+  // Returns -1 if not found
+  var findOrderAllPlants = function (id) {
+    var result;
+    plantService.plants.forEach( function (plant) {
+      plant.lines.forEach( function (line) {
+        var thisResult = findOrder(id, line.orders);
+        if (thisResult !== -1) {
+          result = thisResult;
+        }
+      });
+    });
+    if( result ) {
+      return result;
+    } else {
+      return -1;
+    }
+  };
+
   var broadcastPlants = function (plants) {
     $rootScope.$broadcast( 'namespace:plantinfo', {plants});
+  };
+
+  var broadcastUpdateBoard = function () {
+    $rootScope.$broadcast( 'namespace:updateboard', {});
   };
 
 }; // End Plant Service

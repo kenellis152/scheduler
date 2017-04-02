@@ -75,6 +75,10 @@ div.resinline {
   background-color: #5b965b;
   color: white;
 }
+.slowspeed {
+  background-color: #FFFC7F;
+  color: black;
+}
 .ordercardcomment {
   color: red;
 }

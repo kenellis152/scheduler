@@ -7,8 +7,8 @@ angular.module('scheduler')
   controller: changeOrderController
 });
 
-changeOrderController.$inject = ['OrdersService', '$scope']
-function changeOrderController (OrdersService, $scope) {
+changeOrderController.$inject = ['OrdersService', 'PlantService', '$scope']
+function changeOrderController (OrdersService, PlantService, $scope) {
   var $ctrl = this;
   $ctrl.mindate = new Date();
 
@@ -19,14 +19,19 @@ function changeOrderController (OrdersService, $scope) {
     // don't forget to include cancelled and cancelledReason
   });
 
+  //get current order details whenever an order is selected
   $scope.$on('namespace:selectedOrder', function (event, data) {
     $ctrl.order = data.order;
     $ctrl.spec = data.spec;
   });
 
   $ctrl.submit = function() {
-    OrdersService.changeOrder($ctrl.params);
-    $('#addOrderModal').modal('toggle');
+    OrdersService.changeOrder($ctrl.params).then( function(order) {
+      PlantService.updateOrder(order);
+    }).catch( function (err) {
+
+    });
+    $('#changeOrderModal').modal('toggle');
   } // End Submit
 
   $ctrl.validate = function () {
