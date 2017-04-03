@@ -121,6 +121,30 @@ describe('PATCH orders/:id', (done) => {
 });
 // End update order by id
 
+// Get orders x days back
+describe('GET orders/daysback/:days', (done) => {
+  it('should fetch 2 orders that have due date greater than or equal to 5 days back', (done) => {
+    request(app)
+      .get('/orders/daysback/5')
+      .send()
+      .expect(200)
+      .expect( (res) => {
+        // console.log('daysback', res.body);
+        expect(res.body.orders.length).toBe(2);
+        expect(res.body.orders[0].part).toBe(157193);
+      })
+      .end(done);
+  });
+
+  it('should return a 404 if no orders found', (done) => {
+    request(app)
+      .get('/orders/daysback/0')
+      .send()
+      .expect(404)
+      .end(done);
+  });
+});
+
 // Delete Order
 // *** TO DO ***
 //End Delete order

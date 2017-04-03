@@ -11,20 +11,27 @@ const orderThreeId = new ObjectID();
 const resinOneId = new ObjectID();
 const resinTwoId = new ObjectID();
 
+var now = new Date();
+var date1 = new Date(now.getTime()-24*60*60*1000);
+var date2 = new Date(now.getTime()-2*24*60*60*1000);
+var date3 = new Date(now.getTime()-10*24*60*60*1000);
+
 const orders = [{
   _id: orderOneId,
   part: 157193,
   quantity: 18000,
   plant: 1,
   coNumber: 473473,
-  comments: "whatever"
+  comments: "whatever",
+  dueDate: date1
   },
   {
   _id: orderTwoId,
   part: 181069,
   quantity: 17000,
   plant: 1,
-  coNumber: 473474
+  coNumber: 473474,
+  dueDate: date2
   },
   {
   _id: orderThreeId,
@@ -32,7 +39,8 @@ const orders = [{
   quantity: 20160,
   plant: 1,
   coNumber: 473475,
-  completed: true
+  completed: true,
+  dueDate: date3
 }];
 
 

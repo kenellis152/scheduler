@@ -17,6 +17,7 @@ var {Spec} = require('./models/spec');
 var {Plant} = require('./models/plant');
 var {Line} = require('./models/line');
 var cors = require('cors');
+var moment = require('moment');
 
 //*****************************
 //   Set up the server app
@@ -153,6 +154,21 @@ app.delete('/orders/:id', (req, res) => {
     res.status(404).send();
   });
 });// End Delete order
+
+// Get all orders starting from ":days" number of days back
+app.get('/orders/daysback/:days', (req, res) => {
+  var {days} = req.params;
+  var startDate = moment().subtract(days, "days").toDate();
+  Order.find({dueDate: {"$gte": startDate}}).then( (orders) => {
+    if (orders.length === 0) {
+      res.status(404).send();
+    }
+    res.send({orders});
+  }).catch((err) => {
+    res.status(400).send();
+  });
+});
+// End Get order by id
 
 //*****************************
 //       ResinSpec API

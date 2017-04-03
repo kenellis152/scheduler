@@ -10,11 +10,10 @@ angular.module('scheduler')
   controller: resinDashController
 });
 
-resinDashController.$inject = ['$scope'];
-function resinDashController ($scope) {
+resinDashController.$inject = ['$scope', 'OrdersService'];
+function resinDashController ($scope, OrdersService) {
   var $ctrl = this;
   $ctrl.id = 0;
-
 
   $scope.$on('namespace:changeOrderDetail', function (event, data) {
     $ctrl.order = data.order;

@@ -37,11 +37,25 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     return result.promise;
   };
 
-  // NOT CURRENTLY USED
+  // *****************
+  // Not Currently USED
+  // *****************
   service.getOrderById = function(id) {
     return $http.get(ApiPath + `/orders/${id}`).then( function (response) {
       console.log('calling getOrderById');
       return response.data.order;
+    }).then( function (order) {
+      return SpecService.addSpecToOrder(order);
+    })
+  };
+
+  // *****************
+  // Work in Progress
+  // *****************
+  service.getOrdersFromDaysBack = function(days) {
+    return $http.get(ApiPath + `/orders/daysback/${days}`).then( function (response) {
+      console.log('calling getOrderById');
+      return response.data.orders;
     }).then( function (order) {
       return SpecService.addSpecToOrder(order);
     })
@@ -102,6 +116,16 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   // Copy the source object key values into the destination object
   service.copyOrder = function (destination, source) {
     for(var k in source) destination[k] = source[k];
+  }
+
+  service.daysOut = function (order) {
+    console.log(order.dueDate);
+  }
+
+  // Make sure order has a valid part
+  // Asynchronous function
+  service.validateOrder = function (order) {
+
   }
 
 }
