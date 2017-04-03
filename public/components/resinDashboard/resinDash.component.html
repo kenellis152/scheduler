@@ -1,27 +1,22 @@
-<div class="ibox float-e-margins resindashparent animated fadeIn">
+<div class="ibox float-e-margins resindashparent animated fadeIn" style="margin-bottom: 5px;">
   <div class="ibox-title">
-    <h3>{{$ctrl.plant.name}} Dashboard (todo)</h3>
+    <h3>{{$ctrl.plant.name}} Dashboard (work in progress)</h3>
   </div>
-  <div class="ibox-content">
-    <div class="row">
-      <div class="col-md-2">
-        Placeholder
+  <div class="ibox-content" style="padding-bottom: 3px;">
+    <div layout="row">
+      <div flex="25" class="text-center">
+        Placeholder - Plant status and order breakdown by speed/diameter goes here
       </div>
-      <div class="col-md-5 text-center border-left-right border-top-bottom">
-        Placeholder
+      <div flex="50" id="dash-chart" class="border-bottom">
+        <div layout="row" layout-align="center center">
+          <span class="text-center">Placeholder chart - pallets and hrs demand goes here</span>
+        </div>
+        <div class="flot-chart dashboard-chart" style="margin-top: 3px;">
+            <div flot class="flot-chart-content" dataset="$ctrl.flotData" options="$ctrl.flotOptions"></div>
+        </div>
       </div>
-      <div class="col-md-3">
-        Placeholder
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3">
-        Placeholder
-      </div>
-    </div>
-    <div class="row border-bottom">
-      <div class="col-md-3">
-        Placeholder
+      <div flex="25" class="text-center">
+        Placeholder - Line status and demand breakdown by line goes here
       </div>
     </div>
   </div>
