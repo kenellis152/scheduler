@@ -36,12 +36,13 @@
             </div>
           </div>
           <div layout="row">
-            <div class="form-group">
-              <label for="">Due Date:</label>
-              <md-datepicker ng-model="$ctrl.params.dueDate" md-placeholder="Enter date" md-open-on-focus
-              required md-autofocus required md-min-date="$ctrl.mindate;"></md-datepicker>
-            </div>
             <div flex="15">
+              <md-checkbox ng-model="$ctrl.params.stock" aria-label="Cancel Order">Stock?</md-checkbox>
+            </div>
+            <div class="form-group" flex="50">
+              <label for="" ng-if="!$ctrl.params.stock">Due Date:</label>
+              <md-datepicker ng-model="$ctrl.params.dueDate" md-placeholder="Enter date" md-open-on-focus
+              required md-autofocus required md-min-date="$ctrl.mindate;" ng-if="!$ctrl.params.stock"></md-datepicker>
             </div>
             <div flex=>
               <md-input-container class="md-block">

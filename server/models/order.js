@@ -22,10 +22,12 @@ var OrderSchema =  new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  stock: {
+    type: Boolean,
+    default: false
+  },
   dueDate: {
-    type: Date,
-    default: Date.now
-    // required: true
+    type: Date
   },
   completed: {
     type: Boolean,

@@ -42,7 +42,8 @@ app.post('/orders', (req, res) => {
     plant: req.body.plant,
     shipTo: req.body.shipTo,
     comments: req.body.comments,
-    createDate: req.body.createDate
+    createDate: req.body.createDate,
+    stock: req.body.stock
   });
   order.save().then( (doc) => {
     res.send(doc);
@@ -126,7 +127,7 @@ app.patch('/orders/:id', (req, res) => {
     res.status(404).send();
   }
   var body = _.pick(req.body, ['part', 'quantity', 'plant', 'createDate', 'dueDate', 'completed', 'comments',
-                                'completedDate', 'customerId', 'shipTo', 'cancelled', 'cancelledReason', 'coNumber']);
+                                'completedDate', 'customerId', 'shipTo', 'cancelled', 'cancelledReason', 'coNumber', 'stock']);
   Order.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).then( (order) => {
     if(!order) {
       return res.status(404).send();

@@ -29,6 +29,7 @@ function newOrderController (SpecService) {
       shipTo: $ctrl.shipTo,
       comments: $ctrl.comments,
       plant: $ctrl.plant,
+      stock: $ctrl.stock,
       createDate: new Date()
     }
     console.log(order);

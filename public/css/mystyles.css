@@ -79,6 +79,13 @@ div.resinline {
   background-color: #EFD469;
   color: #222233;
 }
+.duesoon {
+  background-color: #FF4136;
+  color: white;
+}
+.stock {
+  color:  #007fff;
+}
 .ordercardcomment {
   color: red;
 }

@@ -15,8 +15,6 @@ orderCardController.$inject = ['SpecService', 'SelectionService'];
 function orderCardController (SpecService, SelectionService) {
   var $ctrl = this;
   $ctrl.spec = {};
-  $ctrl.order.date = moment($ctrl.order.dueDate).format('MMMM D');
-  $ctrl.palletQty = Math.round($ctrl.order.quantity / $ctrl.spec.palletCount);
 
   this.$onInit = SpecService.getSpecByPart($ctrl.order.part).then( function (result) {
       $ctrl.spec = result.spec;
@@ -30,6 +28,22 @@ function orderCardController (SpecService, SelectionService) {
   };// End clickProcess()
 
   $ctrl.updateCard = function () {
+
+    // $ctrl.palletQty = Math.round($ctrl.order.quantity / $ctrl.spec.palletCount);
+
+    if (!$ctrl.order.stock) {
+      $ctrl.order.date = moment($ctrl.order.dueDate).format('MMMM D');
+      var daysOut = moment($ctrl.order.dueDate).diff(moment(), 'days');
+      if (daysOut < 3) {
+        $ctrl.dueSoon = "duesoon";
+      } else {
+        $ctrl.dueSoon = "";
+      }
+    } else {
+      $ctrl.order.date = "stock";
+      $ctrl.dueSoon = "stock";
+    }
+
     switch($ctrl.spec.speed) {
       case "10":
         $ctrl.speedClass = "tenspeed";
@@ -48,6 +62,7 @@ function orderCardController (SpecService, SelectionService) {
         $ctrl.speedClass = "twentyspeed";
         break;
       case "0204":
+      case "204":
       case "90":
         $ctrl.speedClass = "slowspeed";
         break;
@@ -63,7 +78,7 @@ function orderCardController (SpecService, SelectionService) {
     else if ($ctrl.bxs) {$ctrl.quantityString += $ctrl.bxs + ' bndl ';}
     if($ctrl.pcs) {$ctrl.quantityString += $ctrl.pcs + ' pcs';}
 
-  }// end update class function
+  }// end update card function
 
 }// end orderCardControll
 

@@ -116,6 +116,7 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   // Copy the source object key values into the destination object
   service.copyOrder = function (destination, source) {
     for(var k in source) destination[k] = source[k];
+    console.log('copied order', destination, source);
   }
 
   service.daysOut = function (order) {

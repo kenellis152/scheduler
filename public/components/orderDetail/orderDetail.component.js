@@ -46,6 +46,7 @@ function orderDetailController ($scope) {
         $ctrl.speedClass = "twentyspeed";
         break;
       case "0204":
+      case "204":
       case "90":
         $ctrl.speedClass = "slowspeed";
         break;

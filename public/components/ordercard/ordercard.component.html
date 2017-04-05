@@ -9,8 +9,8 @@
       <div class="col-md-4 cardcolumn {{$ctrl.boxClass}}">
         Part #
       </div>
-      <div class="col-md-4 cardcolumn">
-        <span class="text-centered">Due Date:</span>
+      <div class="col-md-4 cardcolumn text-center">
+        <span class="text-center">Due Date:</span>
       </div>
       <div class="col-md-4 cardcolumn {{$ctrl.palletClass}}">
         <span class="pull-right">Quantity:</span>
@@ -20,8 +20,8 @@
       <div class="col-md-4 cardcolumn">
         <h5>{{$ctrl.order.part}}</h5>
       </div>
-      <div class="col-md-4 cardcolumn">
-        <span class="text-centered"><h5>{{$ctrl.order.date}}</h5></span>
+      <div class="col-md-4 cardcolumn text-center {{$ctrl.dueSoon}}">
+        <span class="text-center {{$ctrl.dueSoon}}"><h5>{{$ctrl.order.date}}</h5></span>
       </div>
       <div class="col-md-4 cardcolumn {{$ctrl.palletClass}}">
         <span class="text-center"><h5>  {{$ctrl.quantityString}}</h5></span>
