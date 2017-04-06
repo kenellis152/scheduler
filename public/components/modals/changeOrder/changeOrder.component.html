@@ -63,7 +63,7 @@
             <md-checkbox ng-model="$ctrl.cancelled" aria-label="Cancel Order">Cancel Order</md-checkbox>
             <md-input-container class="md-block" ng-if="$ctrl.cancelled">
               <label>Cancellation Reason</label>
-              <input type="text" ng-model="$ctrl.params.cancelReason">
+              <input type="text" ng-model="$ctrl.params.cancelledReason">
             </md-input-container>
           </div>
           <md-button class="md-raised md-primary" ng-disabled="changeOrderForm.$invalid"

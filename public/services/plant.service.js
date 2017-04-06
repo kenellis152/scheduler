@@ -42,14 +42,14 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   }
 
   //*****************************
-  //       changeOrder (order)
+  //       updateOrder (order)
   //*****************************
   // takes an order object with the intention of updating the views (by modifying the state on this service)
   // if order change is valid and view is updated, submit to Orders service to update the database
   // DOES NOT DIRECTLY MODIFY THE DATABASE
     plantService.updateOrder = function (order) {
     // first fetch the existing order
-
+    broadcastUpdateOrder(order);
     broadcastUpdateBoard();
   }
 
@@ -125,25 +125,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
     // *** INIT LINE STATES
     .then( function (plant) {
       // make a list of all the orders already scheduled
-      var scheduled = [];
-      plant.lines.forEach( function (line) {
-        var orders = []; //stores actual orders
-        // make a list of all the orders already scheduled
-        // note that 'orders' at this point are still ids, not order objects
-        line.orders.forEach(function (order) {
-          var thisOrder = findOrder(order, plant.openOrders);
-          if (thisOrder !== -1) {
-            scheduled.push(order);
-            orders.push(thisOrder);
-          }
-        });
-        //replace each array of order ids with an array of the actual orders
-        line.orders = orders;
-      });
-      // Create a line with unscheduled orders and push it on to line arrays
-      var floaters = getFloaters(scheduled, plant.openOrders);
-      floaters.name = "Unscheduled";
-      plant.lines.push(floaters);
+      initLines(plant);
       // save plant to service
       plantService.plants[id] = plant;
       //broadcast the loaded plant info
@@ -203,12 +185,40 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
     }
   };
 
+  // Takes a plant object with an array of lines, each with an array of order ids
+  // replaces the array of order ids with the array of orders
+  var initLines = function (plant) {
+    var scheduled = [];
+    plant.lines.forEach( function (line) {
+      var orders = []; //stores actual orders
+      // make a list of all the orders already scheduled
+      // note that 'orders' at this point are still ids, not order objects
+      line.orders.forEach(function (order) {
+        var thisOrder = findOrder(order, plant.openOrders);
+        if (thisOrder !== -1) {
+          scheduled.push(order);
+          orders.push(thisOrder);
+        }
+      });
+      //replace each array of order ids with an array of the actual orders
+      line.orders = orders;
+    });
+    // Create a line with unscheduled orders and push it on to line arrays
+    var floaters = getFloaters(scheduled, plant.openOrders);
+    floaters.name = "Unscheduled";
+    plant.lines.push(floaters);
+  }
+
   var broadcastPlants = function (plants) {
     $rootScope.$broadcast( 'namespace:plantinfo', {plants});
   };
 
   var broadcastUpdateBoard = function () {
     $rootScope.$broadcast( 'namespace:updateboard', {});
+  };
+
+  var broadcastUpdateOrder = function (order) {
+    $rootScope.$broadcast( `namespace:order:${order._id}`, {order});
   };
 
 }; // End Plant Service

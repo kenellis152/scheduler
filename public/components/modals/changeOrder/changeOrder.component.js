@@ -14,11 +14,10 @@ function changeOrderController (OrdersService, PlantService, $scope) {
 
   $('#changeOrderModal').on('shown.bs.modal', function() {
     $('[autofocus]').focus();
-    $ctrl.params = _.pick($ctrl.order, ['_id', 'part', 'quantity', 'coNumber', 'shipTo', 'plant', 'comments', 'stock']);
+    $ctrl.params = _.pick($ctrl.order, ['_id', 'part', 'quantity', 'coNumber', 'shipTo', 'plant', 'comments', 'stock', 'cancelled', 'cancelledReason']);
     if(!$ctrl.params.stock) {
       $ctrl.params.dueDate = new moment($ctrl.order.dueDate).toDate();
     }
-    // don't forget to include cancelled and cancelledReason
   });
 
   //get current order details whenever an order is selected

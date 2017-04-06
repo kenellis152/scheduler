@@ -29,6 +29,9 @@ var OrderSchema =  new mongoose.Schema({
   dueDate: {
     type: Date
   },
+  produced: {
+    type: Number
+  },
   completed: {
     type: Boolean,
     default: false

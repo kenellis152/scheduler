@@ -126,7 +126,7 @@ app.patch('/orders/:id', (req, res) => {
   if(!ObjectID.isValid(id)) {
     res.status(404).send();
   }
-  var body = _.pick(req.body, ['part', 'quantity', 'plant', 'createDate', 'dueDate', 'completed', 'comments',
+  var body = _.pick(req.body, ['part', 'quantity', 'plant', 'createDate', 'dueDate', 'completed', 'comments', 'produced',
                                 'completedDate', 'customerId', 'shipTo', 'cancelled', 'cancelledReason', 'coNumber', 'stock']);
   Order.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).then( (order) => {
     if(!order) {

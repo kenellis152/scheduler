@@ -77,10 +77,19 @@ function OrdersService($http, ApiPath, SpecService, $q) {
 
   service.changeOrder = function (order) {
     var oldOrder = service.retrieveOrder(order._id);
+    //make the api call to patch the order object
     return $http.patch(ApiPath + `/orders/${order._id}`, order).then( function(response) {
-      console.log(`Order ${order._id} updated`, response);
-      service.copyOrder(oldOrder, order);
       return response.data.order;
+    }).then( function (order) {
+      //attach the (maybe) new spec to the order
+      return SpecService.addSpecToOrder(order);
+    }).then( function (order) {
+      //update the order object that is stored locally
+      service.copyOrder(oldOrder, order);
+      var result = $q.defer();
+      result.resolve(order);
+      //return the promise for PlantService to update the line on which it is stored, if necessary
+      return result.promise;
     }).catch( function (err) {
       console.log('Failed to update order', err);
     })
@@ -116,7 +125,7 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   // Copy the source object key values into the destination object
   service.copyOrder = function (destination, source) {
     for(var k in source) destination[k] = source[k];
-    console.log('copied order', destination, source);
+
   }
 
   service.daysOut = function (order) {

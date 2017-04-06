@@ -11,8 +11,8 @@ angular.module('scheduler')
   controller: orderCardController
 });
 
-orderCardController.$inject = ['SpecService', 'SelectionService'];
-function orderCardController (SpecService, SelectionService) {
+orderCardController.$inject = ['SpecService', 'SelectionService', '$scope'];
+function orderCardController (SpecService, SelectionService, $scope) {
   var $ctrl = this;
   $ctrl.spec = {};
 
@@ -27,10 +27,12 @@ function orderCardController (SpecService, SelectionService) {
     SelectionService.clickProcess($ctrl.order._id, $ctrl.order, $ctrl.spec)
   };// End clickProcess()
 
+  $scope.$on(`namespace:order:${$ctrl.order._id}`, function() {
+    $ctrl.spec = $ctrl.order.spec;
+    $ctrl.updateCard();
+  });
+
   $ctrl.updateCard = function () {
-
-    // $ctrl.palletQty = Math.round($ctrl.order.quantity / $ctrl.spec.palletCount);
-
     if (!$ctrl.order.stock) {
       $ctrl.order.date = moment($ctrl.order.dueDate).format('MMMM D');
       var daysOut = moment($ctrl.order.dueDate).diff(moment(), 'days');
@@ -44,7 +46,7 @@ function orderCardController (SpecService, SelectionService) {
       $ctrl.dueSoon = "stock";
     }
 
-    switch($ctrl.spec.speed) {
+    switch($ctrl.order.spec.speed) {
       case "10":
         $ctrl.speedClass = "tenspeed";
         break;
