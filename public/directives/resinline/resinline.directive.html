@@ -3,7 +3,7 @@
       <div class="ibox-content resinline">
           <h3 class="text-center"> {{ $ctrl.linenames[$index] }}</h3>
           <ul ui-sortable="sortableOptions" class="sortable-list connectList agile-list" ng-model="lines[$index]">
-              <li class="success-element cardwrapper" ng-repeat="order in lines[$index]">
+              <li class="cardwrapper" ng-repeat="order in lines[$index]">
                   <order-card order="order"></order-card>
               </li>
           </ul>
