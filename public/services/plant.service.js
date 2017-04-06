@@ -45,42 +45,52 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   //       updateOrder (order)
   //*****************************
   // takes an order object with the intention of updating the views (by modifying the state on this service)
+  // Also takes the bool updateLines which lets this function know if the lines need to be updated (if order was cancelled or plant was changed)
   // if order change is valid and view is updated, submit to Orders service to update the database
   // DOES NOT DIRECTLY MODIFY THE DATABASE
-    plantService.updateOrder = function (order) {
-    // first fetch the existing order
+    plantService.updateOrder = function (order, updateLinesFlag) {
+    // let the order card containing this order know that it has been updated
     broadcastUpdateOrder(order);
+
+    // don't know what the intent of this is
     broadcastUpdateBoard();
+
+    if (updateLinesFlag) {
+      plantService.removeOrder(order._id);
+    }
   }
 
   //*****************************
   //       removeOrder (orderid, plantid)
   //*****************************
-  // takes order id and plant id
+  // takes order id
   // remove order from the run BOARD
   // DOES NOT INTERACT WITH THE API. ONLY REMOVES IT FROM THE RUN BOARD
   // ORDER SERVICE ACTUALLY ADDS/REMOVES, not plant service
-  plantService.removeOrder = function (id, plant) {
-    plantService.plants[plant].lines.forEach( function (line) {
-      var result = findOrder(id, line.orders);
-      if (result !== -1) {
-        // then the order was found and result has the index
-        // FIRST REMOVE IT FROM THE LINE AND SAVE IT OR ELSE ALL THE LINES GET FUCKED
-        // copy to new array
-        var newOrders = line.orders.slice();
-        // delete the order off the new array
-        newOrders.splice(result, 1);
-        var changeBody = {orders: newOrders};
-        // delete from line database, then remove from local order list if successfull
-        LineService.updateLine(line._id, changeBody).then( function (newline) {
+  plantService.removeOrder = function (id) {
+    plantService.plants.forEach( function (plant) {
+      plant.lines.forEach( function (line) {
+        var result = findOrder(id, line.orders);
+        if (result !== -1) {
+          // then the order was found and result has the index
+          // FIRST REMOVE IT FROM THE LINE AND SAVE IT OR ELSE ALL THE LINES GET FUCKED
+          // copy to new array
+          var newOrders = line.orders.slice();
+          // delete the order off the new array
+          newOrders.splice(result, 1);
+          var changeBody = {orders: newOrders};
+          // delete from line database, then remove from local order list if successfull
+          if (line.name !== "Unscheduled") {
+            LineService.updateLine(line._id, changeBody).then( function (newline) {
 
-        })
-        .catch( function (err) {
-          console.log('failed to delete order:', err);
-        });
-        // remove it locally now that we've removed it from the line and calmed down a little
-        line.orders.splice(result, 1);
-      }
+            }).catch( function (err) {
+              console.log('failed to delete order:', err);
+            });
+          }
+          // remove it locally now that we've removed it from the line and calmed down a little
+          line.orders.splice(result, 1);
+        }
+      });
     });
   }
 
@@ -209,6 +219,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
     plant.lines.push(floaters);
   }
 
+  // broadcast that a plant has been updated and pass along plant info
   var broadcastPlants = function (plants) {
     $rootScope.$broadcast( 'namespace:plantinfo', {plants});
   };
@@ -217,6 +228,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
     $rootScope.$broadcast( 'namespace:updateboard', {});
   };
 
+  // intent is to notify the order card containing this order that it's underlying order has changed and it needs to re-update
   var broadcastUpdateOrder = function (order) {
     $rootScope.$broadcast( `namespace:order:${order._id}`, {order});
   };

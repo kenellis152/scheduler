@@ -28,6 +28,7 @@ function OrdersService($http, ApiPath, SpecService, $q) {
       plant.openOrderIds = [];
       data.forEach( function (elem) {
         plant.openOrderIds.push(elem._id);
+        // store the order locally for retrieval in the future without having to make an API call
         service.storeOrder(elem);
       });
       result.resolve(plant);
@@ -61,12 +62,15 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     })
   };
 
+  // API call for adding an order
   service.addOrder = function (order) {
     return $http.post(ApiPath + '/orders/', order).then( function (response) {
+      service.storeOrder(response.data);
       return response.data;
     });
   };
 
+  // API call for deleting an order
   service.deleteOrder = function (orderId) {
     return $http.delete(ApiPath + `/orders/${orderId}`).then( function(response) {
       console.log(`Order ${orderId} Deleted`);
@@ -75,7 +79,9 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     })
   }
 
-  service.changeOrder = function (order) {
+  // Changes the order in the database and attaches new spec
+  // I
+  service.changeOrder = function (order, updateLinesFlag) {
     var oldOrder = service.retrieveOrder(order._id);
     //make the api call to patch the order object
     return $http.patch(ApiPath + `/orders/${order._id}`, order).then( function(response) {
@@ -125,7 +131,6 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   // Copy the source object key values into the destination object
   service.copyOrder = function (destination, source) {
     for(var k in source) destination[k] = source[k];
-
   }
 
   service.daysOut = function (order) {

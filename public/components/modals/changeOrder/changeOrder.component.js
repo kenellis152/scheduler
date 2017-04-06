@@ -27,8 +27,11 @@ function changeOrderController (OrdersService, PlantService, $scope) {
   });
 
   $ctrl.submit = function() {
-    OrdersService.changeOrder($ctrl.params).then( function(order) {
-      PlantService.updateOrder(order);
+    //this flag denotes whether the lines need to be updated (if the order is cancelled or the plant has changed)
+    var updateLines = $ctrl.params.cancelled || ($ctrl.params.plant !== $ctrl.order.plant);
+    if (updateLines) console.log('order changed or cancelled - deleting from current view');
+    OrdersService.changeOrder($ctrl.params, updateLines).then( function(order) {
+      PlantService.updateOrder(order, updateLines);
     }).catch( function (err) {
 
     });

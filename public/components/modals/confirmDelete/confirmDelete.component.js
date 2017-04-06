@@ -17,7 +17,7 @@ function confirmDeleteController (OrdersService, SelectionService, PlantService)
 
   $ctrl.submit = function() {
     var id = SelectionService.getSelected();
-    PlantService.removeOrder(id, $ctrl.plant);
+    PlantService.removeOrder(id);
     OrdersService.deleteOrder(id);
     $('#confirmDeleteModal').modal('toggle');
   } // End Submit
