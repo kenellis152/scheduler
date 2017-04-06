@@ -54,6 +54,11 @@ angular.module('scheduler')
         });
       }
 
+      $ctrl.revert = function () {
+        console.log('calling');
+        $ctrl.updateBoard();
+      }
+
   } //end agileBoard
 
 })();
