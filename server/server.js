@@ -33,6 +33,7 @@ app.use(cors());
 //*****************************
 
 // Save new order
+// tests: done
 app.post('/orders', (req, res) => {
   var order = new Order({
     part: req.body.part,
@@ -54,6 +55,7 @@ app.post('/orders', (req, res) => {
 //End Save new order
 
 // Get open orders
+// tests: done
 app.get('/orders/open', (req, res) => {
   var {plant} = req.query;
   // console.log(req);
@@ -77,6 +79,7 @@ app.get('/orders/open', (req, res) => {
 // Get open order ids
 // If body contains a plant id, return only orders for that plant
 // Else return all open order ids
+// tests: done
 app.get('/orders/open/id', (req, res) => {
   var {plant} = req.query;
   if(plant) {
@@ -121,6 +124,7 @@ app.get('/orders/:id', (req, res) => {
 // End Get order by id
 
 // Update order by id
+// tests: done
 app.patch('/orders/:id', (req, res) => {
   var {id} = req.params;
   if(!ObjectID.isValid(id)) {
@@ -141,6 +145,8 @@ app.patch('/orders/:id', (req, res) => {
 // End update order by id
 
 // Delete Order
+// takes order id, returns deleted object
+// tests: done
 app.delete('/orders/:id', (req, res) => {
   var {id} = req.params;
   if(!ObjectID.isValid(id)) {
@@ -157,6 +163,7 @@ app.delete('/orders/:id', (req, res) => {
 });// End Delete order
 
 // Get all orders starting from ":days" number of days back
+// tests: done
 app.get('/orders/daysback/:days', (req, res) => {
   var {days} = req.params;
   var startDate = moment().subtract(days, "days").toDate();
@@ -177,6 +184,7 @@ app.get('/orders/daysback/:days', (req, res) => {
 
 // ** Resin Spec mass adder
 // Adds an array of objects -- Object.specs where "specs" is the array. Adds them all to resinspecs collection
+// tests: done
 app.post('/resinspecs', (req, res) => {
   Spec.insertMany(req.body.specs).then( (result) => {
     if(!result) {
@@ -190,6 +198,7 @@ app.post('/resinspecs', (req, res) => {
 
 // ** Get spec by part #
 // Take a part number and return the resin specs
+// tests: done
 app.get('/resinspecs/:pn', (req, res) => {
   var {pn} = req.params;
   Spec.findOne({part: pn}).then( (spec) => {
@@ -229,6 +238,7 @@ app.get('/resinspecs/:pn', (req, res) => {
 //*****************************
 
 // Save new plant
+// tests: NOT DONE
 app.post('/plants', (req, res) => {
   var plant = new Plant({
     name: req.body.name,
@@ -245,6 +255,7 @@ app.post('/plants', (req, res) => {
 //End Save new plant
 
 // Get plant by id
+// tests: NOT DONE
 app.get('/plants/:id', (req, res) => {
   var {id} = req.params;
   Plant.findOne({id: id}).then( (plant) => {
@@ -263,6 +274,7 @@ app.get('/plants/:id', (req, res) => {
 //*****************************
 
 // Save new line
+// tests: NOT DONE
 app.post('/lines', (req, res) => {
   var line = new Line({
     plant: req.body.plant,
@@ -281,6 +293,7 @@ app.post('/lines', (req, res) => {
 //End Save new line
 
 // Get all lines
+// tests: NOT DONE
 app.get('/lines/all', (req, res) => {
   Line.find().then( (allLines) => {
     res.send(allLines);
@@ -291,6 +304,7 @@ app.get('/lines/all', (req, res) => {
 // End get all lines
 
 // Get lines by plant id
+// tests: NOT DONE
 app.get('/lines/:id', (req, res) => {
   var {id} = req.params;
   Line.find({plant: id}).then( (lines) => {
@@ -307,6 +321,7 @@ app.get('/lines/:id', (req, res) => {
 
 // Update Line
 // id param denotes the line to Update
+// tests: NOT DONE
 app.patch('/lines/:id', (req, res) => {
   var {id} = req.params;
   var body = _.pick(req.body, ['activeShifts', 'name', 'largeDiam', 'tooSpeedie', 'orders']);

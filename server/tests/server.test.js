@@ -146,7 +146,46 @@ describe('GET orders/daysback/:days', (done) => {
 });
 
 // Delete Order
-// *** TO DO ***
+describe('DELETE /orders/:id', (done) => {
+  it('should return 404 if id not found', (done) => {
+    request(app)
+      .delete('/orders/5')
+      .send()
+      .expect(404)
+      .end(done);
+  });
+
+  it('should return the deleted object', (done) => {
+    request(app)
+      .delete(`/orders/${orders[0]._id}`)
+      .send()
+      .expect(200)
+      .expect( (res) => {
+        expect(res.body.order.comments).toEqual("whatever");
+      })
+      .end(done);
+  });
+
+  it('should remove the object from the database', (done) => {
+    var hexId = orders[0]._id.toHexString();
+    request(app)
+      .delete(`/orders/${hexId}`)
+      .send()
+      .expect(200)
+      .expect( (res) => {
+        expect(res.body.order._id).toBe(hexId);
+      })
+      .end( (err, res) => {
+        if (err) {
+          return done(err);
+        }
+        Order.findById(orders[0]._id).then( (order) =>{
+          expect(order).toNotExist();
+          done();
+        }).catch( (e) => done(e));
+      });
+  });
+});
 //End Delete order
 
 //*****************************
