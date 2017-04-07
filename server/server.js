@@ -80,7 +80,7 @@ app.get('/orders/open', (req, res) => {
 app.get('/orders/open/id', (req, res) => {
   var {plant} = req.query;
   if(plant) {
-    Order.find({'completed': false, 'plant': 1}).then( (openOrders) => {
+    Order.find({'completed': false, 'plant': plant}).then( (openOrders) => {
       var result = [];
       openOrders.forEach( (element)=> {
         result.push(element._id);

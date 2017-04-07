@@ -1,23 +1,17 @@
 <!-- This is a container for each line, and the floaters section -->
 <div class="wrapper wrapper-content animated fadeIn">
 
-    <!-- <div layout="row">
-      <div flex="100">
-        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-      </div>
-    </div> -->
-
     <!-- Display each resin line -->
     <resin-line ng-repeat="line in lines" orderids="line" linenumber="$index"></resin-line>
-    <div class="col-md-2">
+    <div layout="column">
       <div layout="row">
         <md-button class="md-raised md-primary" data-toggle="modal" data-target="#addOrderModal">Create Order</md-button><br>
       </div>
       <div layout="row">
-        <md-button class="md-raised md-primary" data-toggle="modal" data-target="#changeOrderModal">Modify Order</md-button><br>
+        <md-button class="md-raised md-primary" data-toggle="modal" data-target="#changeOrderModal" ng-disabled="!$ctrl.orderSelected">Modify Order</md-button><br>
       </div>
       <div layout="row">
-        <md-button class="md-raised md-primary">Record Production</md-button><br>
+        <md-button class="md-raised md-primary" data-toggle="modal" data-target="#recordProductionModal" ng-disabled="!$ctrl.orderSelected">Record Production</md-button><br>
       </div>
       <div layout="row">
         <md-button class="md-raised md-primary" data-toggle="modal" data-target="#saveChangesModal">Save Changes</md-button><br>
@@ -26,7 +20,7 @@
         <md-button class="md-raised md-warn" ng-click="$ctrl.revert();">Revert Changes</md-button>
       </div>
       <div layout="row">
-        <md-button class="md-raised md-warn" data-toggle="modal" data-target="#confirmDeleteModal">Delete Order</md-button>
+        <md-button class="md-raised md-warn" data-toggle="modal" data-target="#confirmDeleteModal" ng-disabled="!$ctrl.orderSelected">Delete Order</md-button>
       </div>
     </div>
 
@@ -35,6 +29,7 @@
     <save-changes plant="$ctrl.plant.id" />
     <confirm-delete plant="$ctrl.plant.id" />
     <change-order />
+    <record-production />
 
     <!-- Serialized output for debugging -->
     <!-- <div class="row">

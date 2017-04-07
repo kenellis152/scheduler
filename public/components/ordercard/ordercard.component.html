@@ -1,12 +1,12 @@
 <!-- <div class="agile-detail" id="{{$ctrl.order._id}}" ng-click="$ctrl.clickProcess()"> -->
-<md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" id="{{$ctrl.order._id}}" ng-click="$ctrl.clickProcess()" md-theme-watch>
-  <div class="wrapper">
-    <div class="row">
+<md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" id="{{$ctrl.order._id}}" ng-click="$ctrl.clickProcess()" md-theme-watch style="margin: 2px;">
+  <div layout="column">
+    <div layout="row">
       <div class="col-md-12 cardcolumn {{$ctrl.speedClass}}">
         <span class="text-center"><h4>{{$ctrl.spec.description}}</h4></span>
       </div>
     </div>
-    <div class="row">
+    <div layout="row">
       <div class="col-md-4 cardcolumn {{$ctrl.boxClass}}">
         Part #
       </div>
@@ -17,7 +17,7 @@
         <span class="pull-right">Quantity:</span>
       </div>
     </div>
-    <div class="row">
+    <div layout="row">
       <div class="col-md-4 cardcolumn">
         <h5>{{$ctrl.order.part}}</h5>
       </div>
@@ -28,7 +28,7 @@
         <span class="text-center"><h5>  {{$ctrl.quantityString}}</h5></span>
       </div>
     </div>
-    <div class="row" ng-if="$ctrl.order.comments">
+    <div layout="row" ng-if="$ctrl.order.comments">
       <div class="col-md-12 cardcolumn ordercardcomment">
         <span><h5> Special: {{$ctrl.order.comments}}</h5></span>
       </div>

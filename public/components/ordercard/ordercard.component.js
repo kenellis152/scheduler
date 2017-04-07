@@ -34,7 +34,7 @@ function orderCardController (SpecService, SelectionService, $scope) {
 
   $ctrl.updateCard = function () {
     if (!$ctrl.order.stock) {
-      $ctrl.order.date = moment($ctrl.order.dueDate).format('MMMM D');
+      $ctrl.order.date = moment($ctrl.order.dueDate).format('MMM D, ddd');
       var daysOut = moment($ctrl.order.dueDate).diff(moment(), 'days');
       if (daysOut < 3) {
         $ctrl.dueSoon = "duesoon";

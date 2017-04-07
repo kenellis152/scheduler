@@ -1,0 +1,43 @@
+<div class="modal inmodal in" id="recordProductionModal" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <h2>Record Production</h2>
+      </div>
+      <div class="modal-body">
+        <form role="form" name="recordProductionForm" novalidate>
+          <div layout="row">
+            <md-card flex>
+              <md-card-content flex>
+                <div layout="row" class="text-center">
+                  <div flex= "33">Part Number: {{$ctrl.params.part}}</div>
+                  <div flex= "33">Ship To: {{$ctrl.params.shipTo}}</div>
+                  <div flex= "33">Due Date: {{$ctrl.dueDate}}</div>
+                </div>
+              </md-card-content>
+            </md-card>
+          </div>
+          <br>
+          <div layout="row">
+            <div flex="35">
+              <md-checkbox ng-model="$ctrl.params.completed" aria-label="Order Complete">Order Complete</md-checkbox>
+            </div>
+            <div class="form-group" flex="">
+              <label for="">Qty Produced:</label>
+              <input type="text" ng-model="$ctrl.params.quantityProduced" required>
+            </div>
+          </div>
+          <div layout="row">
+            <div class="form-group">
+              <label for="" ng-if="$ctrl.params.completed">Date Completed:</label>
+              <md-datepicker ng-model="$ctrl.params.date" md-placeholder="Enter date" md-open-on-focus
+              ng-if="$ctrl.params.completed" required></md-datepicker>
+            </div>
+          </div>
+          <md-button class="md-raised md-primary" ng-disabled="recordProductionForm.$invalid"
+          ng-click="$ctrl.submit()">Submit</md-button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

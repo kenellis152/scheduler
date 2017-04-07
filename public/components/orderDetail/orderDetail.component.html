@@ -14,7 +14,7 @@
         Quantity: {{$ctrl.order.quantity}}
       </div>
       <div class="col-md-3 text-center">
-        Ship Date: {{$ctrl.order.dueDate | date:'MM/dd/yyyy'}}
+        Ship Date: {{$ctrl.order.dueDate | date:'EEE MM/dd/yyyy'}}
       </div>
     </div>
     <div class="row border-bottom">
@@ -28,7 +28,7 @@
         {{$ctrl.spec.palletCount + ' pieces per pallet'}}
       </div>
       <div class="col-md-3 text-center">
-        Created Date: {{$ctrl.order.createDate | date:'MM/dd/yyyy'}}
+        Created Date: {{$ctrl.order.createDate | date:'EEE MM/dd/yyyy'}}
       </div>
     </div>
     <div class="row border-bottom">

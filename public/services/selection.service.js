@@ -25,10 +25,12 @@ function SelectionService($rootScope, SpecService) {
       select(id);
       broadcastOrder(order, spec);
       showOrderDetails();
+      broadcastToggleSelected();
       return service.selection = id;
     }
     if (service.selection === id) {
       deselect(id);
+      broadcastToggleSelected();
       showDash();
       return service.selection = 0;
     }
@@ -54,6 +56,10 @@ function SelectionService($rootScope, SpecService) {
   // broadcasts
   var broadcastOrder = function (order, spec) {
     $rootScope.$broadcast( 'namespace:selectedOrder', {order, spec});
+  }
+
+  var broadcastToggleSelected = function () {
+    $rootScope.$broadcast( 'namespace:toggleSelected');
   }
 
   var showOrderDetails = function () {

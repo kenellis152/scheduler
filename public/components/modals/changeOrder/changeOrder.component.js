@@ -12,7 +12,7 @@ function changeOrderController (OrdersService, PlantService, $scope) {
   var $ctrl = this;
   $ctrl.mindate = new Date();
 
-  $('#changeOrderModal').on('shown.bs.modal', function() {
+  var changeOrderModal = $('#changeOrderModal').on('shown.bs.modal', function() {
     $('[autofocus]').focus();
     $ctrl.params = _.pick($ctrl.order, ['_id', 'part', 'quantity', 'coNumber', 'shipTo', 'plant', 'comments', 'stock', 'cancelled', 'cancelledReason']);
     if(!$ctrl.params.stock) {
@@ -21,7 +21,7 @@ function changeOrderController (OrdersService, PlantService, $scope) {
   });
 
   //get current order details whenever an order is selected
-  $scope.$on('namespace:selectedOrder', function (event, data) {
+  var selectedOrder = $scope.$on('namespace:selectedOrder', function (event, data) {
     $ctrl.order = data.order;
     $ctrl.spec = data.spec;
   });
@@ -40,6 +40,12 @@ function changeOrderController (OrdersService, PlantService, $scope) {
 
   $ctrl.validate = function () {
     console.log('validating');
+  }
+
+  // release watcher
+  $ctrl.$onDestroy = function () {
+    selectedOrder();
+    changeOrderModal();
   }
 
 }

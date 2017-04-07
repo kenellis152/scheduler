@@ -226,6 +226,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
     $rootScope.$broadcast( 'namespace:plantinfo', {plants});
   };
 
+  // listened to by agileboard controller
   var broadcastUpdateBoard = function () {
     $rootScope.$broadcast( 'namespace:updateboard', {});
   };
