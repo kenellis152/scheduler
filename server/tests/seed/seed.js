@@ -2,7 +2,8 @@ const {ObjectID} = require('mongodb');
 const {Order} = require('./../../models/order');
 const {Line} = require('./../../models/line');
 const {Plant} = require('./../../models/plant');
-const {Spec} = require('./../../models/spec')
+const {Spec} = require('./../../models/spec');
+const {User} = require('./../../models/user');
 const jwt = require('jsonwebtoken');
 
 const orderOneId = new ObjectID();
@@ -10,6 +11,9 @@ const orderTwoId = new ObjectID();
 const orderThreeId = new ObjectID();
 const resinOneId = new ObjectID();
 const resinTwoId = new ObjectID();
+const userOneId = new ObjectID();
+const userTwoId = new ObjectID();
+const userThreeId = new ObjectID();
 
 var now = new Date();
 var date1 = new Date(now.getTime()-24*60*60*1000);
@@ -43,7 +47,42 @@ const orders = [{
   dueDate: date3
 }];
 
+const users = [{
+    _id: userOneId,
+    password: "abc123",
+    email: "test1@123.com",
+    tokens: [{
+      access: 'auth',
+      token: jwt.sign({_id: userOneId, access: 'auth'}, process.env.JWT_SECRET).toString()
+    }]
+  },
+  {
+    _id: userTwoId,
+    password: "herpderp",
+    email: "test2@123.com",
+    tokens: [{
+      access: 'auth',
+      token: jwt.sign({_id: userTwoId, access: 'auth'}, process.env.JWT_SECRET).toString()
+    }]
+  },
+  {
+    _id: userThreeId,
+    password: "password",
+    email: "test3@123.com",
+    tokens: [{
+      access: 'auth',
+      token: jwt.sign({_id: userThreeId, access: 'auth'}, process.env.JWT_SECRET).toString()
+    }]
+}];
 
+const populateUsers = (done) => {
+  User.remove({}).then( () => {
+    User.insertMany(users);
+  }).then( () => done() ).catch((e) => {
+    // console.log("error: " + e);
+    done();
+  });
+};
 
 const populateOrders = (done) => {
   Order.remove({}).then( () => {
@@ -193,5 +232,7 @@ module.exports = {
   orders,
   populateOrders,
   resinSpecs,
-  populateSpecs
+  populateSpecs,
+  users,
+  populateUsers
 };

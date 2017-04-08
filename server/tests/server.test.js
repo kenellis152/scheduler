@@ -6,10 +6,12 @@ const {app} = require('./../server');
 const {Order} = require('./../models/order');
 const {Line} = require('./../models/line');
 const {Plant} = require('./../models/plant');
-const {orders, populateOrders, resinSpecs, populateSpecs} = require('./seed/seed');
+const {User} = require('./../models/user');
+const {orders, populateOrders, resinSpecs, populateSpecs, users, populateUsers} = require('./seed/seed');
 
 beforeEach(populateOrders);
 beforeEach(populateSpecs);
+beforeEach(populateUsers);
 
 //*****************************
 //        Orders API
@@ -252,3 +254,66 @@ describe('GET /resinspecs/:pn', (done) => {
 //
 //   });
 // });
+
+//*****************************
+//        Users API
+//*****************************
+
+describe('POST /users/', (done) => {
+  it('should create a new user and return id and email only', (done) => {
+    var user = {email: "test123@abc.com", password: "password"};
+    request(app)
+      .post('/users/')
+      .send(user)
+      .expect(200)
+      .expect( (res) => {
+        expect(res.body.email).toEqual("test123@abc.com");
+        expect(res.body.password).toNotExist();
+        expect(res.body._id).toExist();
+        expect(res.headers['x-auth']).toExist();
+      })
+      .end( (err) => {
+        if (err) {
+          return done(err);
+        }
+        User.findOne({email: user.email}).then( (user) => {
+          expect(user).toExist();
+          expect(user.password).toNotBe(password);
+          done();
+        }).catch( (e) => done());
+      })
+  });
+
+  it('should not create a new user is email address is taken', (done) => {
+    var user = {email: "test1@123.com", password: "password"};
+    request(app)
+      .post('/users/')
+      .send(user)
+      .expect(400)
+      .end(done);
+  });
+});
+
+describe('GET /users/me', (done) => {
+  it('should return user if authenticated', (done) => {
+    request(app)
+      .get('/users/me')
+      .set('x-auth', users[0].tokens[0].token)
+      .expect(200)
+      .expect( (res) => {
+        expect(res.body._id).toBe(users[0]._id.toHexString());
+        expect(res.body.email).toBe(users[0].email);
+      })
+      .end(done);
+  })
+
+  it('should return 401 if not authenticated', (done) => {
+    request(app)
+      .get('/users/me')
+      .expect(401)
+      .expect( (res) => {
+        expect(res.body).toEqual({});
+      })
+      .end(done);
+  });
+})

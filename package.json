@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^1.0.2",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.15.2",
     "cors": "^2.8.1",
     "express": "^4.14.0",
@@ -18,7 +20,8 @@
     "moment": "^2.18.1",
     "mongodb": "^2.2.5",
     "mongoimport": "^1.0.6",
-    "mongoose": "^4.5.9"
+    "mongoose": "^4.5.9",
+    "validator": "^7.0.0"
   },
   "devDependencies": {
     "angular": "^1.6.4",

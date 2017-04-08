@@ -16,8 +16,10 @@ var {Order} = require('./models/order');
 var {Spec} = require('./models/spec');
 var {Plant} = require('./models/plant');
 var {Line} = require('./models/line');
+var {User} = require('./models/user');
 var cors = require('cors');
 var moment = require('moment');
+var {authenticate} = require('./middleware/authenticate');
 
 //*****************************
 //   Set up the server app
@@ -58,8 +60,6 @@ app.post('/orders', (req, res) => {
 // tests: done
 app.get('/orders/open', (req, res) => {
   var {plant} = req.query;
-  // console.log(req);
-  // console.log(plant);
   if (plant) {
     Order.find({'completed': false, 'plant': plant}).then( (openOrders) => {
       res.send(openOrders);
@@ -336,6 +336,30 @@ app.patch('/lines/:id', (req, res) => {
   });
 });
 // End Get lines by plant id
+
+//*****************************
+//       User API
+//*****************************
+// POST /users
+// test: done
+app.post('/users/', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+  var user = new User(body);
+
+  user.save().then( () => {
+    return user.generateAuthToken();
+  }).then( (token) => {
+    res.header('x-auth', token).send(user);
+  }).catch( (e) => {
+    res.status(400).send(e);
+  })
+});
+
+// Get user corresponding to token passed in via header
+// test: NOT DONE
+app.get('/users/me', authenticate, (req, res) => {
+  res.send(req.user);
+});
 
 //*****************************
 //   Frontend public path
