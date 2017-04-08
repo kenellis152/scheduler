@@ -19,6 +19,8 @@ function MainCtrl() {
 function PublicController() {
   var $ctrl = this;
   this.test = "hello123";
+  $ctrl.dashHeight = 288;
+  $ctrl.bottomMargin = 10;
 }
 
 
