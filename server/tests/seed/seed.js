@@ -77,10 +77,13 @@ const users = [{
 
 const populateUsers = (done) => {
   User.remove({}).then( () => {
-    User.insertMany(users);
-  }).then( () => done() ).catch((e) => {
-    // console.log("error: " + e);
-    done();
+    var userOne = new User(users[0]).save();
+    var userTwo = new User(users[1]).save();
+    var userThree = new User(users[2]).save();
+
+    return Promise.all([userOne, userTwo, userThree]).then( () => {
+
+    }).then( () => done() );
   });
 };
 

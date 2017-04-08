@@ -22,6 +22,12 @@ var moment = require('moment');
 var {authenticate} = require('./middleware/authenticate');
 
 //*****************************
+//   TO DO
+//*****************************
+// Delete expired tokens on user login
+// Tests for Plant and Line API's
+
+//*****************************
 //   Set up the server app
 //*****************************
 var app = express();
@@ -341,7 +347,7 @@ app.patch('/lines/:id', (req, res) => {
 //       User API
 //*****************************
 // POST /users
-// test: done
+// tests: done
 app.post('/users/', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
   var user = new User(body);
@@ -356,9 +362,34 @@ app.post('/users/', (req, res) => {
 });
 
 // Get user corresponding to token passed in via header
-// test: NOT DONE
+// tests: done
 app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
+});
+
+// User login request. Return user info and x-auth token if successful. Return 400 status if not successful
+// test: done
+app.post('/users/login', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+  User.findByCredentials(body.email, body.password).then( (user) => {
+    user.generateAuthToken().then( (token) => {
+      res.header('x-auth', token).send(user);
+    });
+  }).catch( (e) => {
+    console.log(e);
+    res.status(400).send();
+  });
+});
+
+// delete a token
+// note that the authenticate middleware is attaching the user and token properties to the request, corresponding to the User document and authentication token
+// tests: NOT DONE
+app.delete('/users/me/token', authenticate, (req, res) => {
+  req.user.removeToken(req.token).then( () => {
+    res.status(200).send();
+  }, () => {
+    res.status(400).send();
+  });
 });
 
 //*****************************
