@@ -15,12 +15,14 @@ function MainCtrl() {
 };
 
 
-
-function PublicController() {
+PublicController.$inject=['SessionService']
+function PublicController(SessionService) {
   var $ctrl = this;
   this.test = "hello123";
   $ctrl.dashHeight = 288;
   $ctrl.bottomMargin = 10;
+
+  $ctrl.user = SessionService.getUser();
 }
 
 

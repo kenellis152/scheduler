@@ -11,43 +11,25 @@ angular.module('scheduler')
   controller: loginController
 });
 
-loginController.$inject = ['SpecService']
-function loginController (SpecService) {
+loginController.$inject = ['SessionService', '$http', 'ApiPath']
+function loginController (SessionService, $http, ApiPath) {
   var $ctrl = this;
-  $ctrl.mindate = new Date();
+  $ctrl.email = "";
+  $ctrl.password = "";
 
   $('#loginModal').on('shown.bs.modal', function() {
     $('[autofocus]').focus();
   });
 
   $ctrl.submit = function() {
-    var order = {
-      part: $ctrl.part,
-      date: $ctrl.date,
-      coNumber: $ctrl.coNumber,
-      quantity: $ctrl.quantity,
-      shipTo: $ctrl.shipTo,
-      comments: $ctrl.comments,
-      plant: $ctrl.plant,
-      stock: $ctrl.stock,
-      createDate: new Date()
-    }
-    console.log(order);
-    $ctrl.add({order});
-    $ctrl.part = "";
-    $ctrl.date = "";
-    $ctrl.coNumber = "";
-    $ctrl.quantity = "";
-    $ctrl.shipTo = "";
-    $ctrl.comments = "";
-    $ctrl.shipTo = "";
-    $('#addOrderModal').modal('toggle');
+    var user = {email: $ctrl.email, password: $ctrl.password};
+    SessionService.login(user).then( function (response) {
+      $('#loginModal').modal('toggle');
+    }).catch ( function (e) {
+
+    });
+
   } // End Submit
-
-  $ctrl.validate = function () {
-    console.log('validating');
-  }
-
 }
 
 })();

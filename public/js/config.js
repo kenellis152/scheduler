@@ -6,7 +6,6 @@
  * Initial there are written state for all view in theme.
  *
  */
- 
 function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $httpProvider) {
     $urlRouterProvider.otherwise("/index/main");
 
