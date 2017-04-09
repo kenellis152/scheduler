@@ -270,7 +270,7 @@ describe('POST /users/', (done) => {
         expect(res.body.email).toEqual("test123@abc.com");
         expect(res.body.password).toNotExist();
         expect(res.body._id).toExist();
-        expect(res.headers['x-auth']).toExist();
+        expect(res.headers['x-schedulerauth']).toExist();
       })
       .end( (err) => {
         if (err) {
@@ -297,7 +297,7 @@ describe('GET /users/me', (done) => {
   it('should return user if authenticated', (done) => {
     request(app)
       .get('/users/me')
-      .set('x-auth', users[0].tokens[0].token)
+      .set('x-schedulerauth', users[0].tokens[0].token)
       .expect(200)
       .expect( (res) => {
         expect(res.body._id).toBe(users[0]._id.toHexString());
@@ -323,14 +323,14 @@ describe('POST users/login', (done) => {
       .send({email: users[0].email, password: users[0].password})
       .expect(200)
       .expect( (res) => {
-        expect(res.header['x-auth']).toExist();
+        expect(res.header['x-schedulerauth']).toExist();
         expect(res.body.email).toBe(users[0].email);
       })
       .end( (err, res) => {
         User.findById(users[0]._id).then( (user) => {
           expect(user.tokens[1]).toInclude({
             access: 'auth',
-            token: res.headers['x-auth']
+            token: res.headers['x-schedulerauth']
           });
           done();
         }).catch( (e) => done(e));
@@ -342,7 +342,7 @@ describe('POST users/login', (done) => {
       .send({email: users[0].email, password: 'herpderp'})
       .expect(400)
       .expect( (res) => {
-        expect(res.headers['x-auth']).toNotExist();
+        expect(res.headers['x-schedulerauth']).toNotExist();
       })
       .end( (err, res) => {
         if (err) {
@@ -360,7 +360,7 @@ describe('DELETE /users/me/token', () => {
   it('should remove auth token on logout', (done) => {
     request(app)
       .delete('/users/me/token')
-      .set('x-auth', users[0].tokens[0].token)
+      .set('x-schedulerauth', users[0].tokens[0].token)
       .expect(200)
       .end( (err, res) => {
         if (err) {

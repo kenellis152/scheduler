@@ -33,6 +33,9 @@
 <!-- Main view  -->
 <div ui-view></div>
 
+<!-- Login Modal -->
+<login />
+
 <!-- jQuery and Bootstrap -->
 <script src="js/jquery/jquery-3.1.1.min.js"></script>
 <script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -89,6 +92,7 @@
 <script src="components/modals/saveChanges/saveChanges.component.js"></script>
 <script src="components/modals/confirmDelete/confirmDelete.component.js"></script>
 <script src="components/modals/recordProduction/recordProduction.component.js"></script>
+<script src="components/modals/login/login.component.js"></script>
 <script src="components/modals/changeOrder/changeOrder.component.js"></script>
 <script src="components/orderDetail/orderDetail.component.js"></script>
 <script src="components/resinDashboard/resinDash.component.js"></script>
@@ -102,6 +106,8 @@
 <script src="services/spec.service.js"></script>
 <script src="services/line.service.js"></script>
 <script src="services/selection.service.js"></script>
+<script src="services/session.service.js"></script>
+<script src="factories/httpinterceptor.factory.js"></script>
 
 </body>
 </html>

@@ -6,13 +6,16 @@
  * Initial there are written state for all view in theme.
  *
  */
-function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {
+ 
+function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $httpProvider) {
     $urlRouterProvider.otherwise("/index/main");
 
     $ocLazyLoadProvider.config({
         // Set to true if you want to see what and when is dynamically loaded
         debug: false
     });
+
+    $httpProvider.interceptors.push('HttpInterceptor');
 
     $stateProvider
 

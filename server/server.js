@@ -264,6 +264,7 @@ app.post('/plants', (req, res) => {
 // tests: NOT DONE
 app.get('/plants/:id', (req, res) => {
   var {id} = req.params;
+  // console.log(req.header('x-schedulerauth'));
   Plant.findOne({id: id}).then( (plant) => {
     if (!plant) {
       res.status(404).send();
@@ -355,7 +356,7 @@ app.post('/users/', (req, res) => {
   user.save().then( () => {
     return user.generateAuthToken();
   }).then( (token) => {
-    res.header('x-auth', token).send(user);
+    res.header('x-schedulerauth', token).send(user);
   }).catch( (e) => {
     res.status(400).send(e);
   })
@@ -367,13 +368,13 @@ app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
 });
 
-// User login request. Return user info and x-auth token if successful. Return 400 status if not successful
+// User login request. Return user info and x-schedulerauth token if successful. Return 400 status if not successful
 // test: done
 app.post('/users/login', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
   User.findByCredentials(body.email, body.password).then( (user) => {
     user.generateAuthToken().then( (token) => {
-      res.header('x-auth', token).send(user);
+      res.header('x-schedulerauth', token).send(user);
     });
   }).catch( (e) => {
     res.status(400).send();

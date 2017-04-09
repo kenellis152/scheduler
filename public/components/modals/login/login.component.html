@@ -1,0 +1,30 @@
+<div class="modal inmodal in" id="loginModal" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <h2>Login</h2>
+      </div>
+      <div class="modal-body">
+        <form role="form" name="loginForm" novalidate>
+          <div layout="row">
+            <div flex="50">
+              <md-input-container class="md-block">
+                <label>Email</label>
+                <input type="text" ng-model="$ctrl.email" required min-length="6"
+                autofocus id="partnumberinput" ng-blur="$ctrl.validate();">
+              </md-input-container>
+            </div>
+            <div flex="50">
+              <md-input-container class="md-block">
+                <label>Password</label>
+                <input type="password" ng-model="$ctrl.password" required>
+              </md-input-container>
+            </div>
+          </div>
+          <md-button class="md-raised md-primary" ng-disabled="loginForm.$invalid"
+          ng-click="$ctrl.submit()">Submit</md-button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
