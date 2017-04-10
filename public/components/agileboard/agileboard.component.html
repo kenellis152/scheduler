@@ -3,7 +3,7 @@
 
     <!-- Display each resin line -->
     <resin-line ng-repeat="line in lines" orderids="line" linenumber="$index"></resin-line>
-    <div layout="column">
+    <div layout="column" ng-hide="!$ctrl.loginStatus">
       <div layout="row">
         <md-button class="md-raised md-primary" data-toggle="modal" data-target="#addOrderModal">Create Order</md-button><br>
       </div>

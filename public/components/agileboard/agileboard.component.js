@@ -21,6 +21,7 @@ angular.module('scheduler')
       $ctrl.linenames = []; // convoluted, but for some reason if i referenced $ctrl.order.lines[$index].name
                             // on the controller, the line name would show on initial load, but not after changing pages
       $ctrl.orderSelected = false;
+      $ctrl.loginStatus = false;
 
       $ctrl.updateBoard = function () {
         PlantService.getPlant($ctrl.plantid).then( function (result) {
@@ -44,10 +45,15 @@ angular.module('scheduler')
       var toggleSelected = $scope.$on('namespace:toggleSelected', function () {
         $ctrl.orderSelected = !$ctrl.orderSelected;
       });
+      var loginStatus = $scope.$on('namespace:loginStatus', function (event, data) {
+        $ctrl.loginStatus = data.status;
+        console.log('login', data);
+      });
 
       $ctrl.$onDestroy = function () {
         updateBoard();
         toggleSelected();
+        loginStatus();
       }
 
 

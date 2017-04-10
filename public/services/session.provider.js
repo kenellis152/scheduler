@@ -14,7 +14,7 @@ function SessionProvider() {
 
   var provider = this;
 
-  provider.$get = function($window, $http, ApiPath, $mdToast) {
+  provider.$get = function($window, $http, ApiPath, $mdToast, $rootScope) {
     var service = {};
     // var $window = $windowProvider.$get();
     // initialization
@@ -31,6 +31,7 @@ function SessionProvider() {
         console.log('successfully logged in', response, response.data.email);
         service.setEmail(response.data.email);
         showToast(`Logged in as ${response.data.email}`);
+        broadcastStatus(true);
         return response.data;
       }).catch( function(e) {
         failToast(`Login failed`);
@@ -44,12 +45,14 @@ function SessionProvider() {
       service.user.token = '';
       console.log('logged out');
       showToast('Logged out!');
+      broadcastStatus(false);
     }
 
     service.checkToken = function () {
       if (service.user.token) {
         $http.get(ApiPath + '/users/me').then( function (response) {
           service.user = response.data;
+          broadcastStatus(true);
         }, function (e) {
           service.user.email = "guest";
         });
@@ -93,6 +96,10 @@ function SessionProvider() {
           .textContent(text)
           .hideDelay(2000)
       );
+    }
+
+    var broadcastStatus = function (status) {
+      $rootScope.$broadcast('namespace:loginStatus', {status});
     }
 
     return service;
