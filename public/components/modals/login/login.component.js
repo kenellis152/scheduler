@@ -11,7 +11,7 @@ angular.module('scheduler')
   controller: loginController
 });
 
-loginController.$inject = ['SessionService', '$http', 'ApiPath']
+loginController.$inject = ['Session', '$http', 'ApiPath']
 function loginController (SessionService, $http, ApiPath) {
   var $ctrl = this;
   $ctrl.email = "";

@@ -6,13 +6,15 @@
  * Initial there are written state for all view in theme.
  *
  */
-function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $httpProvider) {
+ config.$inject = ['$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', '$httpProvider', 'SessionProvider'];
+function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $httpProvider, SessionProvider) {
     $urlRouterProvider.otherwise("/index/main");
 
     $ocLazyLoadProvider.config({
         // Set to true if you want to see what and when is dynamically loaded
         debug: false
     });
+
 
     $httpProvider.interceptors.push('HttpInterceptor');
 
@@ -73,6 +75,7 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $httpPr
 angular
     .module('scheduler')
     .config(config)
-    .run(function($rootScope, $state) {
+    .run(function($rootScope, $state, Session) {
         $rootScope.$state = $state;
+        Session.checkToken();
     });

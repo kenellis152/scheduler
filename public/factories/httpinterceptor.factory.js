@@ -14,9 +14,9 @@ function HttpInterceptor($injector) {
 
   return {
     request: function (config) {
-      var SessionService = $injector.get('SessionService')
+      var Session = $injector.get('Session');
       config.headers = config.headers || {};
-      var user = SessionService.getUser();
+      var user = Session.getUser();
       config.headers['x-schedulerauth'] = user.token || null;
       return config;
     }
