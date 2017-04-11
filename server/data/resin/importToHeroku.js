@@ -5,11 +5,11 @@ var {Spec} = require('./../../models/spec');
 var mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
-mongoose.connect('http://glacial-everglades-27245.herokuapp.com');
+mongoose.connect('mongodb://heroku_l3p3wsld:v6l6nnhsv5sqpak01o9fja97ma@ds035856.mlab.com:35856/heroku_l3p3wsld');
 
 Spec.insertMany(resindata).then( (result) => {
   if(!result) {
-    console.log("failure1");
+    console.log("failure");
   }
   console.log('success');
 }).catch( (e) => {

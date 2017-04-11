@@ -201,19 +201,21 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // replaces the array of order ids with the array of orders
   var initLines = function (plant) {
     var scheduled = [];
-    plant.lines.forEach( function (line) {
+    plant.lines.forEach( function (line, index) {
       var orders = []; //stores actual orders
       // make a list of all the orders already scheduled
       // note that 'orders' at this point are still ids, not order objects
+      
       line.orders.forEach(function (order) {
-        var thisOrder = findOrder(order, plant.openOrders);
-        if (thisOrder !== -1) {
-          scheduled.push(order);
-          orders.push(thisOrder);
-        }
+          var thisOrder = findOrder(order, plant.openOrders);
+          if (thisOrder !== -1) {
+            scheduled.push(order);
+            orders.push(thisOrder);
+          }
       });
       //replace each array of order ids with an array of the actual orders
       line.orders = orders;
+      
     });
     // Create a line with unscheduled orders and push it on to line arrays
     var floaters = getFloaters(scheduled, plant.openOrders);

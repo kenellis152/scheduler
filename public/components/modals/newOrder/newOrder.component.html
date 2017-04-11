@@ -6,6 +6,11 @@
       </div>
       <div class="modal-body">
         <form role="form" name="newOrderForm" novalidate>
+          <div layout="row" ng-if="$ctrl.showPart">
+            <div flex="70" class=""><h3>Item: {{$ctrl.desc}}</h3></div>
+            <div flex="30" class="" ng-if="$ctrl.quantity && $ctrl.desc !== 'PART NOT FOUND'"><h3>Pallets: {{$ctrl.quantity / $ctrl.spec.palletCount}}</h3></div>
+          </div>
+          <br>
           <div layout="row">
             <div flex="50">
               <md-input-container class="md-block">
@@ -59,7 +64,7 @@
               </md-input-container>
             </div>
           </div>
-          <md-button class="md-raised md-primary" ng-disabled="newOrderForm.$invalid"
+          <md-button class="md-raised md-primary" ng-disabled="newOrderForm.$invalid || $ctrl.desc === 'PART NOT FOUND'"
           ng-click="$ctrl.submit()">Create</md-button>
         </form>
       </div>

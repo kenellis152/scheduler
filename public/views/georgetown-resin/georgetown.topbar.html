@@ -16,11 +16,9 @@
         </li>
     </ol>
 </div>
-<div class="col-lg-2">
+<div class="nav navbar-top-links navbar-right">
   Logged in as <strong>{{pubCtrl.user.email}}</strong>
   <md-button class="md-raised md-primary" data-toggle="modal" data-target="#loginModal" ng-if="pubCtrl.user.email==='guest'">Login</md-button>
   <md-button class="md-raised md-warn" ng-if="pubCtrl.user.email!=='guest'" ng-click="pubCtrl.logout();">Logout</md-button>
-</div>
-<div class="nav navbar-top-links navbar-right">
   <img src="img/minovalogo.png" style="width:200px;height:49px; margin-right: 200px;">
 </div>

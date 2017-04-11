@@ -3,6 +3,8 @@
 
     <!-- Display each resin line -->
     <resin-line ng-repeat="line in lines" orderids="line" linenumber="$index"></resin-line>
+
+    <!-- Buttons for order CRUD -->
     <div layout="column" ng-hide="!$ctrl.loginStatus">
       <div layout="row">
         <md-button class="md-raised md-primary" data-toggle="modal" data-target="#addOrderModal">Create Order</md-button><br>
@@ -30,16 +32,5 @@
     <confirm-delete plant="$ctrl.plant.id" />
     <change-order />
     <record-production />
-
-    <!-- Serialized output for debugging -->
-    <!-- <div class="row">
-        <div class="col-lg-12">
-            <h4>Serialised Output</h4>
-            <div class="output p-m m white-bg" ng-repeat="line in lines">
-                <h4>Line {{$index + 1}}</h4>
-                {{line}}
-            </div>
-        </div>
-    </div> -->
 
 </div>

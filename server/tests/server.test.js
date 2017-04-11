@@ -7,7 +7,7 @@ const {Order} = require('./../models/order');
 const {Line} = require('./../models/line');
 const {Plant} = require('./../models/plant');
 const {User} = require('./../models/user');
-const {orders, populateOrders, resinSpecs, populateSpecs, users, populateUsers} = require('./seed/seed');
+const {orders, populateOrders, resinSpecs, populateSpecs, users, populateUsers} = require('./seed/test-seed');
 
 beforeEach(populateOrders);
 beforeEach(populateSpecs);

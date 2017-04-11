@@ -20,7 +20,6 @@ function SessionProvider() {
     // initialization
     service.user = {email: 'guest'};
     service.user.token = $window.localStorage['x-schedulerauth'];
-    console.log(`token on init is ${service.user.token}`)
 
    // service.user = {email: "guest", token: $window.localStorage['x-schedulerauth']};
 

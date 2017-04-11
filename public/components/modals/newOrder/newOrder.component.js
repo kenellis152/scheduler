@@ -13,11 +13,13 @@ angular.module('scheduler')
 
 newOrderController.$inject = ['SpecService']
 function newOrderController (SpecService) {
+
   var $ctrl = this;
   $ctrl.mindate = new Date();
 
   $('#addOrderModal').on('shown.bs.modal', function() {
     $('[autofocus]').focus();
+    $ctrl.showPart = false;
   });
 
   $ctrl.submit = function() {
@@ -45,9 +47,24 @@ function newOrderController (SpecService) {
   } // End Submit
 
   $ctrl.validate = function () {
-    console.log('validating');
+    if ( $ctrl.part === null ) {
+      $ctrl.showPart = false;
+    } else {
+      SpecService.getSpecByPart($ctrl.part).then( function (response) {
+      console.log(response);
+      if (response.spec) {
+        $ctrl.spec = response.spec;
+        $ctrl.desc = $ctrl.spec.description;
+      } else {
+        $ctrl.desc = "PART NOT FOUND";
+      }
+      $ctrl.showPart = true;
+    }).catch( function (e) {
+      $ctrl.desc = "PART NOT FOUND";
+      $ctrl.showPart = true;
+    });
   }
-
+    }
 }
 
 })();
