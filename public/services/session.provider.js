@@ -55,7 +55,17 @@ function SessionProvider() {
           broadcastStatus(true);
         }, function (e) {
           service.user.email = "guest";
+          broadcastStatus(true);
         });
+      }
+    }
+
+    // return true if logged in, false if not
+    service.getLoginStatus = function () {
+      if (service.user.email === "guest") {
+        return false;
+      } else {
+        return true;
       }
     }
 

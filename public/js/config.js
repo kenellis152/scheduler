@@ -40,10 +40,10 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $httpPr
               }
             }
         })
-        .state('index.georgetown', {
-            url: "/georgetown",
+        .state('index.georgetown-resin', {
+            url: "/georgetown-resin",
             // templateUrl: "views/minor.html",
-            data: { pageTitle: 'Example view' },
+            data: { pageTitle: 'Georgetown Resin Schedule' },
             resolve: {
                 loadPlugin: function ($ocLazyLoad) {
                     return $ocLazyLoad.load([
@@ -61,13 +61,44 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $httpPr
             },
             views: {
               'topnav': {
-                templateUrl: 'views/georgetown/georgetown.topbar.html'
+                templateUrl: 'views/georgetown-resin/georgetown.topbar.html'
               },
               'dashboard': {
-                templateUrl: 'views/georgetown/georgetown.dashboard.html'
+                templateUrl: 'views/georgetown-resin/georgetown.dashboard.html'
               },
               'mainview': {
-                templateUrl: 'views/georgetown/georgetown.mainview.html',
+                templateUrl: 'views/georgetown-resin/georgetown.mainview.html',
+              }
+            }
+        })
+        .state('index.bluefield-resin', {
+            url: "/bluefield-resin",
+            // templateUrl: "views/minor.html",
+            data: { pageTitle: 'Bluefield Resin Schedule' },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'ui.sortable',
+                            files: ['js/plugins/ui-sortable/sortable.js']
+                        },
+                        {
+                            serie: true,
+                            name: 'angular-flot',
+                            files: [ 'js/plugins/flot/jquery.flot.js', 'js/plugins/flot/jquery.flot.time.js', 'js/plugins/flot/jquery.flot.tooltip.min.js', 'js/plugins/flot/jquery.flot.spline.js', 'js/plugins/flot/jquery.flot.resize.js', 'js/plugins/flot/jquery.flot.pie.js', 'js/plugins/flot/curvedLines.js', 'js/plugins/flot/angular-flot.js', ]
+                        }
+                    ]);
+                }
+            },
+            views: {
+              'topnav': {
+                templateUrl: 'views/bluefield-resin/bluefield.topbar.html'
+              },
+              'dashboard': {
+                templateUrl: 'views/bluefield-resin/bluefield.dashboard.html'
+              },
+              'mainview': {
+                templateUrl: 'views/bluefield-resin/bluefield.mainview.html',
               }
             }
         })
