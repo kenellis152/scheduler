@@ -43,17 +43,7 @@ app.use(cors());
 // Save new order
 // tests: done
 app.post('/orders', (req, res) => {
-  var order = new Order({
-    part: req.body.part,
-    quantity: req.body.quantity,
-    dueDate: req.body.date,
-    coNumber: req.body.coNumber,
-    plant: req.body.plant,
-    shipTo: req.body.shipTo,
-    comments: req.body.comments,
-    createDate: req.body.createDate,
-    stock: req.body.stock
-  });
+  var order = new Order(req.body);
   order.save().then( (doc) => {
     res.send(doc);
   }, (err) => {
