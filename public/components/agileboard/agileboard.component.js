@@ -13,19 +13,21 @@ angular.module('scheduler')
 /**
  * agileBoard - Controller for agile Board view
  */
-  agileBoard.$inject = ['$scope', 'PlantService', 'OrdersService', 'SelectionService', 'Session', '$timeout'];
-  function agileBoard($scope, PlantService, OrdersService, SelectionService, Session, $timeout) {
+  agileBoard.$inject = ['$scope', 'PlantService', 'OrdersService', 'SelectionService', 'Session'];
+  function agileBoard($scope, PlantService, OrdersService, SelectionService, Session) {
       var $ctrl = this;
       $scope.lines = []; // for .connectWith to connect the separate ui-sortable lists
       $ctrl.changes = {}; // stores local changes to be saved if user decides to save
       $ctrl.linenames = []; // convoluted, but for some reason if i referenced $ctrl.order.lines[$index].name
                             // on the controller, the line name would show on initial load, but not after changing pages
-      $ctrl.orderSelected = false;
+
       $ctrl.loginStatus = Session.getLoginStatus();
       $ctrl.loading = false;
 
       $ctrl.updateBoard = function () {
         $ctrl.loading = true;
+        $ctrl.orderSelected = false;
+        SelectionService.clearSelected();
         PlantService.getPlant($ctrl.plantid).then( function (result) {
           $scope.lines = []; $ctrl.changes = {}; $ctrl.linenames = [];
           $ctrl.plant = result;

@@ -40,6 +40,10 @@ function SelectionService($rootScope, SpecService) {
     broadcastOrder(order, spec);
   } // End clickProcess()
 
+  service.clearSelected = function () {
+    service.selection = 0;
+  }
+
   // returns the order id of whichever card is selected
   service.getSelected = function () {
     return service.selection;
