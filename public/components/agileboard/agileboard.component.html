@@ -1,36 +1,40 @@
 <!-- This is a container for each line, and the floaters section -->
 <div class="wrapper wrapper-content animated fadeIn">
 
+    <agile-spinner ng-show="$ctrl.loading"></agile-spinner>
     <!-- Display each resin line -->
-    <resin-line ng-repeat="line in lines" orderids="line" linenumber="$index"></resin-line>
+    <div ng-show="!$ctrl.loading">
+      <resin-line ng-repeat="line in lines" orderids="line" linenumber="$index"></resin-line>
 
-    <!-- Buttons for order CRUD -->
-    <div layout="column" ng-hide="!$ctrl.loginStatus">
-      <div layout="row">
-        <md-button class="md-raised md-primary" data-toggle="modal" data-target="#addOrderModal">Create Order</md-button><br>
+      <!-- Buttons for order CRUD -->
+      <div layout="column" ng-hide="!$ctrl.loginStatus">
+        <div layout="row">
+          <md-button class="md-raised md-primary" data-toggle="modal" data-target="#addOrderModal">Create Order</md-button><br>
+        </div>
+        <div layout="row">
+          <md-button class="md-raised md-primary" data-toggle="modal" data-target="#changeOrderModal" ng-disabled="!$ctrl.orderSelected">Modify Order</md-button><br>
+        </div>
+        <div layout="row">
+          <md-button class="md-raised md-primary" data-toggle="modal" data-target="#recordProductionModal" ng-disabled="!$ctrl.orderSelected">Record Production</md-button><br>
+        </div>
+        <div layout="row">
+          <md-button class="md-raised md-primary" data-toggle="modal" data-target="#saveChangesModal">Save Changes</md-button><br>
+        </div>
+        <div layout="row">
+          <md-button class="md-raised md-warn" ng-click="$ctrl.revert();">Revert Changes</md-button>
+        </div>
+        <div layout="row">
+          <md-button class="md-raised md-warn" data-toggle="modal" data-target="#confirmDeleteModal" ng-disabled="!$ctrl.orderSelected">Delete Order</md-button>
+        </div>
       </div>
-      <div layout="row">
-        <md-button class="md-raised md-primary" data-toggle="modal" data-target="#changeOrderModal" ng-disabled="!$ctrl.orderSelected">Modify Order</md-button><br>
-      </div>
-      <div layout="row">
-        <md-button class="md-raised md-primary" data-toggle="modal" data-target="#recordProductionModal" ng-disabled="!$ctrl.orderSelected">Record Production</md-button><br>
-      </div>
-      <div layout="row">
-        <md-button class="md-raised md-primary" data-toggle="modal" data-target="#saveChangesModal">Save Changes</md-button><br>
-      </div>
-      <div layout="row">
-        <md-button class="md-raised md-warn" ng-click="$ctrl.revert();">Revert Changes</md-button>
-      </div>
-      <div layout="row">
-        <md-button class="md-raised md-warn" data-toggle="modal" data-target="#confirmDeleteModal" ng-disabled="!$ctrl.orderSelected">Delete Order</md-button>
-      </div>
+
+      <!-- Modals -->
+      <new-order add="$ctrl.addOrder(order)" plant="$ctrl.plant.id" />
+      <save-changes plant="$ctrl.plant.id" />
+      <confirm-delete plant="$ctrl.plant.id" />
+      <change-order />
+      <record-production />
     </div>
 
-    <!-- Modals -->
-    <new-order add="$ctrl.addOrder(order)" plant="$ctrl.plant.id" />
-    <save-changes plant="$ctrl.plant.id" />
-    <confirm-delete plant="$ctrl.plant.id" />
-    <change-order />
-    <record-production />
 
 </div>
