@@ -25,7 +25,7 @@ function newOrderController (SpecService) {
   $ctrl.submit = function() {
     var order = {
       part: $ctrl.part,
-      date: $ctrl.date,
+      dueDate: $ctrl.date,
       coNumber: $ctrl.coNumber,
       quantity: $ctrl.quantity,
       shipTo: $ctrl.shipTo,

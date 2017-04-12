@@ -3,3 +3,5 @@ server/config/config.json
 old_backup/
 jasmine/
 playground.js
+server/data/resin/packagingChart.json
+server/data/resin/Resin Data*.xlsx
