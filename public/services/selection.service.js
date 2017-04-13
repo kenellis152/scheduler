@@ -59,7 +59,7 @@ function SelectionService($rootScope, SpecService) {
 
   // broadcasts
   var broadcastOrder = function (order, spec) {
-    $rootScope.$broadcast( 'namespace:selectedOrder', {order, spec});
+    $rootScope.$broadcast( 'namespace:selectedOrder', {order: order, spec: spec});
   }
 
   var broadcastToggleSelected = function () {

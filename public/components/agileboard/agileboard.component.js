@@ -31,7 +31,7 @@ angular.module('scheduler')
         PlantService.getPlant($ctrl.plantid).then( function (result) {
           $scope.lines = []; $ctrl.changes = {}; $ctrl.linenames = [];
           $ctrl.plant = result;
-          $ctrl.plant.lines.forEach( (element) => {
+          $ctrl.plant.lines.forEach( function (element) {
             $scope.lines.push(element.orders);
             $ctrl.linenames.push(element.name);
           });
@@ -66,10 +66,10 @@ angular.module('scheduler')
       // Takes an order object and adds it to the database
       // Called by the "newOrder" component when the button is clicked
       $ctrl.addOrder = function (neworder) {
-        OrdersService.addOrder(neworder).then( (result) => {
+        OrdersService.addOrder(neworder).then( function (result) {
             console.log("add order result", result);
             PlantService.addOrder(result);
-        }).catch((e) => {
+        }).catch( function (e) {
           console.log(e);
         });
       }

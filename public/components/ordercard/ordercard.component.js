@@ -23,11 +23,16 @@ function orderCardController (SpecService, SelectionService, $scope) {
       $ctrl.updateCard();
   }); // End $onInit()
 
+  $ctrl.$onDestroy = function () {
+    idwatcher();
+  }
+
   $ctrl.clickProcess = function () {
     SelectionService.clickProcess($ctrl.order._id, $ctrl.order, $ctrl.spec)
   };// End clickProcess()
 
-  $scope.$on(`namespace:order:${$ctrl.order._id}`, function() {
+  var watchername = 'namespace:order:' + $ctrl.order._id;
+  var idwatcher = $scope.$on(watchername, function() {
     $ctrl.spec = $ctrl.order.spec;
     $ctrl.updateCard();
   });

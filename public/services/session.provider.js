@@ -24,16 +24,16 @@ function SessionProvider() {
    // service.user = {email: "guest", token: $window.localStorage['x-schedulerauth']};
 
     service.login = function (user) {
-      console.log(`trying to log in as user ${user.email}`);
-      return $http.post(ApiPath + `/users/login`, user).then( function (response) {
+      console.log("trying to log in as user " + user.email);
+      return $http.post(ApiPath + '/users/login', user).then( function (response) {
         service.saveToken(response.headers('x-schedulerauth'));
         console.log('successfully logged in', response, response.data.email);
         service.setEmail(response.data.email);
-        showToast(`Logged in as ${response.data.email}`);
+        showToast('Logged in as ' + response.data.email);
         broadcastStatus(true);
         return response.data;
       }).catch( function(e) {
-        failToast(`Login failed`);
+        failToast('Login failed');
         console.log('failed to log in', e);
       });
     };
@@ -108,7 +108,7 @@ function SessionProvider() {
     }
 
     var broadcastStatus = function (status) {
-      $rootScope.$broadcast('namespace:loginStatus', {status});
+      $rootScope.$broadcast('namespace:loginStatus', {status: status});
     }
 
     return service;

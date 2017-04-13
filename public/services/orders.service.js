@@ -4,11 +4,31 @@
 angular.module('scheduler')
 .service('OrdersService', OrdersService);
 
+//*****************************
+//       Orders Service
+//*****************************
+// Interface with the Order API
+// Locally store/fetch orders once retrieved from the API
+// tests: NOT DONE
+  //*****************************
+  //       To Do
+  //*****************************
+  // Implement Unit tests
+  // Implement daysOut
+  // Implement validateOrder
+
 OrdersService.$inject = ['$http', 'ApiPath', 'SpecService', '$q'];
 function OrdersService($http, ApiPath, SpecService, $q) {
   var service = this;
   service.orders = [];
 
+  //*****************************
+  //    getOpenOrders(plantid)
+  //*****************************
+  // @param plantid - the id number of the plant to fetch open orders for
+  // returns an array of order objects - all orders that are 'open' (not
+  // yet completed or cancelled) for the given plant id
+  // tests: NOT DONE
   service.getOpenOrders = function (plantid) {
     config = {
       params: {
@@ -20,7 +40,13 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     });
   };
 
-  // Attaches array of open orders to plant object
+  //*****************************
+  //addOpenOrdersToPlant(plantid)
+  //*****************************
+  // @param plantid - the id number of the plant to fetch open orders for
+  // Attaches array of open orders to plant object, and returns the plant
+  // wrapped up in a promise
+  // tests: NOT DONE
   service.addOpenOrdersToPlant = function(plant) {
     var result = $q.defer();
     service.getOpenOrders(plant.id).then( function (data) {
@@ -42,7 +68,8 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   // Not Currently USED
   // *****************
   service.getOrderById = function(id) {
-    return $http.get(ApiPath + `/orders/${id}`).then( function (response) {
+    var fullPath = ApiPath + '/orders/' + id;
+    return $http.get(fullPath).then( function (response) {
       console.log('calling getOrderById');
       return response.data.order;
     }).then( function (order) {
@@ -50,11 +77,19 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     })
   };
 
+  //*****************************
+  // getOrdersFromDaysBack(days)
+  //*****************************
   // *****************
   // Work in Progress
   // *****************
+  // @param days - the number of days back to fetch orders from
+  //     i.e. if days == 4, get all orders with due date >= (4 days before today)
+  // return an array of order objects
+  // tests: NOT DONE
   service.getOrdersFromDaysBack = function(days) {
-    return $http.get(ApiPath + `/orders/daysback/${days}`).then( function (response) {
+    var fullPath = ApiPath + '/orders/daysback/' + days;
+    return $http.get(fullPath).then( function (response) {
       console.log('calling getOrderById');
       return response.data.orders;
     }).then( function (order) {
@@ -62,7 +97,12 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     })
   };
 
-  // API call for adding an order
+  //*****************************
+  //      addOrder (order)
+  //*****************************  
+  // @param order - order object to add to the database
+  // Stores an order object to the REST API
+  // tests: NOT DONE
   service.addOrder = function (order) {
     return $http.post(ApiPath + '/orders/', order).then( function (response) {
       service.storeOrder(response.data);
@@ -70,21 +110,30 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     });
   };
 
-  // API call for deleting an order
+  //*****************************
+  //    deleteOrder (orderId)
+  //*****************************  
+  // @param orderId - _id attribute of the order to be removed from the database
+  // removes the order object from the REST API with the given _id attribute
+  // tests: NOT DONE
   service.deleteOrder = function (orderId) {
-    return $http.delete(ApiPath + `/orders/${orderId}`).then( function(response) {
-      console.log(`Order ${orderId} Deleted`);
+    return $http.delete(ApiPath + '/orders/' + orderId).then( function(response) {
+      console.log('Order ' + orderId + ' Deleted');
     }).catch( function (err) {
       console.log('Failed to delete order', err);
     })
   }
 
-  // Changes the order in the database and attaches new spec
-  // I
-  service.changeOrder = function (order, updateLinesFlag) {
+  //*****************************
+  //    changeOrder (order)
+  //*****************************
+  // @param order - order object to be updated
+  // Changes the order in the database, attaches new spec if necessary
+  // tests: NOT DONE
+  service.changeOrder = function (order) {
     var oldOrder = service.retrieveOrder(order._id);
     //make the api call to patch the order object
-    return $http.patch(ApiPath + `/orders/${order._id}`, order).then( function(response) {
+    return $http.patch(ApiPath + '/orders/' + order._id, order).then( function(response) {
       return response.data.order;
     }).then( function (order) {
       //attach the (maybe) new spec to the order
@@ -101,11 +150,16 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     })
   }
 
-    //*****************************
-    //       Helper functions
-    //*****************************
+  //*****************************
+  //       Helper functions
+  //*****************************
 
-  // Take an order, store it if it isn't found, replace the existing order if it already exists
+  //*****************************
+  //    storeOrder (order)
+  //*****************************
+  // @param order - object to be stored locally (on this service)
+  // Locally (on this service) stores an order. If order with idential _id exists, replace it
+  // tests: NOT DONE
   service.storeOrder = function (order) {
     var retrieveResult = service.retrieveOrder(order._id);
     if (retrieveResult === -1) {
@@ -116,11 +170,19 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     }
   }
 
+  //*****************************
+  //    retrieveOrder (id)
+  //*****************************
+  // @param id - _id attridbute of the order object to fetch
   // Take an order id, return the order if the id is found locally, else return -1
+  // tests: NOT DONE
   service.retrieveOrder = function (id) {
-    var result = service.orders.find( function(order) {
-      return order._id === id;
-    });
+    var result;
+    service.orders.forEach( function (order) {
+      if (order._id === id) {
+        result = order;
+      }
+    })
     if (result) {
       return result;
     } else {
@@ -128,17 +190,39 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     }
   }
 
+  //*********************************
+  // copyOrder (destination, source)
+  //*********************************
+  // @param destination - the order object to be copied into
+  // @param source - the order object to be copied
   // Copy the source object key values into the destination object
+  // tests: NOT DONE
   service.copyOrder = function (destination, source) {
     for(var k in source) destination[k] = source[k];
   }
 
+  //*****************************
+  //    daysOut (order)
+  //*****************************
+  //*****************************
+  //    WORK IN PROGRESS
+  //*****************************
+  // @param order - the order to analyze
+  // returns the number of days (from today) until order is due
+  // tests: NOT DONE
   service.daysOut = function (order) {
     console.log(order.dueDate);
   }
 
-  // Make sure order has a valid part
-  // Asynchronous function
+  //*****************************
+  //    validateOrder (order)
+  //*****************************
+  //*****************************
+  //    WORK IN PROGRESS
+  //*****************************
+  // @param order - the order to validate
+  // Make sure order has a valid part. Return true/false
+  // tests: NOT DONE
   service.validateOrder = function (order) {
 
   }

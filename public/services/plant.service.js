@@ -7,6 +7,13 @@ angular.module('scheduler')
 //*****************************
 //       Plant Service
 //*****************************
+
+  //*****************************
+  //          To Do
+  //*****************************
+  // make getFloaters sort the unscheduled orders by due date
+  // finish documentation - starting from getFloaters
+
 PlantService.$inject = ['OrdersService', '$http', 'ApiPath', 'LineService', '$q', '$rootScope'];
 function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope) {
   var plantService = this;
@@ -15,9 +22,11 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   //*****************************
   //       getPlant(id)
   //*****************************
+  // @param id - id (as in plant warehouse #, not the mongodb _id property) of the plant to fetch
   // returns promise w/ plant object with given id
   // if it's not initialized, fetch from database, add orders to it, and populate lines
   // if it's initialized (exists on plantService.plants[]), then just return that
+  // tests: NOT DONE
   plantService.getPlant = function(id) {
     //see if this plant already initialized, if so, return promise containing result
     // this commented code returns local data if available before making an API call
@@ -35,47 +44,52 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   //*****************************
   //       addOrder (order)
   //*****************************
+  // @param order - order object to be updated
   // takes an order as a parameter and pushes it onto the unscheduled line for the plant it's assigned to
   // DOES NOT INTERACT WITH API. ONLY ADDS AN EXISTING ORDER THAT (presumably) IS NOT ON THE BOARD YET
   // ORDER SERVICE ACTUALLY ADDS/REMOVES, not plant service
+  // tests: NOT DONE
   plantService.addOrder = function (order) {
     var unscheduledlineindex = plantService.plants[order.plant].lines.length - 1;
     plantService.plants[order.plant].lines[unscheduledlineindex].orders.push(order);
   }
 
   //*****************************
-  //       updateOrder (order)
+  //     updateOrder (order)
   //*****************************
+  // @param order - order object to be updated
+  // @param updateLinesFlag - set to true if the lines need to be updated (which will be if order is cancelled/complete/moved to another plant)
   // takes an order object with the intention of updating the views (by modifying the state on this service)
   // Also takes the bool updateLines which lets this function know if the lines need to be updated (if order was cancelled or plant was changed)
   // if order change is valid and view is updated, submit to Orders service to update the database
   // DOES NOT DIRECTLY MODIFY THE DATABASE
+  // tests: NOT DONE
     plantService.updateOrder = function (order, updateLinesFlag) {
     // let the order card containing this order know that it has been updated
-    broadcastUpdateOrder(order);
-
-    // don't know what the intent of this is
-    broadcastUpdateBoard();
-
+    broadcastUpdateOrder(order);   
+    // if the lines need to be updated (order removed), broadcast to update
     if (updateLinesFlag) {
       plantService.removeOrder(order._id);
+      broadcastUpdateBoard();
     }
   }
 
   //*****************************
   //       removeOrder (orderid, plantid)
   //*****************************
-  // takes order id
+  // @param orderid - _id property (mongodb assigned) of the order to remove
+  // @param plantid - plant id (whse number, not mongodb _id) of the plant to remove from
   // remove order from the run BOARD
   // DOES NOT INTERACT WITH THE API. ONLY REMOVES IT FROM THE RUN BOARD
   // ORDER SERVICE ACTUALLY ADDS/REMOVES, not plant service
+  // tests: NOT DONE
   plantService.removeOrder = function (id) {
     plantService.plants.forEach( function (plant) {
       plant.lines.forEach( function (line) {
         var result = findOrder(id, line.orders);
         if (result !== -1) {
           // then the order was found and result has the index
-          // FIRST REMOVE IT FROM THE LINE AND SAVE IT OR ELSE ALL THE LINES GET FUCKED
+          // FIRST REMOVE IT FROM THE LINE AND SAVE IT OR ELSE ALL THE LINES GET BORKED
           // copy to new array
           var newOrders = line.orders.slice();
           // delete the order off the new array
@@ -97,9 +111,11 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   }
 
   //*****************************
-  //       saveChanges (plantid)
+  //    saveChanges (plantid)
   //*****************************
+  // @param plantid - plant id (whse number, not mongodb _id) of the plant save current state for
   // saves the displayed line state (orders assigned to each line) to the REST API
+  // tests: NOT DONE
   plantService.saveChanges = function (plantid) {
     var promises = [];
     console.log(plantid, plantService.plants[plantid])
@@ -109,7 +125,8 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
       line.orders.forEach( function (order) {
         body.orders.push(order._id);
       });
-      if (line.name !== 'Unscheduled') {promises.push($http.patch(ApiPath + `/lines/${line._id}`, body))};
+      var fullPath = ApiPath + '/lines/' + line._id;
+      if (line.name !== 'Unscheduled') {promises.push($http.patch(fullPath, body))};
     });
     $q.all(promises).then( function (results) {
       console.log('successfully saved');
@@ -122,10 +139,16 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   //       Helper functions
   //*****************************
 
-  // *** FETCH PLANT ***
-  //grab the plant from Api
+  //*****************************
+  //      fetchPlant (id)
+  //*****************************
+  // @param plantid - plant id (whse #, not mongodb _id) of the plant to fetch
+  // grab the plant from API, attach lines to the plant object, then attach orders to the line objects
+  // save plant to the service, broadcast, and return the plant wrapped in a promise
+  // tests: NOT DONE
   var fetchPlant = function (id) {
-    return $http.get(ApiPath + `/plants/${id}`)
+    var fullPath = ApiPath + '/plants/' + id;
+    return $http.get(fullPath)
     .then( function (response) {
       //grab the lines from Api and attach to the plant object
       return LineService.addLinesToPlant(response.data.plant);
@@ -147,9 +170,14 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
     });
   };
 
+  //*********************************
+  // getFloaters (scheduled, orders)
+  //*********************************
+  // ** DOESNT SORT YET ** MAKE IT SORT
+  // @param scheduled - 
+  // @param orders - 
   // take in array of scheduled orders and all open orders
   // return array of unscheduled order ids, sorted by order due dates
-  // ** DOESNT SORT YET ** FIX IT
   var getFloaters = function (scheduled, orders) {
     var floaters = {orders: []};
     var unscheduled = [];
@@ -225,7 +253,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
 
   // broadcast that a plant has been updated and pass along plant info
   var broadcastPlants = function (plants) {
-    $rootScope.$broadcast( 'namespace:plantinfo', {plants});
+    $rootScope.$broadcast( 'namespace:plantinfo', {plants: plants});
   };
 
   // listened to by agileboard controller
@@ -235,7 +263,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
 
   // intent is to notify the order card containing this order that it's underlying order has changed and it needs to re-update
   var broadcastUpdateOrder = function (order) {
-    $rootScope.$broadcast( `namespace:order:${order._id}`, {order});
+    $rootScope.$broadcast( 'namespace:order:' + order._id, {order: order});
   };
 
 }; // End Plant Service

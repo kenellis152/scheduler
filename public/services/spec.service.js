@@ -9,7 +9,8 @@ function SpecService($http, ApiPath, $q) {
   var service = this;
 
   service.getSpecByPart = function(part) {
-    return $http.get(ApiPath + `/resinspecs/${part}`).then( function (response) {
+    var fullPath = ApiPath + '/resinspecs/' + part;
+    return $http.get(fullPath).then( function (response) {
       return response.data;
     });
   };

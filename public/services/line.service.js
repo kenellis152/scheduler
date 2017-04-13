@@ -10,7 +10,8 @@ function LineService($http, ApiPath, $q) {
   service.lines = [];
 
   service.getLinesByPlantId = function(plantid) {
-    return $http.get(ApiPath + `/lines/${plantid}`).then( function (response) {
+    var fullPath = ApiPath + '/lines/' + plantid;
+    return $http.get(fullPath).then( function (response) {
       response.data.lines.forEach( function (line) {
         storeLine(line);
       });
@@ -37,7 +38,8 @@ function LineService($http, ApiPath, $q) {
   };//End addLinesToPlant
 
   service.updateLine = function(lineid, changebody) {
-    return $http.patch(ApiPath + `/lines/${lineid}`, changebody).then( function (data) {
+    var fullPath = ApiPath + '/lines/' + lineid;
+    return $http.patch(fullPath, changebody).then( function (data) {
       return data.line;
     }).catch( function (err) {
       console.log('failed to update line:', err);

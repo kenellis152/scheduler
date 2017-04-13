@@ -35,7 +35,7 @@ function newOrderController (SpecService) {
       createDate: new Date()
     }
     console.log(order);
-    $ctrl.add({order});
+    $ctrl.add({order: order});
     $ctrl.part = "";
     $ctrl.date = "";
     $ctrl.coNumber = "";
