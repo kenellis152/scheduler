@@ -5,3 +5,6 @@ jasmine/
 playground.js
 server/data/resin/packagingChart.json
 server/data/resin/Resin Data*.xlsx
+server/data/orders/*.xlsm
+server/data/orders/*.xlsx
+server/data/orders/*.json

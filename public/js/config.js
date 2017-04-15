@@ -1,12 +1,6 @@
-/**
- * INSPINIA - Responsive Admin Theme
- *
- * Inspinia theme use AngularUI Router to manage routing and views
- * Each view are defined as state.
- * Initial there are written state for all view in theme.
- *
- */
- config.$inject = ['$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', '$httpProvider', 'SessionProvider'];
+
+
+config.$inject = ['$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', '$httpProvider', 'SessionProvider'];
 function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $httpProvider, SessionProvider) {
     $urlRouterProvider.otherwise("/index/main");
 
@@ -37,6 +31,34 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $httpPr
               },
               'mainview': {
                 templateUrl: 'views/main/main.mainview.html',
+              }
+            }
+        })
+        .state('index.georgetown-dash', {
+            url: "/georgetown-dash",
+            // templateUrl: "views/minor.html",
+            data: { pageTitle: 'Georgetown Resin Overview' },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'ui.sortable',
+                            files: ['js/plugins/ui-sortable/sortable.js']
+                        },
+                        {
+                            serie: true,
+                            name: 'angular-flot',
+                            files: [ 'js/plugins/flot/jquery.flot.js', 'js/plugins/flot/jquery.flot.time.js', 'js/plugins/flot/jquery.flot.tooltip.min.js', 'js/plugins/flot/jquery.flot.spline.js', 'js/plugins/flot/jquery.flot.resize.js', 'js/plugins/flot/jquery.flot.pie.js', 'js/plugins/flot/curvedLines.js', 'js/plugins/flot/angular-flot.js', ]
+                        }
+                    ]);
+                }
+            },
+            views: {
+              'topnav': {
+                templateUrl: 'views/georgetown-dash/gtdash.topbar.html'
+              },
+              'mainview': {
+                templateUrl: 'views/georgetown-dash/gtdash.mainview.html',
               }
             }
         })

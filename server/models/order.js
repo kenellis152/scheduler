@@ -53,6 +53,9 @@ var OrderSchema =  new mongoose.Schema({
   },
   coNumber: {
     type: Number
+  },
+  customerNumber: {
+    type: Number
   }
 });
 
