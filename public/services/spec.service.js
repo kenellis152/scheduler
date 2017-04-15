@@ -45,19 +45,15 @@ function SpecService($http, ApiPath, $q) {
   // takes an array of order objects
   // returns array of order objects with specs attached to each object
   service.addSpecsToOrdersArray = function(orders) {
-    var result = $q.defer();
-    var parts = [];
+    var promises = [];
     orders.forEach( function (order) {
-      parts.push(order.part);
+      promises.push(service.getSpecByPart(order.part));
     });
-    service.getSpecArray(parts).then( function (data) {
-      // order.spec = data.spec;
-      console.log("spec array", data);
-      result.resolve(order);
-    }, function(err) {
-      result.reject(err);
+    $q.all(promises).then( function (results) {
+      for (var i = 0; i < orders.length; i++) {
+        orders[i].spec = results[i].spec;
+      }
     });
-    return result.promise;
   };
 
 }

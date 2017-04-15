@@ -16,26 +16,28 @@ function orderCardController (SpecService, SelectionService, $scope) {
   var $ctrl = this;
   $ctrl.spec = {};
 
-  this.$onInit = SpecService.getSpecByPart($ctrl.order.part).then( function (result) {
+  $ctrl.$onInit = function () {
+    SpecService.getSpecByPart($ctrl.order.part).then( function (result) {
       $ctrl.spec = result.spec;
       $ctrl.order.spec = result.spec;
       if( SelectionService.getSelected() === $ctrl.order._id ) {$ctrl.clickProcess();}
       $ctrl.updateCard();
-  }); // End $onInit()
+      var watchername = 'namespace:order:' + $ctrl.order._id;
+      $ctrl.idwatcher = $scope.$on(watchername, function() {
+        $ctrl.spec = $ctrl.order.spec;
+        $ctrl.updateCard();
+      });
+    });
+  }
 
   $ctrl.$onDestroy = function () {
-    idwatcher();
+    $ctrl.idwatcher();
   }
 
   $ctrl.clickProcess = function () {
     SelectionService.clickProcess($ctrl.order._id, $ctrl.order, $ctrl.spec)
   };// End clickProcess()
 
-  var watchername = 'namespace:order:' + $ctrl.order._id;
-  var idwatcher = $scope.$on(watchername, function() {
-    $ctrl.spec = $ctrl.order.spec;
-    $ctrl.updateCard();
-  });
 
   $ctrl.updateCard = function () {
     if (!$ctrl.order.stock) {
@@ -51,11 +53,12 @@ function orderCardController (SpecService, SelectionService, $scope) {
       $ctrl.dueSoon = "stock";
     }
 
-    switch($ctrl.order.spec.speed) {
+    switch($ctrl.order.spec.gelSpeed) {
       case "10":
         $ctrl.speedClass = "tenspeed";
         break;
       case "50":
+      case "45":
         $ctrl.speedClass = "fiftyspeed";
         break;
       case "35":
@@ -72,6 +75,9 @@ function orderCardController (SpecService, SelectionService, $scope) {
       case "204":
       case "90":
         $ctrl.speedClass = "slowspeed";
+        break;
+      case "10-50":
+        $ctrl.speedClass = "toospeedie";
         break;
     }// end speed switch
 

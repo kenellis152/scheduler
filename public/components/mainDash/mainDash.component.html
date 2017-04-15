@@ -1,0 +1,15 @@
+<!-- This is a container for each line, and the floaters section -->
+<div class="wrapper wrapper-content animated fadeIn">
+
+  <agile-spinner ng-show="$ctrl.loading"></agile-spinner>
+
+  <main-dash-resin ng-hide="$ctrl.loading" plant="$ctrl.plants[1]"></main-dash-resin>
+
+  <!-- Modals -->
+  <new-order add="$ctrl.addOrder(order)" plant="$ctrl.plant.id"></new-order>
+  <save-changes plant="$ctrl.plant.id"></save-changes>
+  <confirm-delete plant="$ctrl.plant.id"></confirm-delete>
+  <change-order></change-order>
+  <record-production></record-production>
+
+</div>

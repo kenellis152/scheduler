@@ -99,7 +99,7 @@ function OrdersService($http, ApiPath, SpecService, $q) {
 
   //*****************************
   //      addOrder (order)
-  //*****************************  
+  //*****************************
   // @param order - order object to add to the database
   // Stores an order object to the REST API
   // tests: NOT DONE
@@ -112,7 +112,7 @@ function OrdersService($http, ApiPath, SpecService, $q) {
 
   //*****************************
   //    deleteOrder (orderId)
-  //*****************************  
+  //*****************************
   // @param orderId - _id attribute of the order to be removed from the database
   // removes the order object from the REST API with the given _id attribute
   // tests: NOT DONE
@@ -225,6 +225,40 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   // tests: NOT DONE
   service.validateOrder = function (order) {
 
+  }
+
+  //*****************************
+  //    computeRunTime (order)
+  //*****************************
+  //*****************************
+  //    WORK IN PROGRESS
+  //*****************************
+  // @param order - the order to compute the run time on
+  // Compute the run time of an order. Return -1 if the spec is not attached and print to the console
+  // Otherwise, return the estimated time to run the order in hours
+  // tests: NOT DONE
+  service.computeRunTime = function (order) {
+    if(!order.spec) {
+      return -1;
+    }
+    const RUNRATEMODIFIER = 0.64; //to account for downtime and OEE
+    var runRate = 134; //default to the highest possible run rate, and run all checks that may lower the run rate. This ensures that lower run rates override higher ones.
+    if (order.spec.formulation === 'H10') runRate = 120;
+    if (order.spec.viscosity === 'TOOSPEEDIE') runRate = 118;
+    if (order.spec.formulation === 'H5') runRate = 110;
+    if (order.spec.mmCartridgeDiameter == 32) runRate = 95;
+    if (order.spec.mmCartridgeDiameter == 35) runRate = 90;
+    if (order.spec.mmCartridgeDiameter == 35) runRate = 90;
+    if (order.spec.clip !== "None") runRate = 67;
+    if (order.spec.mmCartridgeDiameter == 40) runRate = 40;
+
+    runRate = runRate * RUNRATEMODIFIER;
+    if (order.completed === undefined) order.completed = 0;
+    var totalFootage = order.spec.cartridgeLength * (order.quantity - order.completed) / 12;
+
+    var result = totalFootage / runRate / 60;
+    // console.log('computed: ' + result + ' for order:' + order);
+    return result;
   }
 
 }

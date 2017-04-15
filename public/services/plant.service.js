@@ -42,6 +42,17 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   };
 
   //*****************************
+  //       getPlantInfo(id)
+  //*****************************
+  // @param id - id (as in plant warehouse #, not the mongodb _id property) of the plant to fetch
+  // returns promise w/ plant info only - none of the orders attached
+  // tests: NOT DONE
+  plantService.getPlantInfo = function(id) {
+    var fullPath = ApiPath + '/plants/' + id;
+    return $http.get(fullPath);
+  }
+
+  //*****************************
   //       addOrder (order)
   //*****************************
   // @param order - order object to be updated
@@ -66,7 +77,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // tests: NOT DONE
     plantService.updateOrder = function (order, updateLinesFlag) {
     // let the order card containing this order know that it has been updated
-    broadcastUpdateOrder(order);   
+    broadcastUpdateOrder(order);
     // if the lines need to be updated (order removed), broadcast to update
     if (updateLinesFlag) {
       plantService.removeOrder(order._id);
@@ -174,8 +185,8 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // getFloaters (scheduled, orders)
   //*********************************
   // ** DOESNT SORT YET ** MAKE IT SORT
-  // @param scheduled - 
-  // @param orders - 
+  // @param scheduled -
+  // @param orders -
   // take in array of scheduled orders and all open orders
   // return array of unscheduled order ids, sorted by order due dates
   var getFloaters = function (scheduled, orders) {
@@ -233,7 +244,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
       var orders = []; //stores actual orders
       // make a list of all the orders already scheduled
       // note that 'orders' at this point are still ids, not order objects
-      
+
       line.orders.forEach(function (order) {
           var thisOrder = findOrder(order, plant.openOrders);
           if (thisOrder !== -1) {
@@ -243,7 +254,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
       });
       //replace each array of order ids with an array of the actual orders
       line.orders = orders;
-      
+
     });
     // Create a line with unscheduled orders and push it on to line arrays
     var floaters = getFloaters(scheduled, plant.openOrders);

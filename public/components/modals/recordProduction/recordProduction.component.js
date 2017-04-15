@@ -57,7 +57,7 @@ function recordProductionController (OrdersService, PlantService, $scope) {
   // Clean up listeners
   $ctrl.$onDestroy = function () {
     selectedOrder();
-    recordProductionModal();
+    // recordProductionModal();
   }
 
 }

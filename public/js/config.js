@@ -24,7 +24,7 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $httpPr
         .state('index.main', {
             url: "/main",
             // templateUrl: "views/main.html",
-            data: { pageTitle: 'Example view' },
+            data: { pageTitle: 'Main Dashboard' },
             views: {
               'topnav': {
                 templateUrl: 'views/main/main.topbar.html'

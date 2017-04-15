@@ -45,7 +45,7 @@ function changeOrderController (OrdersService, PlantService, $scope) {
   // release watcher
   $ctrl.$onDestroy = function () {
     selectedOrder();
-    changeOrderModal();
+    // changeOrderModal();
   }
 
 }

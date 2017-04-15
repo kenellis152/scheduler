@@ -45,9 +45,11 @@ angular.module('scheduler')
         });
       }
 
-      $ctrl.$onInit = $ctrl.updateBoard();
+      $ctrl.$onInit = function () {
+        $ctrl.updateBoard();
+      }
 
-      var updateBoard = $scope.$on('namespace:updateboard', $ctrl.updateBoard);
+      var updateBoardWatcher = $scope.$on('namespace:updateboard', $ctrl.updateBoard);
       var toggleSelected = $scope.$on('namespace:toggleSelected', function () {
         $ctrl.orderSelected = !$ctrl.orderSelected;
       });
@@ -57,7 +59,7 @@ angular.module('scheduler')
       });
 
       $ctrl.$onDestroy = function () {
-        updateBoard();
+        updateBoardWatcher();
         toggleSelected();
         loginStatus();
       }

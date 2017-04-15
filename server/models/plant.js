@@ -10,6 +10,14 @@ var PlantSchema =  new mongoose.Schema({
     type: Number,
     required: true
   },
+  activeShifts: {
+    type: Number,
+    default: 1
+  },
+  shiftHours: {
+    type: Number,
+    default: 8
+  },
   numLines: {
     type: Number,
     required: true

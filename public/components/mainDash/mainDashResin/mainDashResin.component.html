@@ -1,0 +1,87 @@
+<div class="col-lg-6">
+  <div class="panel panel-success">
+      <div class="panel-heading">
+          <strong>{{$ctrl.plant.name}} Resin</strong> -- Running {{$ctrl.plant.lines.length}} lines for {{$ctrl.plant.activeShifts}} {{$ctrl.plant.shiftHours}} - hr shift
+      </div>
+      <div class="panel-body"> <!-- Start Body -->
+
+        <main-dash-resin-header></main-dash-resin-header>
+
+        <div class="ibox collapsed text-center main-dash-row-item">
+            <div class="ibox-title">
+              <div class="col-md-3">
+                <h4>5-day demand:</h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{$ctrl.fivedayPallets}} </h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{$ctrl.fivedayLineHours}} </h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{$ctrl.fivedayLineHours}} </h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{$ctrl.fivedayShifts}} </h4>
+              </div>
+              <div ibox-collapse></div>
+            </div>
+            <div class="ibox-content">
+                <p>Placeholder text</p>
+                <p>more placeholder text</p>
+            </div>
+        </div>
+
+        <div class="ibox collapsed text-center main-dash-row-item">
+            <div class="ibox-title" style="border-style: none;">
+              <div class="col-md-3">
+                <h4>Inventory demand:</h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{$ctrl.inventoryPallets}} </h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{$ctrl.inventoryLineHours}} </h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{$ctrl.inventoryPlantHours}} </h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{$ctrl.inventoryShifts}} </h4>
+              </div>
+              <div ibox-collapse></div>
+            </div>
+            <div class="ibox-content">
+                <p>Placeholder text</p>
+                <p>more placeholder text</p>
+            </div>
+        </div>
+
+        <div class="ibox collapsed text-center main-dash-row-item">
+            <div class="ibox-title" style="border-style: none;">
+              <div class="col-md-3">
+                <h4>Total Open Orders:</h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{$ctrl.totalPallets}} </h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{$ctrl.totalLineHours}} </h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{$ctrl.totalPlantHours}} </h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{$ctrl.totalShifts}} </h4>
+              </div>
+              <div ibox-collapse></div>
+            </div>
+            <div class="ibox-content">
+                <p>Placeholder text</p>
+                <p>more placeholder text</p>
+            </div>
+        </div>
+
+      </div> <!-- Finish Body -->
+  </div>
+</div>
