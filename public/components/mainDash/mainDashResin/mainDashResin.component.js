@@ -17,7 +17,6 @@ function mainDashResinController ($scope, OrdersService, $timeout) {
   $ctrl.$onChanges = function (changesObj) {
     if($ctrl.plant) {
       if ($ctrl.plant.openOrders) {
-        console.log('updating');
         $timeout(updateBoard, 200);
       }
     }
@@ -39,15 +38,23 @@ function mainDashResinController ($scope, OrdersService, $timeout) {
         $ctrl.fivedayPallets += order.quantity / order.spec.palletCount;
         $ctrl.fivedayLineHours += runTime;
       }
-      $ctrl.totalPallets += order.quantity / order.spec.palletCount;
-      $ctrl.totalLineHours += runTime;
+      if (order.stock) {
+        $ctrl.inventoryPallets += order.quantity / order.spec.palletCount;
+        $ctrl.inventoryLineHours += runTime;
+      } else {
+        $ctrl.totalPallets += order.quantity / order.spec.palletCount;
+        $ctrl.totalLineHours += runTime;
+      }
     });
-    $ctrl.fivedayPlantHours = Math.round($ctrl.fivedayLineHours / $ctrl.plant.lines.length);
+    $ctrl.fivedayLineHours = Math.round($ctrl.fivedayLineHours * 10) / 10;
+    $ctrl.fivedayPlantHours = Math.round($ctrl.fivedayLineHours * 10 / $ctrl.plant.lines.length) / 10;
     $ctrl.fivedayShifts = Math.round($ctrl.fivedayPlantHours * 10 / $ctrl.plant.shiftHours) / 10;
-    $ctrl.totalPlantHours = Math.round($ctrl.totalLineHours / $ctrl.plant.lines.length);
+    $ctrl.totalLineHours = Math.round($ctrl.fivedayLineHours * 10) / 10;
+    $ctrl.totalPlantHours = Math.round($ctrl.totalLineHours * 10 / $ctrl.plant.lines.length) / 10;
     $ctrl.totalShifts = Math.round($ctrl.totalPlantHours * 10 / $ctrl.plant.shiftHours) / 10;
-    $ctrl.fivedayLineHours = Math.round($ctrl.fivedayLineHours);
-    $ctrl.totalLineHours = Math.round($ctrl.fivedayLineHours);
+    $ctrl.inventoryLineHours = Math.round($ctrl.inventoryLineHours * 10) / 10;
+    $ctrl.inventoryPlantHours = Math.round($ctrl.inventoryLineHours * 10 / $ctrl.plant.lines.length) / 10;
+    $ctrl.inventoryShifts = Math.round($ctrl.inventoryPlantHours * 10 / $ctrl.plant.shiftHours) / 10;
   }
 
 

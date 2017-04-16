@@ -16,7 +16,7 @@ function orderCardController (SpecService, SelectionService, $scope) {
   var $ctrl = this;
   $ctrl.spec = {};
 
-  $ctrl.$onInit = function () {
+  $ctrl.$onChanges = function () {
     SpecService.getSpecByPart($ctrl.order.part).then( function (result) {
       $ctrl.spec = result.spec;
       $ctrl.order.spec = result.spec;

@@ -1,7 +1,8 @@
-<div class="col-lg-6">
+
   <div class="panel panel-success">
       <div class="panel-heading">
-          <strong>{{$ctrl.plant.name}} Resin</strong> -- Running {{$ctrl.plant.lines.length}} lines for {{$ctrl.plant.activeShifts}} {{$ctrl.plant.shiftHours}} - hr shift
+          <strong>{{$ctrl.plant.name}} Resin</strong> -- Running {{$ctrl.plant.lines.length}}
+            lines for {{$ctrl.plant.activeShifts}} x {{$ctrl.plant.shiftHours}}-hr shift
       </div>
       <div class="panel-body"> <!-- Start Body -->
 
@@ -19,7 +20,7 @@
                 <h4> {{$ctrl.fivedayLineHours}} </h4>
               </div>
               <div class="col-md-2">
-                <h4> {{$ctrl.fivedayLineHours}} </h4>
+                <h4> {{$ctrl.fivedayPlantHours}} </h4>
               </div>
               <div class="col-md-2">
                 <h4> {{$ctrl.fivedayShifts}} </h4>
@@ -84,4 +85,3 @@
 
       </div> <!-- Finish Body -->
   </div>
-</div>

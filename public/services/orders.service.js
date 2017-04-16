@@ -80,9 +80,6 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   //*****************************
   // getOrdersFromDaysBack(days)
   //*****************************
-  // *****************
-  // Work in Progress
-  // *****************
   // @param days - the number of days back to fetch orders from
   //     i.e. if days == 4, get all orders with due date >= (4 days before today)
   // return an array of order objects
@@ -90,11 +87,9 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   service.getOrdersFromDaysBack = function(days) {
     var fullPath = ApiPath + '/orders/daysback/' + days;
     return $http.get(fullPath).then( function (response) {
-      console.log('calling getOrderById');
       return response.data.orders;
-    }).then( function (order) {
-      return SpecService.addSpecToOrder(order);
-    })
+      // return SpecService.addSpecsToOrdersArray(response.data.orders);
+    });
   };
 
   //*****************************

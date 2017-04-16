@@ -25,6 +25,17 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $httpPr
             url: "/main",
             // templateUrl: "views/main.html",
             data: { pageTitle: 'Main Dashboard' },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            serie: true,
+                            name: 'angular-flot',
+                            files: [ 'js/plugins/flot/jquery.flot.js', 'js/plugins/flot/jquery.flot.time.js', 'js/plugins/flot/jquery.flot.tooltip.min.js', 'js/plugins/flot/jquery.flot.spline.js', 'js/plugins/flot/jquery.flot.resize.js', 'js/plugins/flot/jquery.flot.pie.js', 'js/plugins/flot/curvedLines.js', 'js/plugins/flot/angular-flot.js', ]
+                        }
+                    ]);
+                }
+            },
             views: {
               'topnav': {
                 templateUrl: 'views/main/main.topbar.html'
