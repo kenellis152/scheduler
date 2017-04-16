@@ -3,15 +3,19 @@ const request = require('supertest');
 const {ObjectID} = require('mongodb');
 
 const {app} = require('./../server');
+const {serverHelpers} = require('./../server');
 const {Order} = require('./../models/order');
 const {Line} = require('./../models/line');
 const {Plant} = require('./../models/plant');
+const {Production} = require('./../models/production');
 const {User} = require('./../models/user');
-const {orders, populateOrders, resinSpecs, populateSpecs, users, populateUsers} = require('./seed/test-seed');
+const {orders, populateOrders, resinSpecs, populateSpecs,
+  users, populateUsers, production, populateProduction} = require('./seed/test-seed');
 
 beforeEach(populateOrders);
 beforeEach(populateSpecs);
 beforeEach(populateUsers);
+beforeEach(populateProduction);
 
 //*****************************
 //        Orders API
@@ -356,7 +360,7 @@ describe('POST users/login', (done) => {
   });
 });
 
-describe('DELETE /users/me/token', () => {
+describe('DELETE /users/me/token', (done) => {
   it('should remove auth token on logout', (done) => {
     request(app)
       .delete('/users/me/token')
@@ -368,6 +372,71 @@ describe('DELETE /users/me/token', () => {
         }
         User.findById(users[0]._id).then( (user) => {
           expect(user.tokens.length).toBe(0);
+          done();
+        }).catch( (e) => done(e));
+      });
+  });
+});
+
+//*****************************
+//        Production API
+//*****************************
+
+describe('POST /inventory', (done) => {
+
+  it('should get the current inventory', (done) => {
+    reqBody = {part: 157193, plant: 1}
+    request(app)
+      .post('/inventory')
+      .send(reqBody)
+      .expect(200)
+      .expect( (res) => {
+        expect(res.body.inventory).toBe(-1000)
+      })
+      .end(done);
+  });
+  it('should output zero if nothing found', (done) => {
+    reqBody = {part: 244033, plant: 1}
+    request(app)
+      .post('/inventory')
+      .send(reqBody)
+      .expect(200)
+      .expect( (res) => {
+        expect(res.body.inventory).toBe(0)
+      })
+      .end(done);
+  });
+  it('should return a negative number if it shipped but there has been no production', (done) => {
+    reqBody = {part: 181069, plant: 1}
+    request(app)
+      .post('/inventory')
+      .send(reqBody)
+      .expect(200)
+      .expect( (res) => {
+        expect(res.body.inventory).toBe(-17000)
+      })
+      .end(done);
+  });
+
+});
+
+describe('POST /production', (done) => {
+
+  it('should add a new production entry', (done) => {
+    var newProduction = {part: 157193, productionType: "production", quantity: 2000, plant: 1, date: new Date() }
+    request(app)
+      .post('/production')
+      .send(newProduction)
+      .expect(200)
+      .expect( (res) => {
+        expect(res.body.part).toBe(newProduction.part);
+        expect(res.body.productionType).toBe(newProduction.productionType);
+        expect(res.body.quantity).toBe(newProduction.quantity);
+      })
+      .end( (err, res) => {
+        if (err) return done(err);
+        serverHelpers.getInventory(157193, 1).then( (result) => {
+          expect(result).toBe(1000);
           done();
         }).catch( (e) => done(e));
       });

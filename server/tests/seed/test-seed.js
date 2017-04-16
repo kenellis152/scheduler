@@ -4,6 +4,7 @@ const {Line} = require('./../../models/line');
 const {Plant} = require('./../../models/plant');
 const {Spec} = require('./../../models/spec');
 const {User} = require('./../../models/user');
+const {Production} = require('./../../models/production');
 const jwt = require('jsonwebtoken');
 
 const orderOneId = new ObjectID();
@@ -14,11 +15,14 @@ const resinTwoId = new ObjectID();
 const userOneId = new ObjectID();
 const userTwoId = new ObjectID();
 const userThreeId = new ObjectID();
+const productionOneId = new ObjectID();
+const productionTwoId = new ObjectID();
+const productionThreeId = new ObjectID();
 
 var now = new Date();
-var date1 = new Date(now.getTime()-24*60*60*1000);
-var date2 = new Date(now.getTime()-2*24*60*60*1000);
-var date3 = new Date(now.getTime()-10*24*60*60*1000);
+var date1 = new Date(now.getTime()-24*60*60*1000); // one day ago
+var date2 = new Date(now.getTime()-2*24*60*60*1000); // two days ago
+var date3 = new Date(now.getTime()-10*24*60*60*1000); // ten days ago
 
 const orders = [{
   _id: orderOneId,
@@ -74,6 +78,43 @@ const users = [{
       token: jwt.sign({_id: userThreeId, access: 'auth'}, process.env.JWT_SECRET).toString()
     }]
 }];
+
+const production = [{
+    _id: productionOneId,
+    part: 157193,
+    productionType: "production",
+    quantity: 10000,
+    plant: 1,
+    date: date1
+  },
+  {
+    _id: productionTwoId,
+    part: 157193,
+    productionType: "production",
+    quantity: 12000,
+    plant: 1,
+    date: date2
+  },
+  {
+    _id: productionThreeId,
+    part: 157193,
+    productionType: "adjustment",
+    quantity: -5000,
+    plant: 1,
+    date: date1
+}];
+
+const populateProduction = (done) => {
+  Production.remove({}).then( () => {
+    var productionOne = new Production(production[0]).save();
+    var productionTwo = new Production(production[1]).save();
+    var productionThree = new Production(production[2]).save();
+
+    return Promise.all([productionOne, productionTwo, productionThree]).then( () => {
+
+    }).then( () => done() );
+  });
+};
 
 const populateUsers = (done) => {
   User.remove({}).then( () => {
@@ -237,5 +278,7 @@ module.exports = {
   resinSpecs,
   populateSpecs,
   users,
-  populateUsers
+  populateUsers,
+  production,
+  populateProduction
 };

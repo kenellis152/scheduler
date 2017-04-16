@@ -1,26 +1,27 @@
 var mongoose = require('mongoose');
 
 var ProductionSchema =  new mongoose.Schema({
-  part: {
+  part: { // part number
     type: Number,
     required: true,
     minlength: 1,
   },
-  productionType: {
+  productionType: { // either "production" or "adjustment" which will simply set the current inventory level
     type: String,
     required: true
-  }
-  quantity: {
+  },
+  quantity: { // quantity received
     type: Number,
     required: true
   },
-  plant: {
+  plant: { // plant received/adjusted at
     type: Number,
     required: true,
     default: 1
   },
-  date: {
-    type: Date
+  date: { // date of receipt or adjustment
+    type: Date,
+    default: new Date()
   }
 });
 

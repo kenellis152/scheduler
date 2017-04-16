@@ -17,6 +17,7 @@ var {Spec} = require('./models/spec');
 var {Plant} = require('./models/plant');
 var {Line} = require('./models/line');
 var {User} = require('./models/user');
+var {Production} = require('./models/production');
 var cors = require('cors');
 var moment = require('moment');
 var {authenticate} = require('./middleware/authenticate');
@@ -383,6 +384,68 @@ app.delete('/users/me/token', authenticate, (req, res) => {
 });
 
 //*****************************
+//        Production API
+//*****************************
+// POST new Production '/production'
+// POST '/inventory' return
+// POST plant and part to get production for that part/plant '/production/history'
+// tests : done
+app.post('/production', (req, res) => {
+  var production = new Production(req.body);
+  // if this is an adjustment, first move all existing production to history
+  production.save().then( (doc) => {
+    res.send(doc);
+  }, (err) => {
+    res.status(400).send(err);
+  });
+});
+//End POST production
+
+// get inventory for a part # at a plant
+// @param req.part - the part number we're looking for
+// @param req.plant - the plant we're looking for
+// tests : done
+app.post('/inventory', (req, res) => {
+  serverHelpers.getInventory(req.body.part, req.body.plant).then( (result) => {
+    res.status(200).send({inventory: result});
+  }, (err) => {
+    res.status(400).send(err);
+  });
+});
+
+//*****************************
+//        Helper Functions
+//*****************************
+var serverHelpers = {};
+
+// GET inventory
+// @param part - part # we're looking for
+// @param plant - the plant we're interested in
+// return a number equal to what our current inventory should be
+// Tests: done - tested in the post /production and post /inventory routes in Production API
+serverHelpers.getInventory = function (part, plant) {
+  // return Promise.resolve(1);
+  var current = 0;
+  return Production.find({part, plant}).then( (result) => {
+    if (result) {
+      result.forEach( (production) => {
+        if (production.plant === plant) current += production.quantity;
+      });
+    }
+    return Promise.resolve(current);
+  }).then( (result) => {
+    return Order.find({part, plant}).then( (orders) => {
+      if (orders) {
+        orders.forEach( (order) => {
+          result -= order.quantity;
+        });
+      }
+      return Promise.resolve(result);
+    });
+  })
+}
+
+//*****************************
 //   Frontend public path
 //*****************************
 const publicPath = path.join(__dirname, '../public');
@@ -395,4 +458,4 @@ app.listen(port, () => {
   console.log(`Started on port ${port}`);
 });
 
-module.exports = {app};
+module.exports = {app, serverHelpers};
