@@ -104,6 +104,24 @@ const production = [{
     date: date1
 }];
 
+const plants = [{
+    // _id: productionOneId,
+    name: "Georgetown",
+    id: 1,
+    numLines: 4,
+    activeShifts: 1,
+    shiftHours: 8
+}];
+
+const populatePlants = (done) => {
+  Plant.remove({}).then( () => {
+    var plant = new Plant(plants[0]);
+    return plant.save();
+  })
+  .then( () => done())
+  .catch( (err) => done(err));
+}
+
 const populateProduction = (done) => {
   Production.remove({}).then( () => {
     var productionOne = new Production(production[0]).save();
@@ -280,5 +298,7 @@ module.exports = {
   users,
   populateUsers,
   production,
-  populateProduction
+  populateProduction,
+  plants,
+  populatePlants
 };

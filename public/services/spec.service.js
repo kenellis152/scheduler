@@ -20,18 +20,14 @@ function SpecService($http, ApiPath, $q) {
     });
   };
 
-
-  // ** IN PROGRESS - DOESN'T WORK
-  // Don't know how to pass an array of params to a get request.
   // takes an array of part numbers
   // returns array back array of specs for the part numbers
   service.getSpecArray = function(parts) {
-    console.log(parts);
-    return $http.post(ApiPath + '/resinspecs/partarray', parts)
-    .then( function (response) {
-      console.log("response", response);
-      return response.data;
+    var promises = [];
+    parts.forEach( function (part) {
+      promises.push(service.getSpecByPart(part));
     });
+    return $q.all(promises);
   };
 
   // takes an order object

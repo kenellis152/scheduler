@@ -24,7 +24,19 @@ var PlantSchema =  new mongoose.Schema({
   },
   lines: {
     type: [mongoose.Schema.Types.ObjectId]
-  }
+  },
+  stockItems: [{
+    part: {
+      type: Number
+    },
+    quantity: {
+      type: Number
+    },
+    customer: {
+      type: String
+    }
+  }]
+
 });
 
 var Plant = mongoose.model('Plant', PlantSchema);

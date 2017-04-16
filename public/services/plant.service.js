@@ -147,6 +147,52 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   }
 
   //*****************************
+  // getInventory(part, plantid)
+  //*****************************
+  // @param part - part # of inventory item we are looking for
+  // @param plant - id (as in plant warehouse #, not the mongodb _id property) of the plant to fetch
+  // returns promise w/ number equal to inventory of the part at the given plant
+  // tests: NOT DONE
+  plantService.getInventory = function(part, plant) {
+    var fullPath = ApiPath + '/inventory';
+    return $http.post(fullPath, {part, plant}).then( function (result) {
+      return Promise.resolve(result.data.inventory);
+    })
+  }
+
+  //**********************************
+  // getInventoryArray(parts, plantid)
+  //**********************************
+  // @param parts - array of part #s item we are trying to determine the inventory on
+  // @param plant - id (as in plant warehouse #, not the mongodb _id property) of the plant to fetch
+  // returns promise w/ number equal to inventory of the part at the given plant
+  // tests: NOT DONE
+  plantService.getInventoryArray = function(parts, plant) {
+    var promises = [];
+    parts.forEach( function (part) {
+      promises.push(plantService.getInventory(part, plant));
+    });
+    return $q.all(promises);
+  };
+
+  //*************************************************************
+  // postProduction(part, productionType, quantity, plant, date)
+  //*************************************************************
+  // @param part - part # of item produced
+  // @param productionType "production" for actual production, "adjustment" for inventory adjustment
+  // @param quantity - quantity produced or adjusted
+  // @param plant - plant where production/adjustment occurs
+  // @param date - date of transaction
+  // returns promise w/ production document or an error
+  // tests: NOT DONE
+  plantService.postProduction = function(part, productionType, quantity, plant, date) {
+    var fullPath = ApiPath + '/production';
+    return $http.post(fullPath, {part, productionType, quantity, plant, date}).then( function (result) {
+      return Promise.resolve(result.body);
+    })
+  }
+
+  //*****************************
   //       Helper functions
   //*****************************
 

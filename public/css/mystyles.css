@@ -99,6 +99,24 @@ div.resinline {
   color: red;
 }
 
+/*Stock Board Items*/
+.lowstock {
+  background-color: #FF4136;
+  color: white;
+}
+.mediumstock {
+  background-color: #EFD469;
+  color: #222233;
+}
+.goodstock {
+  background-color: #007fff;
+  color: white;
+}
+.fullstock {
+  background-color: #5b965b;
+  color: white;
+}
+
 /*ORDER DETAIL VIEW*/
 .orderdetailparent {
   font-size: 1.3em;

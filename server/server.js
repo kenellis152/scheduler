@@ -137,7 +137,6 @@ app.patch('/orders/:id', (req, res) => {
   }).catch( (e) => {
     res.status(400).send();
   });
-
 });
 // End update order by id
 
@@ -255,7 +254,6 @@ app.post('/plants', (req, res) => {
 // tests: NOT DONE
 app.get('/plants/:id', (req, res) => {
   var {id} = req.params;
-  // console.log(req.header('x-schedulerauth'));
   Plant.findOne({id: id}).then( (plant) => {
     if (!plant) {
       res.status(404).send();
@@ -266,6 +264,27 @@ app.get('/plants/:id', (req, res) => {
   });
 });
 // End Get plant by id
+
+// Update plant by id
+// tests: PARTIALLY INCOMPLETE - add test to make sure stockItems passed in follow correct format
+app.patch('/plants/:id', (req, res) => {
+  var {id} = req.params;
+  if (!(id >= 0 && id <= 3)) {
+    console.log('invalid id');
+    res.status(404).send();
+  }
+  var body = _.pick(req.body, ['_id', 'activeShifts', 'shiftHours', 'numLines', 'stockItems']);
+
+  Plant.findOneAndUpdate({id: id}, {$set: body}, {new: true}).then( (plant) => {
+    if(!plant) {
+      return res.status(404).send();
+    }
+    res.send({plant});
+  }).catch( (e) => {
+    res.status(400).send();
+  });
+});
+// End update order by id
 
 //*****************************
 //       Line API
@@ -401,7 +420,7 @@ app.post('/production', (req, res) => {
 });
 //End POST production
 
-// get inventory for a part # at a plant
+// Returns inventory of a part at a plant as result.inventory (had to be an object. if it's a number, express thinks it's an invalid response code)
 // @param req.part - the part number we're looking for
 // @param req.plant - the plant we're looking for
 // tests : done

@@ -1,0 +1,56 @@
+<!-- This is a container for each line, and the floaters section -->
+<div class="wrapper wrapper-content animated fadeIn">
+
+  <agile-spinner ng-show="$ctrl.loading"></agile-spinner>
+
+  <div class="panel panel-success">
+      <div class="panel-heading">
+          <strong>{{$ctrl.plant.name}} Stock Plan</strong> -- Running {{$ctrl.plant.lines.length}}
+            lines for {{$ctrl.plant.activeShifts}} x {{$ctrl.plant.shiftHours}}-hr shift
+      </div>
+      <div class="panel-body"> <!-- Start Body -->
+
+        <stock-board-header></stock-board-header>
+
+        <div class="ibox collapsed text-center main-dash-row-item" ng-repeat="item in $ctrl.plant.stockItems">
+            <div class="ibox-title">
+              <div class="col-md-1">
+                {{item.part}}
+              </div>
+              <div class="col-md-2">
+                <h4> {{item.spec.description}} </h4>
+              </div>
+              <div class="col-md-2">
+                <h4> {{item.customer}} </h4>
+              </div>
+              <div class="col-md-1">
+                <h4> {{item.quantity / item.spec.palletCount | number: 0}} </h4>
+              </div>
+              <div class="col-md-1">
+                <h4> {{item.inventory / item.spec.palletCount | number: 0}} </h4>
+              </div>
+              <div class="col-md-1 {{item.stockStatus}}">
+                <h4> {{ item.variance / item.spec.palletCount | number: 0}} </h4>
+              </div>
+              <div class="col-md-1 {{item.stockStatus}}">
+                <h4> {{item.stockPercent / item.spec.palletCount | number: 0}} </h4>
+              </div>
+              <div ibox-collapse></div>
+            </div>
+            <div class="ibox-content">
+                <p>Placeholder text</p>
+                <p>more placeholder text</p>
+            </div>
+        </div>
+      </div> <!-- Finish Body -->
+  </div><!-- Finish Panel -->
+
+
+  <!-- Modals -->
+  <!-- <new-order add="$ctrl.addOrder(order)" plant="$ctrl.plant.id"></new-order>
+  <save-changes plant="$ctrl.plant.id"></save-changes>
+  <confirm-delete plant="$ctrl.plant.id"></confirm-delete>
+  <change-order></change-order>
+  <record-production></record-production> -->
+
+</div>
