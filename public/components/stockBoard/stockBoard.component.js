@@ -61,7 +61,7 @@ function stockBoardController (PlantService, SpecService, $q, $scope) {
     stockItem.stockPercent = stockItem.inventory / stockItem.quantity * 100;
     if (stockItem.variance > 0) stockItem.variance = 0;
 
-    if (stockItem.stockPercent > 100 || !stockItem.stockPercent) stockItem.stockPercent = 100;
+    if (stockItem.stockPercent > 100 ) stockItem.stockPercent = 100;
     if ( stockItem.stockPercent < 20) stockItem.stockStatus = "bg-danger";
     if ( stockItem.stockPercent > 20) stockItem.stockStatus = "bg-warning";
     if ( stockItem.stockPercent > 50) stockItem.stockStatus = "bg-success";
