@@ -7,18 +7,24 @@
       <div class="panel-heading">
           <strong>{{$ctrl.plant.name}} Stock Plan</strong> -- Running {{$ctrl.plant.lines.length}}
             lines for {{$ctrl.plant.activeShifts}} x {{$ctrl.plant.shiftHours}}-hr shift
+          <!-- <md-button class="md-raised md-primary pull-right" data-toggle="modal"
+            data-target="#changePlantModal">Save Changes</md-button> -->
+          <a class="label-success text-primary" style="margin-left: 10px;">
+              <i class="fa fa-wrench" data-toggle="modal" data-target="#changePlantModal" ></i>
+          </a>
       </div>
       <div class="panel-body"> <!-- Start Body -->
 
         <stock-board-header></stock-board-header>
 
-        <div class="ibox collapsed text-center main-dash-row-item" ng-repeat="item in $ctrl.plant.stockItems">
-            <div class="ibox-title">
+        <div class="ibox collapsed text-center main-dash-row-item " ng-repeat="item in $ctrl.plant.stockItems" >
+
+            <div class="ibox-title {{item.stockStatus}}">
               <div class="col-md-1">
                 {{item.part}}
               </div>
               <div class="col-md-2">
-                <h4> {{item.spec.description}} </h4>
+                {{item.spec.description}}
               </div>
               <div class="col-md-2">
                 <h4> {{item.customer}} </h4>
@@ -29,13 +35,16 @@
               <div class="col-md-1">
                 <h4> {{item.inventory / item.spec.palletCount | number: 0}} </h4>
               </div>
-              <div class="col-md-1 {{item.stockStatus}}">
+              <div class="col-md-1 ">
                 <h4> {{ item.variance / item.spec.palletCount | number: 0}} </h4>
               </div>
-              <div class="col-md-1 {{item.stockStatus}}">
+              <div class="col-md-1 ">
                 <h4> {{item.stockPercent / item.spec.palletCount | number: 0}} </h4>
               </div>
-              <div ibox-collapse></div>
+              <a class="text-primary pull-right" style="margin-left: 20px;">
+                  <i class="fa fa-wrench" data-toggle="modal" data-target="#adjustInventoryModal" ng-click="$ctrl.adjustSelection(item)"></i>
+              </a>
+              <div ibox-collapse class="pull-right"></div>
             </div>
             <div class="ibox-content">
                 <p>Placeholder text</p>
@@ -47,6 +56,8 @@
 
 
   <!-- Modals -->
+  <change-plant plant="$ctrl.plant"></change-plant>
+  <adjust-inventory plant="$ctrl.plant" selection="$ctrl.selected"></adjust-inventory>
   <!-- <new-order add="$ctrl.addOrder(order)" plant="$ctrl.plant.id"></new-order>
   <save-changes plant="$ctrl.plant.id"></save-changes>
   <confirm-delete plant="$ctrl.plant.id"></confirm-delete>

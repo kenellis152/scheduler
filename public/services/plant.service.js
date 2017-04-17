@@ -52,6 +52,24 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
     return $http.get(fullPath);
   }
 
+  //*********************************************************
+  //   updatePlant(id, activeShifts, shiftHours, numLines)
+  //*********************************************************
+  // @param id - id (as in plant warehouse #, not the mongodb _id property) of the plant to fetch
+  // @param activeShifts - they number of active shifts the plant will be running per day
+  // @param shiftHours - the number of hours each shift will run
+  // @param numLines - the number of active lines the plant will run
+  // returns promise w/ plant info only - none of the orders attached
+  // tests: NOT DONE
+  plantService.updatePlant = function(id, activeShifts, shiftHours, numLines) {
+    var body = {activeShifts, shiftHours, numLines}
+    var fullPath = ApiPath + '/plants/' + id;
+    return $http.patch(fullPath, body).then( function (result) {
+      console.log('result is', result);
+      return Promise.resolve(result.data.plant);
+    });
+  }
+
   //*****************************
   //       addOrder (order)
   //*****************************

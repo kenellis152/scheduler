@@ -131,6 +131,9 @@ div.resinline {
 .md-datepicker-calendar-pane {
   z-index: 9999;
 }
+.md-select-menu-container {
+  z-index: 9999;
+}
 
 /*Navbar*/
 /*.navbar-static-side {

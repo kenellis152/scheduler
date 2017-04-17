@@ -49,7 +49,7 @@ function mainDashResinController ($scope, OrdersService, $timeout) {
     $ctrl.fivedayLineHours = Math.round($ctrl.fivedayLineHours * 10) / 10;
     $ctrl.fivedayPlantHours = Math.round($ctrl.fivedayLineHours * 10 / $ctrl.plant.lines.length) / 10;
     $ctrl.fivedayShifts = Math.round($ctrl.fivedayPlantHours * 10 / $ctrl.plant.shiftHours) / 10;
-    $ctrl.totalLineHours = Math.round($ctrl.fivedayLineHours * 10) / 10;
+    $ctrl.totalLineHours = Math.round($ctrl.totalLineHours * 10) / 10;
     $ctrl.totalPlantHours = Math.round($ctrl.totalLineHours * 10 / $ctrl.plant.lines.length) / 10;
     $ctrl.totalShifts = Math.round($ctrl.totalPlantHours * 10 / $ctrl.plant.shiftHours) / 10;
     $ctrl.inventoryLineHours = Math.round($ctrl.inventoryLineHours * 10) / 10;

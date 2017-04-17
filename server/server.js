@@ -266,7 +266,7 @@ app.get('/plants/:id', (req, res) => {
 // End Get plant by id
 
 // Update plant by id
-// tests: PARTIALLY INCOMPLETE - add test to make sure stockItems passed in follow correct format
+// tests: done
 app.patch('/plants/:id', (req, res) => {
   var {id} = req.params;
   if (!(id >= 0 && id <= 3)) {

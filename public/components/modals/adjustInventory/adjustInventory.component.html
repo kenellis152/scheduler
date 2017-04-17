@@ -1,0 +1,47 @@
+<div class="modal inmodal in" id="adjustInventoryModal" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <h2 ng-if="!$ctrl.error">Part: {{$ctrl.selection.part}}</h2><h2 ng-if="$ctrl.error">{{$ctrl.error}}</h2>
+        <h3>{{$ctrl.selection.spec.description}}</h3>
+        <span ng-if="$ctrl.params.quantity">({{$ctrl.params.quantity * $ctrl.selection.spec.palletCount}} total pcs)
+        </span><br>Inventory Adjustment
+      </div>
+      <div class="modal-body">
+        <form role="form" name="adjustInventoryForm" novalidate>
+          <div layout="row">
+            <div flex="33">
+              <md-input-container class="md-block">
+                <label>Part Number</label>
+                <input type="text" ng-model="$ctrl.params.part" required min-length="6"
+                id="partnumberinput" ng-blur="$ctrl.validate();">
+              </md-input-container>
+            </div>
+            <div flex="33">
+              <md-input-container class="md-block">
+                <label>Customer</label>
+                <input type="text" ng-model="$ctrl.params.customer" required>
+              </md-input-container>
+            </div>
+            <div flex="33">
+              <md-input-container class="md-block">
+                <label>Target Quantity (pallets)</label>
+                <input type="text" ng-model="$ctrl.params.quantity" required>
+              </md-input-container>
+            </div>
+          </div>
+          <div layout="row">
+            <div flex="50">
+              <md-input-container class="md-block">
+                <label>Adj. Inv. (input +/- pallet qty)</label>
+                <input type="text" ng-model="$ctrl.params.adjustment" autofocus>
+              </md-input-container>
+            </div>
+          </div>
+          <md-button class="md-raised md-primary" ng-disabled="adjustInventoryForm.$invalid || $ctrl.invalid"
+          ng-click="$ctrl.submit()">Submit Changes</md-button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

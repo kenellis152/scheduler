@@ -10,14 +10,26 @@ angular.module('scheduler')
   controller: stockBoardController
 });
 
-stockBoardController.$inject = ['PlantService', 'SpecService', '$q'];
-function stockBoardController (PlantService, SpecService, $q) {
+stockBoardController.$inject = ['PlantService', 'SpecService', '$q', '$scope'];
+function stockBoardController (PlantService, SpecService, $q, $scope) {
   var $ctrl = this;
   $ctrl.stock = [];
 
   $ctrl.$onChanges = function () {
     updateBoard();
   }
+
+  $ctrl.$onDestroy = function () {
+    updateWatcher();
+  }
+
+  $ctrl.adjustSelection = function (item) {
+    $ctrl.selected = item;
+  }
+
+  var updateWatcher = $scope.$on('stockBoard:update', function () {
+    updateBoard();
+  });
 
   var updateBoard = function () {
     PlantService.getPlantInfo($ctrl.plantid).then( function (result) {
@@ -47,11 +59,12 @@ function stockBoardController (PlantService, SpecService, $q) {
     stockItem.variance = stockItem.inventory - stockItem.quantity;
     stockItem.stockPercent = stockItem.inventory / stockItem.quantity;
     if (stockItem.variance > 0) stockItem.variance = 0;
-    if (stockItem.stockPercent > 100) stockItem.stockPercent = 100;
-    if ( stockItem.stockPercent < 20) stockItem.stockStatus = "lowstock";
+
+    if (stockItem.stockPercent > 100 || !stockItem.stockPercent) stockItem.stockPercent = 100;
+    if ( stockItem.stockPercent < 20) stockItem.stockStatus = "bg-danger";
     if ( stockItem.stockPercent > 20) stockItem.stockStatus = "mediumstock";
     if ( stockItem.stockPercent > 50) stockItem.stockStatus = "goodstock";
-    if ( stockItem.stockPercent >= 100) stockItem.stockStatus = "fullstock";
+    if ( stockItem.stockPercent >= 100) stockItem.stockStatus = "bg-primary";
 
   }
 

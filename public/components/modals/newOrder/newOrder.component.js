@@ -59,12 +59,12 @@ function newOrderController (SpecService) {
         $ctrl.desc = "PART NOT FOUND";
       }
       $ctrl.showPart = true;
-    }).catch( function (e) {
-      $ctrl.desc = "PART NOT FOUND";
-      $ctrl.showPart = true;
-    });
-  }
+      }).catch( function (e) {
+        $ctrl.desc = "PART NOT FOUND";
+        $ctrl.showPart = true;
+      });
     }
+  }
 }
 
 })();

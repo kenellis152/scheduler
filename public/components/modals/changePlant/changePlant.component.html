@@ -1,0 +1,49 @@
+<div class="modal inmodal in" id="changePlantModal" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <h2>{{$ctrl.plant.name}} Plant</h2>
+      </div>
+      <div class="modal-body">
+        <form role="form" name="changePlantForm" novalidate>
+          <div layout="row">
+            <div flex="33">
+              <md-input-container class="md-block" flex-gt-sm>
+                <label>Active Shifts</label>
+                <md-select ng-model="$ctrl.params.activeShifts" required>
+                  <md-option value=1>1</md-option>
+                  <md-option value=2>2</md-option>
+                  <md-option value=3>3</md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+            <div flex="33">
+              <md-input-container class="md-block" flex-gt-sm>
+                <label>Hours Per Shifts</label>
+                <md-select ng-model="$ctrl.params.shiftHours" required>
+                  <md-option value="6">6</md-option>
+                  <md-option value="8">8</md-option>
+                  <md-option value="10">10</md-option>
+                  <md-option value="12">12</md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+            <div flex="33">
+              <md-input-container class="md-block" flex-gt-sm required>
+                <label>Active Lines</label>
+                <md-select ng-model="$ctrl.params.numLines">
+                  <md-option value="1">1</md-option>
+                  <md-option value="2">2</md-option>
+                  <md-option value="3">3</md-option>
+                  <md-option value="4">4</md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+          </div>
+          <md-button class="md-raised md-primary" ng-disabled="changePlantForm.$invalid"
+          ng-click="$ctrl.submit()">Submit Changes</md-button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
