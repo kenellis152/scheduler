@@ -11,8 +11,8 @@ angular.module('scheduler')
   controller: adjustInventoryController
 });
 
-adjustInventoryController.$inject = ['PlantService', 'SpecService']
-function adjustInventoryController (PlantService, SpecService) {
+adjustInventoryController.$inject = ['PlantService', 'SpecService', '$q', '$scope']
+function adjustInventoryController (PlantService, SpecService, $q, $scope) {
   var $ctrl = this;
 
   var adjustInventoryModal = $('#adjustInventoryModal').on('shown.bs.modal', function() {
@@ -25,14 +25,27 @@ function adjustInventoryController (PlantService, SpecService) {
   }
 
   $ctrl.submit = function() {
+    var promises = [];
     if ($ctrl.params.adjustment) {
-      console.log('adjusting current inventory');
+      // convert pallet quantity to piece quantity
+      $ctrl.params.adjustment *= $ctrl.selection.spec.palletCount;
+      console.log($ctrl.params.part, $ctrl.params.adjustment, $ctrl.plant.id, $ctrl.params.date);
+      promises.push(PlantService.adjustInventory($ctrl.params.part, $ctrl.params.adjustment, $ctrl.plant.id, $ctrl.params.date));
     }
     if ($ctrl.params.part !== $ctrl.selection.part || $ctrl.params.customer !== $ctrl.selection.customer || $ctrl.params.quantity * $ctrl.selection.spec.palletCount !== $ctrl.selection.quantity) {
+      // convert pallet quantity to piece quantity
       $ctrl.params.quantity *= $ctrl.selection.spec.palletCount;
       console.log('updating stock item');
     }
-    $('#adjustInventory').modal('toggle');
+
+    $q.all(promises).then( function (results) {
+      console.log('success')
+      $scope.$emit('stockBoard:update');
+      $('#adjustInventoryModal').modal('toggle');
+    }).catch( function (error) {
+      console.log('failure', error);
+      $('#adjustInventoryModal').modal('toggle');
+    });
   } // End Submit
 
   $ctrl.validate = function () {
@@ -61,6 +74,7 @@ function adjustInventoryController (PlantService, SpecService) {
   var updateParams = function () {
     $ctrl.params = _.pick($ctrl.selection, ['part', 'customer', 'quantity']);
     $ctrl.params.quantity /= $ctrl.selection.spec.palletCount;
+    $ctrl.params.date = new Date();
   }
 
 }

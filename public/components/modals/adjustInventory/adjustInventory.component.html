@@ -14,7 +14,7 @@
               <md-input-container class="md-block">
                 <label>Part Number</label>
                 <input type="text" ng-model="$ctrl.params.part" required min-length="6"
-                id="partnumberinput" ng-blur="$ctrl.validate();">
+                id="partnumberinput" ng-blur="$ctrl.validate();" ng-disabled="true">
               </md-input-container>
             </div>
             <div flex="33">
@@ -37,6 +37,9 @@
                 <input type="text" ng-model="$ctrl.params.adjustment" autofocus>
               </md-input-container>
             </div>
+            <label for="" ng-if="$ctrl.params.adjustment">Adj Date:</label>
+            <md-datepicker ng-model="$ctrl.params.date" md-placeholder="Enter date" md-open-on-focus
+             ng-if="$ctrl.params.adjustment"></md-datepicker>
           </div>
           <md-button class="md-raised md-primary" ng-disabled="adjustInventoryForm.$invalid || $ctrl.invalid"
           ng-click="$ctrl.submit()">Submit Changes</md-button>

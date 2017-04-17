@@ -140,7 +140,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   }
 
   //*****************************
-  //    saveChanges (plantid)
+  //    saveChanges (plantid)      SAVES LINE STATES
   //*****************************
   // @param plantid - plant id (whse number, not mongodb _id) of the plant save current state for
   // saves the displayed line state (orders assigned to each line) to the REST API
@@ -194,7 +194,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   };
 
   //*************************************************************
-  // postProduction(part, productionType, quantity, plant, date)
+  // postProduction(part, quantity, plant, date)
   //*************************************************************
   // @param part - part # of item produced
   // @param productionType "production" for actual production, "adjustment" for inventory adjustment
@@ -203,11 +203,28 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // @param date - date of transaction
   // returns promise w/ production document or an error
   // tests: NOT DONE
-  plantService.postProduction = function(part, productionType, quantity, plant, date) {
+  plantService.postProduction = function(part, quantity, plant, date) {
     var fullPath = ApiPath + '/production';
-    return $http.post(fullPath, {part, productionType, quantity, plant, date}).then( function (result) {
+    return $http.post(fullPath, {part, productionType: "production", quantity, plant, date}).then( function (result) {
       return Promise.resolve(result.body);
     })
+  }
+
+  //*************************************************************
+  // adjustInventory(part, quantity, plant, date)
+  //*************************************************************
+  // @param part - part # of item produced
+  // @param productionType "production" for actual production, "adjustment" for inventory adjustment
+  // @param quantity - quantity produced or adjusted
+  // @param plant - plant where production/adjustment occurs
+  // @param date - date of transaction
+  // returns promise w/ production document or an error
+  // tests: NOT DONE
+  plantService.adjustInventory = function(part, quantity, plant, date) {
+    var fullPath = ApiPath + '/production';
+    return $http.post(fullPath, {part, productionType: "adjustment", quantity, plant, date}).then( function (result) {
+      return Promise.resolve(result.body);
+    });
   }
 
   //*****************************

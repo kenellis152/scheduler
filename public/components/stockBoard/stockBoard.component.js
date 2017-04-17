@@ -57,14 +57,19 @@ function stockBoardController (PlantService, SpecService, $q, $scope) {
   // attach "stockStatus" property depending on current inventory level
   var updateStockStatus = function (stockItem) {
     stockItem.variance = stockItem.inventory - stockItem.quantity;
-    stockItem.stockPercent = stockItem.inventory / stockItem.quantity;
+    if (stockItem.variance < -stockItem.quantity) stockItem.variance = -stockItem.quantity;
+    stockItem.stockPercent = stockItem.inventory / stockItem.quantity * 100;
     if (stockItem.variance > 0) stockItem.variance = 0;
 
     if (stockItem.stockPercent > 100 || !stockItem.stockPercent) stockItem.stockPercent = 100;
     if ( stockItem.stockPercent < 20) stockItem.stockStatus = "bg-danger";
-    if ( stockItem.stockPercent > 20) stockItem.stockStatus = "mediumstock";
-    if ( stockItem.stockPercent > 50) stockItem.stockStatus = "goodstock";
+    if ( stockItem.stockPercent > 20) stockItem.stockStatus = "bg-warning";
+    if ( stockItem.stockPercent > 50) stockItem.stockStatus = "bg-success";
     if ( stockItem.stockPercent >= 100) stockItem.stockStatus = "bg-primary";
+    if ( stockItem.quantity === 0) {
+      stockItem.stockStatus = "bg-primary";
+      stockItem.stockPercent = 100;
+    }
 
   }
 
