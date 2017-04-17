@@ -3,6 +3,7 @@
     <div class="modal-content animated fadeIn">
       <div class="modal-header">
         <h2>Record Production</h2>
+        <h4>Quantity Remaining: {{$ctrl.remaining}}</h4>
       </div>
       <div class="modal-body">
         <form role="form" name="recordProductionForm" novalidate>
@@ -28,10 +29,11 @@
             </div>
           </div>
           <div layout="row">
+          <div flex="35"></div>
             <div class="form-group">
-              <label for="" ng-if="$ctrl.params.completed">Date Completed:</label>
+              <label for="" >Date Produced:</label>
               <md-datepicker ng-model="$ctrl.params.date" md-placeholder="Enter date" md-open-on-focus
-              ng-if="$ctrl.params.completed" required></md-datepicker>
+              required></md-datepicker>
             </div>
           </div>
           <md-button class="md-raised md-primary" ng-disabled="recordProductionForm.$invalid"

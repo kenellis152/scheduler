@@ -7,8 +7,8 @@ angular.module('scheduler')
   controller: recordProductionController
 });
 
-recordProductionController.$inject = ['OrdersService', 'PlantService', '$scope']
-function recordProductionController (OrdersService, PlantService, $scope) {
+recordProductionController.$inject = ['OrdersService', 'PlantService', '$scope', '$q']
+function recordProductionController (OrdersService, PlantService, $scope, $q) {
   var $ctrl = this;
   $ctrl.mindate = new Date();
 
@@ -16,6 +16,7 @@ function recordProductionController (OrdersService, PlantService, $scope) {
     $ctrl.params = _.pick($ctrl.order, ['_id', 'part', 'quantity', 'coNumber', 'shipTo', 'plant', 'produced', 'stock', 'dueDate']);
     //checkbox for order completed defaults to true
     $ctrl.params.completed = true;
+    $ctrl.remaining = $ctrl.order.quantity - $ctrl.order.produced || $ctrl.order.quantity;
 
     if(!$ctrl.params.stock) {
       $ctrl.dueDate = new moment($ctrl.params.dueDate).format("dddd MMM Do");
@@ -44,8 +45,14 @@ function recordProductionController (OrdersService, PlantService, $scope) {
       $ctrl.params.completedDate = $ctrl.params.date;
     }
     OrdersService.changeOrder($ctrl.params, $ctrl.params.completed).then( function(order) {
-      PlantService.updateOrder(order, $ctrl.params.completed);
+      var promises = [];
+      promises[0] = PlantService.postProduction($ctrl.params.part, $ctrl.params.quantityProduced, $ctrl.params.plant, $ctrl.params.date);
+      promises[1] = PlantService.updateOrder(order, $ctrl.params.completed);
+      return $q.all(promises);
+    }).then( function (results) {
+      console.log('updated order');
     }).catch( function (err) {
+      console.log("failed to update order", err);
     });
     $('#recordProductionModal').modal('toggle');
   } // End Submit

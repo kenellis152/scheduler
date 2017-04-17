@@ -205,7 +205,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // tests: NOT DONE
   plantService.postProduction = function(part, quantity, plant, date) {
     var fullPath = ApiPath + '/production';
-    return $http.post(fullPath, {part, productionType: "production", quantity, plant, date}).then( function (result) {
+    return $http.post(fullPath, {part, quantity, plant, date}).then( function (result) {
       return Promise.resolve(result.body);
     })
   }
