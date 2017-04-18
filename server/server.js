@@ -244,7 +244,7 @@ app.get('/resinspecs/:pn', (req, res) => {
 // tests: NOT DONE
 app.post('/resinspecs/partarray', (req, res) => {
   var parts = req.body;
-  console.log(req.body);
+  // console.log(req.body);
   return Spec.find({
     part: {$in: parts}
   })
@@ -532,7 +532,6 @@ serverHelpers.attachResinSpecArray = function (orders, parts) {
     //   order.spec = serverHelpers.getSpecFromArray(order.part, specs);
     //   console.log(order.spec.description);
     // });
-    console.log(orders[1]);
     return Promise.resolve(orders);
   })
 }
@@ -565,7 +564,6 @@ serverHelpers.getSpecFromArray = function (order, specs) {
   specs.forEach( (spec) => {
     if (spec.part === order.part) {
       order.spec = spec;
-      console.log(spec);
     }
   });
 }
