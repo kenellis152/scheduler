@@ -62,7 +62,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // returns promise w/ plant info only - none of the orders attached
   // tests: NOT DONE
   plantService.updatePlant = function(id, activeShifts, shiftHours, numLines) {
-    var body = {activeShifts, shiftHours, numLines}
+    var body = {activeShifts: activeShifts, shiftHours: shiftHours, numLines: numLines};
     var fullPath = ApiPath + '/plants/' + id;
     return $http.patch(fullPath, body).then( function (result) {
       console.log('result is', result);
