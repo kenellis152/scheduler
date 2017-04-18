@@ -82,7 +82,7 @@ function SpecService($http, ApiPath, $q) {
   // tests: NOT DONE
   var getSpecFromArray = function (part, specs) {
     var result;
-    specs.forEach( (spec) => {
+    specs.forEach( function (spec) {
       if (spec.part === part) {
         result = spec;
       }

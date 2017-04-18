@@ -173,7 +173,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // tests: NOT DONE
   plantService.getInventory = function(part, plant) {
     var fullPath = ApiPath + '/inventory';
-    return $http.post(fullPath, {part, plant}).then( function (result) {
+    return $http.post(fullPath, {part: part, plant: plant}).then( function (result) {
       return Promise.resolve(result.data.inventory);
     })
   }
