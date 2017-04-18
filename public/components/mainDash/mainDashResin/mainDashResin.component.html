@@ -14,16 +14,16 @@
                 <h4>5-day demand:</h4>
               </div>
               <div class="col-md-2">
-                <h4> {{$ctrl.fivedayPallets}} </h4>
+                <h4> {{$ctrl.fivedayPallets | number: 0 }} </h4>
               </div>
               <div class="col-md-2">
-                <h4> {{$ctrl.fivedayLineHours}} </h4>
+                <h4> {{$ctrl.fivedayLineHours | number: 1}}  </h4>
               </div>
               <div class="col-md-2">
-                <h4> {{$ctrl.fivedayPlantHours}} </h4>
+                <h4> {{$ctrl.fivedayPlantHours | number: 1}}  </h4>
               </div>
               <div class="col-md-2">
-                <h4> {{$ctrl.fivedayShifts}} </h4>
+                <h4> {{$ctrl.fivedayShifts | number: 1}} </h4>
               </div>
               <div ibox-collapse></div>
             </div>

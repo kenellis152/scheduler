@@ -14,14 +14,23 @@ mainDashResinController.$inject = ['$scope', 'OrdersService', '$timeout'];
 function mainDashResinController ($scope, OrdersService, $timeout) {
   var $ctrl = this;
 
-  $ctrl.$onChanges = function (changesObj) {
-    if($ctrl.plant) {
-      if ($ctrl.plant.openOrders) {
+  // $ctrl.$onChanges = function (changesObj) {
+  //   console.log($ctrl.plant);
+  //   if($ctrl.plant) {
+  //     if ($ctrl.plant.openOrders) {
+  //
+  //       $timeout(updateBoard, 200);
+  //     }
+  //   }
+  // }
 
-        $timeout(updateBoard, 200);
-      }
-    }
+  $ctrl.$onDestroy = function () {
+    plantsLoadedWatcher();
   }
+
+  var plantsLoadedWatcher = $scope.$on('mainDash:plantsLoaded', function () {
+    updateBoard();
+  })
 
   var updateBoard = function () {
     console.log($ctrl.plant);

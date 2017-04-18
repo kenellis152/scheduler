@@ -26,10 +26,14 @@ function mainDashController ($scope, PlantService, OrdersService, Session, $q, S
     promises[4] = OrdersService.getEightWeekDemandHistory(1);
     promises[5] = OrdersService.getEightWeekDemandHistory(2);
     $q.all(promises).then( function (results) {
+      // var tempplants = [];
       $ctrl.plants[1] = results[0].data.plant;
       $ctrl.plants[2] = results[1].data.plant;
       $ctrl.plants[1].openOrders = results[2];
       $ctrl.plants[2].openOrders = results[3];
+      // tempplants[0].openOrders = results[2];
+      // tempplants[1].openOrders = results[3];
+      // console.log(tempplants[0], tempplants[1]);
       // processOrderHistory(results[4]);
       var newpromises = [];
       newpromises[0] = SpecService.addSpecsToOrdersArray($ctrl.plants[1].openOrders);
@@ -39,6 +43,7 @@ function mainDashController ($scope, PlantService, OrdersService, Session, $q, S
       return $q.all(newpromises)
     }).then( function (results) {
       $ctrl.loading = false;
+      $scope.$broadcast('mainDash:plantsLoaded');
       $ctrl.history[0] = results[2];
       $ctrl.history[1] = results[3];
       // processOrderHistory(results[2]);
