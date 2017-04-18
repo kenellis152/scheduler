@@ -411,7 +411,7 @@ app.delete('/users/me/token', authenticate, (req, res) => {
 // tests : done
 app.post('/production', (req, res) => {
   var production = new Production(req.body);
-  console.log(req.body);
+  // console.log(req.body);
   // if this is an adjustment, first move all existing production to history
   production.save().then( (doc) => {
     res.send(doc);
@@ -457,7 +457,8 @@ serverHelpers.getInventory = function (part, plant) {
     return Order.find({part, plant}).then( (orders) => {
       if (orders) {
         orders.forEach( (order) => {
-          result -= order.quantity;
+          if (order.dueDate < new Date() && order.stock !== true)
+            result -= order.quantity;
         });
       }
       return Promise.resolve(result);
