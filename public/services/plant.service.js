@@ -205,7 +205,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // tests: NOT DONE
   plantService.postProduction = function(part, quantity, plant, date) {
     var fullPath = ApiPath + '/production';
-    return $http.post(fullPath, {part, productionType: "production", quantity, plant, date}).then( function (result) {
+    return $http.post(fullPath, {part: part, productionType: "production", quantity: quantity, plant: plant, date: date}).then( function (result) {
       return Promise.resolve(result.body);
     })
   }
@@ -222,7 +222,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // tests: NOT DONE
   plantService.adjustInventory = function(part, quantity, plant, date) {
     var fullPath = ApiPath + '/production';
-    return $http.post(fullPath, {part, productionType: "adjustment", quantity, plant, date}).then( function (result) {
+    return $http.post(fullPath, {part: part, productionType: "adjustment", quantity: quantity, plant: plant, date: date}).then( function (result) {
       return Promise.resolve(result.body);
     });
   }
