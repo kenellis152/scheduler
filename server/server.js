@@ -158,6 +158,7 @@ app.delete('/orders/:id', (req, res) => {
   });
 });// End Delete order
 
+// THIS ONE SUCKS DON't USE IT
 // Get all orders starting from ":days" number of days back
 // tests: done
 app.get('/orders/daysback/:days', (req, res) => {
@@ -170,6 +171,37 @@ app.get('/orders/daysback/:days', (req, res) => {
     res.send({orders});
   }).catch((err) => {
     res.status(400).send();
+  });
+});
+// End Get order by id
+
+// Get all orders with due date within the past eight weeks
+// tests: NOT DONE
+app.get('/orders/eightweekhistory/:plant', (req, res) => {
+  var {plant} = req.params;
+  var endDate = serverHelpers.getEndDate();
+  var startDate = serverHelpers.getEndDate().subtract(8, 'weeks').subtract(4, 'days');
+  var answer = {pallets: 0, hours: 0};
+  Order.find({plant, stock: false, "dueDate":
+                                      {"$gte": startDate.toDate(),
+                                      "$lte": endDate.toDate()}
+                    })
+  .then( function (results) {
+    var parts = [];
+    results.forEach( (result) => {
+      parts.push(result.part);
+    });
+    // console.log(results, parts);
+    return serverHelpers.attachResinSpecArray(results, parts);
+  })
+  .then( (result) => {
+    // console.log(result[5]);
+    if (result.length === 0) {
+      res.status(404).send();
+    }
+    res.send(result);
+  }).catch((err) => {
+    res.status(400).send(err);
   });
 });
 // End Get order by id
@@ -209,24 +241,24 @@ app.get('/resinspecs/:pn', (req, res) => {
 
 // ** Get spec array by part # array
 // Take an array of part numbers, return array of specs for the part numbers
-// app.post('/resinspecs/partarray', (req, res) => {
-//   var parts = req.body;
-//   // console.log(req.body);
-//   var result = [];
-//   parts.forEach( (part) => {
-//     Spec.findOne({part}).then( (spec) => {
-//       if (!spec) {
-//         res.status(404).send();
-//       }
-//       console.log(spec.description)
-//       result.push(spec);
-//     }).catch((err) => {
-//       res.status(400).send();
-//     });
-//   })
-//   console.log(result.length);
-//   res.send(result);
-// });// End get resin spec by part number
+// tests: NOT DONE
+app.post('/resinspecs/partarray', (req, res) => {
+  var parts = req.body;
+  console.log(req.body);
+  return Spec.find({
+    part: {$in: parts}
+  })
+  .then( (results) => {
+    if (!results) {
+      res.status(404).send();
+    }
+    res.send(results);
+  })
+  .catch((err) => {
+    res.status(400).send();
+    console.log(err);
+  });
+});// End get resin spec by part number
 
 
 //*****************************
@@ -464,6 +496,78 @@ serverHelpers.getInventory = function (part, plant) {
       return Promise.resolve(result);
     });
   })
+}
+
+//*****************************
+// getResinSpecArray([parts])
+//*****************************
+// @params [parts] - array of part #'s  for which to get resin specs.
+// returns array of specs
+// tests: NOT DONE
+serverHelpers.getResinSpecArray = function (parts) {
+  return Spec.find({
+    part: {$in: parts}
+  });
+}
+
+//*****************************
+// attachResinSpecs([orders], [parts])
+//*****************************
+// @params [orders] - array of orders to attach resin specs to
+// @params [parts] - array of part #'s  for which to get resin specs.
+// returns promise that resoves to array of orders with specs attached.
+// tests: NOT DONE
+serverHelpers.attachResinSpecArray = function (orders, parts) {
+  return Spec.find({
+    part: {$in: parts}
+  }).then( (specs) => {
+    // No idea why this doesn't work???
+    // console.log(orders.length, orders[2]);
+    for (var k = 0; k < orders.length; k++) {
+      serverHelpers.getSpecFromArray(orders[k], specs );
+      // console.log(serverHelpers.getSpecFromArray(orders[k].part, specs ));
+      // console.log(orders[k]);
+    }
+    // orders.forEach( (order) => {
+    //   order.spec = serverHelpers.getSpecFromArray(order.part, specs);
+    //   console.log(order.spec.description);
+    // });
+    console.log(orders[1]);
+    return Promise.resolve(orders);
+  })
+}
+
+//*****************************
+//       getEndDate()
+//*****************************
+// determines which Friday will be the end of the demand history we are fetching for the 8 week demand
+// if today is Wednesday or sooner, then the end will be Friday of this week
+// if today is Thursday or later, then the right-most value should be Friday of next week
+// tests: NOT DONE
+serverHelpers.getEndDate = function () {
+  var weekday = moment().day();
+  if(weekday < 4 && weekday !== 0) { //if it today is Wednesday or sooner in the week, start with Monday of this week
+    var endDate = moment().day(5);
+  } else { // if today is Thursday or later in the week, start with Monday of next week
+    var endDate = moment().day(12);
+  }
+  return endDate.startOf('day');
+}
+
+//*****************************
+// getSpecFromArray(part, specs)
+//*****************************
+// @param part - part number we're looking for
+// @param specs - array of specs we are searching through
+// tests: NOT DONE
+serverHelpers.getSpecFromArray = function (order, specs) {
+  var result;
+  specs.forEach( (spec) => {
+    if (spec.part === order.part) {
+      order.spec = spec;
+      console.log(spec);
+    }
+  });
 }
 
 //*****************************

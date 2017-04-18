@@ -46,11 +46,11 @@ function stockBoardController (PlantService, SpecService, $q, $scope) {
     }).then( function (results) {
       // console.log(results);
       for (var i = 0; i < $ctrl.plant.stockItems.length; i++) {
-        $ctrl.plant.stockItems[i].spec = results[0][i].spec,
+        $ctrl.plant.stockItems[i].spec = results[0][i],
         $ctrl.plant.stockItems[i].inventory = results[1][i];
         updateStockStatus($ctrl.plant.stockItems[i]);
       };
-      console.log($ctrl.plant.stockItems);
+      // console.log($ctrl.plant.stockItems);
     });
   }
 

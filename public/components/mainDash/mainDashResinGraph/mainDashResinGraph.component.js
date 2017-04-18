@@ -21,6 +21,10 @@ function mainDashResinGraphController ($scope, OrdersService, $timeout) {
   }
 
   var updateData = function () {
+    // get data
+    var pallets = [0,0,0,0,0,0,0,0,0,0,0]; // 0 index corresponds to startDate, i index corresponds to startDate - i weeks
+    var hours = [0,0,0,0,0,0,0,0,0,0,0];
+    startDate = getStartDate();
 
     // set x axes labels
     var startDate = getStartDate();
@@ -29,22 +33,16 @@ function mainDashResinGraphController ($scope, OrdersService, $timeout) {
       startDate.subtract(1, 'weeks');
     }
 
-    // get data
-    var pallets = [0,0,0,0,0,0,0,0,0,0,0]; // 0 index corresponds to startDate, i index corresponds to startDate - i weeks
-    var hours = [0,0,0,0,0,0,0,0,0,0,0];
-    startDate = getStartDate();
-
     $ctrl.orders.forEach(function (order) {
       //first determine the appropriate index
-      var daysAgo = startDate.diff(moment(order.dueDate), 'days');
-      var index = getDataIndex(daysAgo);
+      // var daysAgo = startDate.diff(moment(order.dueDate), 'days');
+      var index = getDataIndex(order.dueDate);
       // var index = Math.floor((daysAgo+7) / 7);
 
       var newpallets = order.quantity / order.spec.palletCount;
       pallets[index] = pallets[index] + newpallets;
-      hours[index] = pallets[index] + OrdersService.computeRunTime(order);
+      hours[index] = hours[index] + OrdersService.computeRunTime(order);
     });
-    console.log(pallets);
 
     for (var i = 0; i < 9; i++) {
       data1[i][1] = pallets[i];
@@ -81,12 +79,10 @@ function mainDashResinGraphController ($scope, OrdersService, $timeout) {
   // return the appropriate array index for which the pallet and hours quantity should be added to
   // index should be 0 for future order, and i if it was from i weeks back
   // tests: NOT DONE
-  var getDataIndex = function (daysAgo) {
-    var result;
-    for (var i = 0; i < 9; i++) {
-      if (daysAgo > i * 7) result = i;
-    }
-    return result;
+  var getDataIndex = function (date) {
+    var endDate = getStartDate().add(4, 'days');
+    var daysAgo = endDate.diff(moment(date), 'days');
+    return (Math.floor(daysAgo / 7));
   }
 
 

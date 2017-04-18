@@ -15,7 +15,7 @@ function SpecService($http, ApiPath, $q) {
     if (local) return Promise.resolve(local);
     var fullPath = ApiPath + '/resinspecs/' + part;
     return $http.get(fullPath).then( function (response) {
-      storeLocal(response.data);
+      // storeLocal(response.data);
       return response.data;
     });
   };
@@ -23,11 +23,16 @@ function SpecService($http, ApiPath, $q) {
   // takes an array of part numbers
   // returns array back array of specs for the part numbers
   service.getSpecArray = function(parts) {
-    var promises = [];
-    parts.forEach( function (part) {
-      promises.push(service.getSpecByPart(part));
+    // var promises = [];
+    // parts.forEach( function (part) {
+    //   promises.push(service.getSpecByPart(part));
+    // });
+    // return $q.all(promises);
+    var fullPath = ApiPath + '/resinspecs/partarray';
+    return $http.post(fullPath, parts).then( function (response) {
+      // storeLocal(response.data);
+      return response.data;
     });
-    return $q.all(promises);
   };
 
   // takes an order object
@@ -51,17 +56,39 @@ function SpecService($http, ApiPath, $q) {
   // takes an array of order objects
   // returns array of order objects with specs attached to each object
   service.addSpecsToOrdersArray = function(orders) {
-    var promises = [];
-    orders.forEach( function (order) {
-      promises.push(service.getSpecByPart(order.part));
-    });
-    return $q.all(promises).then( function (results) {
+    // var promises = [];
+    // orders.forEach( function (order) {
+    //   promises.push(service.getSpecByPart(order.part));
+    // });
+    // return $q.all(promises)
+    var parts = [];
+    orders.forEach ( function (order) {
+      parts.push(order.part);
+    })
+    return service.getSpecArray(parts).then( function (results) {
       for (var i = 0; i < orders.length; i++) {
-        orders[i].spec = results[i].spec;
+        // orders[i].spec = results[i].spec;
+        orders[i].spec = getSpecFromArray(orders[i].part, results);
       }
       return Promise.resolve(orders);
     });
   };
+
+  //*****************************
+  // getSpecFromArray(part, specs)
+  //*****************************
+  // @param part - part number we're looking for
+  // @param specs - array of specs we are searching through
+  // tests: NOT DONE
+  var getSpecFromArray = function (part, specs) {
+    var result;
+    specs.forEach( (spec) => {
+      if (spec.part === part) {
+        result = spec;
+      }
+    });
+    return result;
+  }
 
   //*****************************
   //       storeLocal()

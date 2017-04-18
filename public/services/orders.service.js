@@ -145,6 +145,20 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     })
   }
 
+  //**************************************
+  //  getEightWeekDemandHistory (plant)
+  //**************************************
+  // @param params.plant - id of the plant (1, 2, 3) to get history on
+  // @param params.startDate - the first week we are looking for the history on
+  // return an object with 2 arrays - {palletDemand: [8], hoursDemand[8]}
+  // tests: NOT DONE
+  service.getEightWeekDemandHistory = function (plant) {
+    console.log('calling');
+    return $http.get(ApiPath + '/orders/eightweekhistory/' + plant).then( function(response) {
+      return response.data;
+    });
+  }
+
   //*****************************
   //       Helper functions
   //*****************************

@@ -502,3 +502,28 @@ describe('*** Production API ***', (done) => {
     });
   });
 });
+
+//*****************************
+//        Server Helpers
+//*****************************
+describe('*** Helper Functions ***', (done) => {
+
+  describe('Get Resin spec array', () => {
+    it('should return an array of resin specs', () => {
+      serverHelpers.getResinSpecArray([157193, 155075, 181069]).then( (result) => {
+        expect(result.length).toBe(3);
+        expect(result[1].description).toBe("A23 5.2' M35 (SWP, 1008 Pcs)");
+      });
+    });
+  });
+
+  describe('Attach resin spec array', () => {
+    it('should return an array of resin specs', () => {
+      serverHelpers.getResinSpecArray([157193, 155075, 181069]).then( (result) => {
+        expect(result.length).toBe(3);
+        expect(result[1].description).toBe("A23 5.2' M35 (SWP, 1008 Pcs)");
+      });
+    });
+  });
+
+});
