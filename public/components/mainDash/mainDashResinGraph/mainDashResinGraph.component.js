@@ -26,6 +26,8 @@ function mainDashResinGraphController ($scope, OrdersService, $timeout) {
     var hours = [0,0,0,0,0,0,0,0,0,0,0];
     startDate = getStartDate();
 
+    console.log($ctrl.orders);
+    var newpallets
     // set x axes labels
     var startDate = getStartDate();
     for (var i = 0; i < 9; i++) {
@@ -38,9 +40,10 @@ function mainDashResinGraphController ($scope, OrdersService, $timeout) {
       // var daysAgo = startDate.diff(moment(order.dueDate), 'days');
       var index = getDataIndex(order.dueDate);
       // var index = Math.floor((daysAgo+7) / 7);
-
-      var newpallets = order.quantity / order.spec.palletCount;
-      pallets[index] = pallets[index] + newpallets;
+      if(index > 8 || index < 0 ) console.log(index);
+      // console.log(typeof (order.quantity / order.spec.palletCount), typeof (pallets[index] + newpallets));
+      // if ( order.spec.palletCount ) {newpallets = order.quantity / order.spec.palletCount;
+      // pallets[index] = pallets[index] + newpallets;}
       hours[index] = hours[index] + OrdersService.computeRunTime(order);
     });
 
@@ -65,8 +68,8 @@ function mainDashResinGraphController ($scope, OrdersService, $timeout) {
   var getStartDate = function () {
     var weekday = moment().day();
     if(weekday < 4 && weekday !== 0) { //if it today is Wednesday or sooner in the week, start with Monday of this week
-      var startDate = moment().day(1);
-    } else { // if today is Thursday or later in the week, start with Monday of next week
+      var startDate = moment().day(1)
+;    } else { // if today is Thursday or later in the week, start with Monday of next week
       var startDate = moment().day(8);
     }
     return startDate.hour(0).minute(0).seconds(0).milliseconds(0);

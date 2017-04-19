@@ -33,7 +33,7 @@ function mainDashResinController ($scope, OrdersService, $timeout) {
   })
 
   var updateBoard = function () {
-    console.log($ctrl.plant);
+    // console.log($ctrl.plant);
     $ctrl.fivedayPallets = $ctrl.fivedayLineHours = $ctrl.fivedayPlantHours = $ctrl.fivedayShifts = 0;
     $ctrl.totalPallets = $ctrl.totalLineHours = $ctrl.totalPlantHours = $ctrl.totalShifts = 0;
     $ctrl.inventoryPallets = $ctrl.inventoryLineHours = $ctrl.inventoryPlantHours = $ctrl.inventoryShifts = 0;

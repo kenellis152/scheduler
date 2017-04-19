@@ -153,7 +153,6 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   // return an object with 2 arrays - {palletDemand: [8], hoursDemand[8]}
   // tests: NOT DONE
   service.getEightWeekDemandHistory = function (plant) {
-    console.log('calling');
     return $http.get(ApiPath + '/orders/eightweekhistory/' + plant).then( function(response) {
       return response.data;
     });
