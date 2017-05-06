@@ -9,6 +9,6 @@ convertExcel('history.xlsx', 'chemicalHistory.json', options, (err, data) => {
   if (err) {
     console.log(err);
   } else {
-    console.log("great success");
+    console.log("great succes");
   }
 });
