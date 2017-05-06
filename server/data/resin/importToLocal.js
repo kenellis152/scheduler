@@ -7,14 +7,16 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI);
 
-
-Spec.insertMany(resindata).then( (result) => {
-  if(!result) {
-    console.log("failure1");
-  }
-  console.log('success');
+Spec.remove({}).then( () => {
+  console.log('succesfully removed specs');
+  return Spec.insertMany(resindata).then( (result) => {
+    if(!result) {
+      console.log("failure1");
+    }
+    console.log('success');
+  });
 }).catch( (e) => {
-  console.log(e);
+  console.log('failed to remove specs', e);
 });
 
 
