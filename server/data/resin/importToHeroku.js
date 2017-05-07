@@ -7,14 +7,18 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://heroku_l3p3wsld:v6l6nnhsv5sqpak01o9fja97ma@ds035856.mlab.com:35856/heroku_l3p3wsld');
 
-Spec.insertMany(resindata).then( (result) => {
-  if(!result) {
-    console.log("failure");
-  }
-  console.log('success');
+Spec.remove({}).then( () => {
+  console.log('succesfully removed specs');
+  return Spec.insertMany(resindata).then( (result) => {
+    if(!result) {
+      console.log("failure1");
+    }
+    console.log('success');
+  });
 }).catch( (e) => {
-  console.log(e);
+  console.log('failed to remove specs', e);
 });
+
 
 
 // var mi = require('mongoimport');

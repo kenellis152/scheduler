@@ -10,20 +10,22 @@ angular.module('scheduler')
   controller: resinDashController
 });
 
-resinDashController.$inject = ['$scope', 'OrdersService'];
-function resinDashController ($scope, OrdersService) {
+resinDashController.$inject = ['$scope', 'OrdersService', 'PlantService'];
+function resinDashController ($scope, OrdersService, PlantService) {
   var $ctrl = this;
   $ctrl.id = 0;
 
-  $scope.$on('namespace:changeOrderDetail', function (event, data) {
-    $ctrl.order = data.order;
-    $ctrl.spec = data.spec;
-    $ctrl.loadWeight = Math.floor($ctrl.order.quantity / $ctrl.spec.palletCount * $ctrl.spec.palletWeight);
-  });
+  $ctrl.$onDestroy = function () {
+    plantInfo();
+  }
 
-  $scope.$on('namespace:plantinfo', function (event, data) {
+  var plantInfo = $scope.$on('namespace:plantinfo', function (event, data) {
     $ctrl.plant = data.plants[$ctrl.plantid];
     $ctrl.updateDash();
+    $ctrl.demand = OrdersService.getDemand($ctrl.plant);
+    PlantService.getInventoryArray($ctrl.plant.stockItems, $ctrl.plant.id).then( function (result) {
+      console.log(result);
+    })
   });
 
   $ctrl.updateDash = function () {

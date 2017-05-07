@@ -241,8 +241,8 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   //*****************************
   //    WORK IN PROGRESS
   //*****************************
-  // @param order - the order to compute the run time on
-  // Compute the run time of an order. Return -1 if the spec is not attached and print to the console
+  // @param order - the order to compute the run time (hrs) on
+  // Compute the run time (hrs) of an order. Return -1 if the spec is not attached and print to the console
   // Otherwise, return the estimated time to run the order in hours
   // tests: NOT DONE
   service.computeRunTime = function (order) {
@@ -268,6 +268,54 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     // console.log('computed: ' + result + ' for order:' + order);
     return result;
   }
+  //*****************************
+  //    getDemand (plant)
+  //*****************************
+  //*****************************
+  //    WORK IN PROGRESS
+  //*****************************
+  // @param plant - the plant to get the demand on
+  // Return result object with the following properties: fivedayLineHours, fivedayPlantHours, fivedayShifts, totalLineHours
+  //        totalPlantHours, totalShifts, inventoryLineHours, inventoryPlantHours, inventoryShifts
+  // tests: NOT DONE
+  service.getDemand = function (plant) {
+    console.log(plant);
+    var result = {};
+    result.fivedayPallets = result.fivedayLineHours = result.fivedayPlantHours = result.fivedayShifts = 0;
+    result.totalPallets = result.totalLineHours = result.totalPlantHours = result.totalShifts = 0;
+    result.inventoryPallets = result.inventoryLineHours = result.inventoryPlantHours = result.inventoryShifts = 0;
 
+    plant.openOrders.forEach (function (order) {
+      if (order.dueDate) {
+        var daysOut = moment(order.dueDate).diff(moment(), 'days');
+      } else {
+        var daysOut = 365;
+      }
+      var runTime = service.computeRunTime(order);
+      if (daysOut <= 7) {
+        // console.log(order);
+        result.fivedayPallets += order.quantity / order.spec.palletCount;
+        result.fivedayLineHours += runTime;
+      }
+      if (order.stock) {
+        // $ctrl.inventoryPallets += order.quantity / order.spec.palletCount;
+        // $ctrl.inventoryLineHours += runTime;
+      } else {
+        result.totalPallets += order.quantity / order.spec.palletCount;
+        result.totalLineHours += runTime;
+      }
+    });
+
+    result.fivedayLineHours = Math.round(result.fivedayLineHours * 10) / 10;
+    result.fivedayPlantHours = Math.round(result.fivedayLineHours * 10 / plant.lines.length) / 10;
+    result.fivedayShifts = Math.round(result.fivedayPlantHours * 10 / plant.shiftHours) / 10;
+    result.totalLineHours = Math.round(result.totalLineHours * 10) / 10;
+    result.totalPlantHours = Math.round(result.totalLineHours * 10 / plant.lines.length) / 10;
+    result.totalShifts = Math.round(result.totalPlantHours * 10 / plant.shiftHours) / 10;
+    result.inventoryLineHours = Math.round(result.inventoryLineHours * 10) / 10;
+    result.inventoryPlantHours = Math.round(result.inventoryLineHours * 10 / plant.lines.length) / 10;
+    result.inventoryShifts = Math.round(result.inventoryPlantHours * 10 / plant.shiftHours) / 10;
+    return result;
+  }
 }
 })();

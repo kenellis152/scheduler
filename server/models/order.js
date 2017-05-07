@@ -56,6 +56,9 @@ var OrderSchema =  new mongoose.Schema({
   },
   customerNumber: {
     type: Number
+  },
+  spec: {
+    type: Object
   }
 });
 

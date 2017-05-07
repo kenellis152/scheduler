@@ -26,7 +26,7 @@ function mainDashResinGraphController ($scope, OrdersService, $timeout) {
     var hours = [0,0,0,0,0,0,0,0,0,0,0];
     startDate = getStartDate();
 
-    console.log($ctrl.orders);
+    // console.log($ctrl.orders);
     var newpallets
     // set x axes labels
     var startDate = getStartDate();
@@ -42,7 +42,7 @@ function mainDashResinGraphController ($scope, OrdersService, $timeout) {
       // var index = Math.floor((daysAgo+7) / 7);
       if(index > 8 || index < 0 ) console.log(index);
       // console.log(typeof (order.quantity / order.spec.palletCount), typeof (pallets[index] + newpallets));
-      if ( order.spec.palletCount ) {newpallets = order.quantity / order.spec.palletCount;
+      if ( order.spec && order.spec.palletCount ) {newpallets = order.quantity / order.spec.palletCount;
       pallets[index] = pallets[index] + newpallets;}
       hours[index] = hours[index] + OrdersService.computeRunTime(order);
     });

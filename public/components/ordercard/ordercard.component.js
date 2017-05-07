@@ -17,16 +17,22 @@ function orderCardController (SpecService, SelectionService, $scope) {
   $ctrl.spec = {};
 
   $ctrl.$onChanges = function () {
-    SpecService.getSpecByPart($ctrl.order.part).then( function (result) {
-      $ctrl.spec = result.spec;
-      $ctrl.order.spec = result.spec;
-      if( SelectionService.getSelected() === $ctrl.order._id ) {$ctrl.clickProcess();}
-      $ctrl.updateCard();
-      var watchername = 'namespace:order:' + $ctrl.order._id;
-      $ctrl.idwatcher = $scope.$on(watchername, function() {
-        $ctrl.spec = $ctrl.order.spec;
+    if (!$ctrl.order.spec) {
+      SpecService.getSpecByPart($ctrl.order.part).then( function (result) {
+        $ctrl.spec = result.spec;
+        $ctrl.order.spec = result.spec;
+        if( SelectionService.getSelected() === $ctrl.order._id ) {$ctrl.clickProcess();}
         $ctrl.updateCard();
+        var watchername = 'namespace:order:' + $ctrl.order._id;
       });
+    } else {
+      $ctrl.spec = $ctrl.order.spec;
+    }
+    var watchername = 'namespace:order:' + $ctrl.order._id;
+    $ctrl.updateCard();
+    $ctrl.idwatcher = $scope.$on(watchername, function() {
+      $ctrl.spec = $ctrl.order.spec;
+      $ctrl.updateCard();
     });
   }
 

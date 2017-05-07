@@ -58,8 +58,16 @@ app.post('/orders', (req, res) => {
 app.get('/orders/open', (req, res) => {
   var {plant} = req.query;
   if (plant) {
-    Order.find({'completed': false, 'plant': plant}).then( (openOrders) => {
-      res.send(openOrders);
+    Order.find({'completed': false, 'plant': plant}).then( (results) => {
+      var parts = [];
+      results.forEach( (result) => {
+        parts.push(result.part);
+      });
+      // console.log(results, parts);
+      return serverHelpers.attachResinSpecArray(results, parts);
+    }).then( (results) => {
+      // console.log(results);
+      res.send(results);
     }).catch( (err) => {
       res.status(400).send();
     });
@@ -524,7 +532,8 @@ serverHelpers.attachResinSpecArray = function (orders, parts) {
     // No idea why this doesn't work???
     // console.log(orders.length, orders[2]);
     for (var k = 0; k < orders.length; k++) {
-      serverHelpers.getSpecFromArray(orders[k], specs );
+      orders[k].spec = serverHelpers.getSpecFromArray(orders[k], specs );
+      console.log(orders[k]);
       // console.log(serverHelpers.getSpecFromArray(orders[k].part, specs ));
       // console.log(orders[k]);
     }
@@ -561,11 +570,22 @@ serverHelpers.getEndDate = function () {
 // tests: NOT DONE
 serverHelpers.getSpecFromArray = function (order, specs) {
   var result;
+  // console.log(specs);
   specs.forEach( (spec) => {
     if (spec.part === order.part) {
+      order.spec = {};
+      // console.log(order, spec);
       order.spec = spec;
+      // console.log(order.spec);
+      result = order;
     }
   });
+  // console.log(result);
+  if (result) {
+    // console.log(result.spec);
+    // console.log(result);
+    return result.spec;
+  }
 }
 
 //*****************************

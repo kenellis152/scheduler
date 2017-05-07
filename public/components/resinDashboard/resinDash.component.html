@@ -4,8 +4,14 @@
   </div>
   <div class="ibox-content" style="padding-bottom: 3px;">
     <div layout="row">
-      <div flex="25" class="text-center">
-        Placeholder - Plant status and order breakdown by speed/diameter goes here
+      <div flex="25" class="text-left">
+        <!-- Placeholder - Plant status and order breakdown by speed/diameter goes here -->
+        <div layout="row">
+          Active Shifts: {{$ctrl.plant.activeShifts}} Shift ({{$ctrl.plant.shiftHours}} hrs)<br>
+          5-day Pallet Demand: {{$ctrl.demand.fivedayPallets | number: 0}}<br>
+          5-day Plant-Hours Demand: {{$ctrl.demand.fivedayPlantHours | number: 1}}<br>
+          5-day Plant Shifts Demand: {{$ctrl.demand.fivedayShifts}}
+        </div>
       </div>
       <div flex="50" id="dash-chart" class="border-bottom">
         <div layout="row" layout-align="center center">
