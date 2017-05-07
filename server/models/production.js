@@ -22,6 +22,10 @@ var ProductionSchema =  new mongoose.Schema({
   date: { // date of receipt or adjustment
     type: Date,
     default: new Date()
+  },
+  reason: {
+    type: String,
+    default: "None given"
   }
 });
 

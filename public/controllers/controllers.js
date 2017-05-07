@@ -19,7 +19,7 @@ PublicController.$inject=['Session']
 function PublicController(Session) {
   var $ctrl = this;
   this.test = "hello123";
-  $ctrl.dashHeight = 288;
+  $ctrl.dashHeight = 190;
   $ctrl.bottomMargin = 10;
 
   $ctrl.user = Session.getUser();

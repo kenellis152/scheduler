@@ -35,7 +35,7 @@ function resinDashController ($scope, OrdersService, PlantService, $q, SpecServi
         $ctrl.plant.stockItems[i].inventory = results[1][i];
         OrdersService.updateStockStatus($ctrl.plant.stockItems[i]);
       }
-      console.log($ctrl.plant.stockItems);
+      console.log($ctrl.plant.stockItems, $ctrl.plant);
       $ctrl.updateDash();
     });
   });
