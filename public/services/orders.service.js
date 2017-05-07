@@ -332,7 +332,8 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     stockItem.variance = stockItem.inventory - stockItem.quantity;
     if (stockItem.variance < -stockItem.quantity) stockItem.variance = -stockItem.quantity;
     stockItem.stockPercent = stockItem.inventory / stockItem.quantity * 100;
-    if (stockItem.variance > 0) stockItem.variance = 0;
+    if (stockItem.inventory < 0) stockItem.inventory = 0;
+    if (stockItem.variance < 0) stockItem.variance = 0;
 
     if (stockItem.stockPercent > 100 ) stockItem.stockPercent = 100;
     if ( stockItem.stockPercent < 20) stockItem.stockStatus = "bg-danger";

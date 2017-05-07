@@ -17,11 +17,22 @@ function resinDashController ($scope, OrdersService, PlantService, $q, SpecServi
 
   $ctrl.$onDestroy = function () {
     plantInfo();
+    updateDash();
   }
 
   var plantInfo = $scope.$on('namespace:plantinfo', function (event, data) {
     $ctrl.plant = data.plants[$ctrl.plantid];
     $ctrl.demand = OrdersService.getDemand($ctrl.plant);
+    $ctrl.updateDash();
+  });
+
+  var updateDash = $scope.$on('resinDash:update', function (event, data) {
+    $ctrl.plant.shiftHours = data.shiftHours;
+    $ctrl.plant.activeShifts = data.activeShifts;
+    $ctrl.updateDash();
+  })
+
+  $ctrl.updateDash = function () {
     var stockParts = [];
     var promises = [];
     $ctrl.plant.stockItems.forEach( function(item) {
@@ -35,13 +46,7 @@ function resinDashController ($scope, OrdersService, PlantService, $q, SpecServi
         $ctrl.plant.stockItems[i].inventory = results[1][i];
         OrdersService.updateStockStatus($ctrl.plant.stockItems[i]);
       }
-      console.log($ctrl.plant.stockItems, $ctrl.plant);
-      $ctrl.updateDash();
     });
-  });
-
-  $ctrl.updateDash = function () {
-
   };
 
   var data1 = [
