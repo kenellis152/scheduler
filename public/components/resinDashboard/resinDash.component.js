@@ -10,8 +10,8 @@ angular.module('scheduler')
   controller: resinDashController
 });
 
-resinDashController.$inject = ['$scope', 'OrdersService', 'PlantService'];
-function resinDashController ($scope, OrdersService, PlantService) {
+resinDashController.$inject = ['$scope', 'OrdersService', 'PlantService', '$q', 'SpecService'];
+function resinDashController ($scope, OrdersService, PlantService, $q, SpecService) {
   var $ctrl = this;
   $ctrl.id = 0;
 
@@ -21,11 +21,23 @@ function resinDashController ($scope, OrdersService, PlantService) {
 
   var plantInfo = $scope.$on('namespace:plantinfo', function (event, data) {
     $ctrl.plant = data.plants[$ctrl.plantid];
-    $ctrl.updateDash();
     $ctrl.demand = OrdersService.getDemand($ctrl.plant);
-    PlantService.getInventoryArray($ctrl.plant.stockItems, $ctrl.plant.id).then( function (result) {
-      console.log(result);
-    })
+    var stockParts = [];
+    var promises = [];
+    $ctrl.plant.stockItems.forEach( function(item) {
+      stockParts.push(item.part);
+    });
+    promises[0] = SpecService.getSpecArray(stockParts);
+    promises[1] = PlantService.getInventoryArray(stockParts, $ctrl.plantid);
+    $q.all(promises).then( function (results) {
+      for (var i = 0; i < $ctrl.plant.stockItems.length; i++) {
+        $ctrl.plant.stockItems[i].spec = results[0][i],
+        $ctrl.plant.stockItems[i].inventory = results[1][i];
+        OrdersService.updateStockStatus($ctrl.plant.stockItems[i]);
+      }
+      console.log($ctrl.plant.stockItems);
+      $ctrl.updateDash();
+    });
   });
 
   $ctrl.updateDash = function () {

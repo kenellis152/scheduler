@@ -533,7 +533,7 @@ serverHelpers.attachResinSpecArray = function (orders, parts) {
     // console.log(orders.length, orders[2]);
     for (var k = 0; k < orders.length; k++) {
       orders[k].spec = serverHelpers.getSpecFromArray(orders[k], specs );
-      console.log(orders[k]);
+      // console.log(orders[k]);
       // console.log(serverHelpers.getSpecFromArray(orders[k].part, specs ));
       // console.log(orders[k]);
     }

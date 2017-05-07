@@ -186,6 +186,7 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   // returns promise w/ number equal to inventory of the part at the given plant
   // tests: NOT DONE
   plantService.getInventoryArray = function(parts, plant) {
+    // console.log(parts, plant);
     var promises = [];
     parts.forEach( function (part) {
       promises.push(plantService.getInventory(part, plant));

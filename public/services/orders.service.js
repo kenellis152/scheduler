@@ -261,7 +261,7 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     if (order.spec.mmCartridgeDiameter == 40) runRate = 40;
 
     runRate = runRate * RUNRATEMODIFIER;
-    if (order.completed === undefined) order.completed = 0;
+    if (order.produced === undefined) order.produced = 0;
     var totalFootage = order.spec.cartridgeLength * (order.quantity - order.completed) / 12;
 
     var result = totalFootage / runRate / 60;
@@ -317,5 +317,36 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     result.inventoryShifts = Math.round(result.inventoryPlantHours * 10 / plant.shiftHours) / 10;
     return result;
   }
+
+  //*****************************
+  //    getStockStatus (stockItem)
+  //*****************************
+  //*****************************
+  //    WORK IN PROGRESS
+  //*****************************
+  // @param stockItem - the object from the plant model that contains the stock item
+  // Attach variance, stockPercent, and stockStatus properties to the stock itme
+  // Attach computation of run time
+  // tests: NOT DONE
+  service.updateStockStatus = function (stockItem) {
+    stockItem.variance = stockItem.inventory - stockItem.quantity;
+    if (stockItem.variance < -stockItem.quantity) stockItem.variance = -stockItem.quantity;
+    stockItem.stockPercent = stockItem.inventory / stockItem.quantity * 100;
+    if (stockItem.variance > 0) stockItem.variance = 0;
+
+    if (stockItem.stockPercent > 100 ) stockItem.stockPercent = 100;
+    if ( stockItem.stockPercent < 20) stockItem.stockStatus = "bg-danger";
+    if ( stockItem.stockPercent > 20) stockItem.stockStatus = "bg-warning";
+    if ( stockItem.stockPercent > 50) stockItem.stockStatus = "bg-success";
+    if ( stockItem.stockPercent >= 100) stockItem.stockStatus = "bg-primary";
+    if ( stockItem.quantity === 0) {
+      stockItem.stockStatus = "bg-primary";
+      stockItem.stockPercent = 100;
+    }
+    var order = {part: stockItem.part, completed: false, quantity: -stockItem.variance, spec: stockItem.spec, produced: 0};
+    stockItem.runTime = service.computeRunTime(order);
+    stockItem.variancePallets = -stockItem.variance / stockItem.spec.palletCount;
+  }
+
 }
 })();
