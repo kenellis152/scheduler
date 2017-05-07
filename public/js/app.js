@@ -7,7 +7,7 @@ var ApiPath;
 if (host === 'localhost') {
     ApiPath = 'http://localhost:3000';
 } else {
-  ApiPath = 'http://glacial-everglades-27245.herokuapp.com';
+  ApiPath = 'https://glacial-everglades-27245.herokuapp.com';
 }
 
 
