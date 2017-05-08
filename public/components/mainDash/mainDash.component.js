@@ -42,7 +42,7 @@ function mainDashController ($scope, PlantService, OrdersService, Session, $q, S
       newpromises[3] = SpecService.addSpecsToOrdersArray(results[5]);
       newpromises[4] = SpecService.addSpecsToOrdersArray($ctrl.plants[1].stockItems);
       newpromises[5] = SpecService.addSpecsToOrdersArray($ctrl.plants[2].stockItems);
-      newpromises[4] = PlantSe rvice.getInventoryArray($ctrl.plants[1].stockItems);
+      // newpromises[4] = PlantSe rvice.getInventoryArray($ctrl.plants[1].stockItems);
       return $q.all(newpromises)
     }).then( function (results) {
       $ctrl.loading = false;
