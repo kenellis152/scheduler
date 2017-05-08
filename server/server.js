@@ -570,20 +570,14 @@ serverHelpers.getEndDate = function () {
 // tests: NOT DONE
 serverHelpers.getSpecFromArray = function (order, specs) {
   var result;
-  // console.log(specs);
   specs.forEach( (spec) => {
     if (spec.part === order.part) {
       order.spec = {};
-      // console.log(order, spec);
       order.spec = spec;
-      // console.log(order.spec);
       result = order;
     }
   });
-  // console.log(result);
   if (result) {
-    // console.log(result.spec);
-    // console.log(result);
     return result.spec;
   }
 }

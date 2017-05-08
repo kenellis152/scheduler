@@ -262,7 +262,7 @@ function OrdersService($http, ApiPath, SpecService, $q) {
 
     runRate = runRate * RUNRATEMODIFIER;
     if (order.produced === undefined) order.produced = 0;
-    var totalFootage = order.spec.cartridgeLength * (order.quantity - order.completed) / 12;
+    var totalFootage = order.spec.cartridgeLength * (order.quantity - order.produced) / 12;
 
     var result = totalFootage / runRate / 60;
     // console.log('computed: ' + result + ' for order:' + order);
@@ -279,7 +279,6 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   //        totalPlantHours, totalShifts, inventoryLineHours, inventoryPlantHours, inventoryShifts
   // tests: NOT DONE
   service.getDemand = function (plant) {
-    console.log(plant);
     var result = {};
     result.fivedayPallets = result.fivedayLineHours = result.fivedayPlantHours = result.fivedayShifts = 0;
     result.totalPallets = result.totalLineHours = result.totalPlantHours = result.totalShifts = 0;
@@ -324,29 +323,42 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   //*****************************
   //    WORK IN PROGRESS
   //*****************************
-  // @param stockItem - the object from the plant model that contains the stock item
+  // @param plant - the plant object to get the stock status for
   // Attach variance, stockPercent, and stockStatus properties to the stock itme
   // Attach computation of run time
   // tests: NOT DONE
-  service.updateStockStatus = function (stockItem) {
-    stockItem.variance = stockItem.inventory - stockItem.quantity;
-    if (stockItem.variance < -stockItem.quantity) stockItem.variance = -stockItem.quantity;
-    stockItem.stockPercent = stockItem.inventory / stockItem.quantity * 100;
-    if (stockItem.inventory < 0) stockItem.inventory = 0;
-    if (stockItem.variance < 0) stockItem.variance = 0;
+  service.updateStockStatus = function (plant) {
+    console.log(plant);
+    var targetPallets=0; //stores running total of total target pallets
+    var stockPallets=0; //stores running total of total in-stock pallets
+    var inventoryDemandHours=0; //stores running total of total line-hours to replenish inventory
+    plant.stockItems.forEach( function (stockItem) {
+      stockItem.variance = stockItem.inventory - stockItem.quantity; //inventory is current inventory, quantity is target quantity
+      // if (stockItem.variance < -stockItem.quantity) stockItem.variance = -stockItem.quantity;
+      stockItem.stockPercent = stockItem.inventory / stockItem.quantity * 100;
+      // if (stockItem.inventory < 0) stockItem.inventory = 0;
+      if (stockItem.variance > 0) stockItem.variance = 0;
 
-    if (stockItem.stockPercent > 100 ) stockItem.stockPercent = 100;
-    if ( stockItem.stockPercent < 20) stockItem.stockStatus = "bg-danger";
-    if ( stockItem.stockPercent > 20) stockItem.stockStatus = "bg-warning";
-    if ( stockItem.stockPercent > 50) stockItem.stockStatus = "bg-success";
-    if ( stockItem.stockPercent >= 100) stockItem.stockStatus = "bg-primary";
-    if ( stockItem.quantity === 0) {
-      stockItem.stockStatus = "bg-primary";
-      stockItem.stockPercent = 100;
-    }
-    var order = {part: stockItem.part, completed: false, quantity: -stockItem.variance, spec: stockItem.spec, produced: 0};
-    stockItem.runTime = service.computeRunTime(order);
-    stockItem.variancePallets = -stockItem.variance / stockItem.spec.palletCount;
+      if (stockItem.stockPercent > 100 ) stockItem.stockPercent = 100;
+      if ( stockItem.stockPercent < 20) stockItem.stockStatus = "bg-danger";
+      if ( stockItem.stockPercent > 20) stockItem.stockStatus = "bg-warning";
+      if ( stockItem.stockPercent > 50) stockItem.stockStatus = "bg-success";
+      if ( stockItem.stockPercent >= 100) stockItem.stockStatus = "bg-primary";
+      if ( stockItem.quantity === 0) {
+        stockItem.stockStatus = "bg-primary";
+        stockItem.stockPercent = 100;
+      }
+      var order = {part: stockItem.part, completed: false, quantity: -stockItem.variance, spec: stockItem.spec, produced: 0};
+      stockItem.runTime = service.computeRunTime(order);
+      stockItem.variancePallets = -stockItem.variance / stockItem.spec.palletCount;
+      stockPallets = stockPallets + stockItem.inventory / stockItem.spec.palletCount;
+      targetPallets = targetPallets + stockItem.quantity / stockItem.spec.palletCount;
+      inventoryDemandHours = inventoryDemandHours + stockItem.runTime;
+    });
+    plant.stockPallets = stockPallets;
+    plant.targetPallets = targetPallets;
+    plant.inventoryDemandHours = inventoryDemandHours;
+
   }
 
 }

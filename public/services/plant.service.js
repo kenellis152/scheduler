@@ -45,7 +45,8 @@ function PlantService(OrdersService, $http, ApiPath, LineService, $q, $rootScope
   //       getPlantInfo(id)
   //*****************************
   // @param id - id (as in plant warehouse #, not the mongodb _id property) of the plant to fetch
-  // returns promise w/ plant info only - none of the orders attached
+  // returns promise w/ plant info only - none of the orders attached.
+  // Attach specs to stock items
   // tests: NOT DONE
   plantService.getPlantInfo = function(id) {
     var fullPath = ApiPath + '/plants/' + id;

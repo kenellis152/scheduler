@@ -31,22 +31,34 @@ function mainDashController ($scope, PlantService, OrdersService, Session, $q, S
       $ctrl.plants[2] = results[1].data.plant;
       $ctrl.plants[1].openOrders = results[2];
       $ctrl.plants[2].openOrders = results[3];
-      // tempplants[0].openOrders = results[2];
-      // tempplants[1].openOrders = results[3];
-      // console.log(tempplants[0], tempplants[1]);
-      // processOrderHistory(results[4]);
+
+      // var plant1StockItems, plant2StockItems;
+      // $ctrl.plants[1].stockItems.forEach()
+
       var newpromises = [];
       newpromises[0] = SpecService.addSpecsToOrdersArray($ctrl.plants[1].openOrders);
       newpromises[1] = SpecService.addSpecsToOrdersArray($ctrl.plants[2].openOrders);
       newpromises[2] = SpecService.addSpecsToOrdersArray(results[4]);
       newpromises[3] = SpecService.addSpecsToOrdersArray(results[5]);
+      newpromises[4] = SpecService.addSpecsToOrdersArray($ctrl.plants[1].stockItems);
+      newpromises[5] = SpecService.addSpecsToOrdersArray($ctrl.plants[2].stockItems);
+      newpromises[4] = PlantSe rvice.getInventoryArray($ctrl.plants[1].stockItems);
       return $q.all(newpromises)
     }).then( function (results) {
       $ctrl.loading = false;
       $scope.$broadcast('mainDash:plantsLoaded');
       $ctrl.history[0] = results[2];
       $ctrl.history[1] = results[3];
-      // processOrderHistory(results[2]);
+      //attach specs to the stock items
+      // $ctrl.plants[1].stockItems.forEach ( function (item) {
+      //   // $ctrl.plant.stockItems[i].spec = results[0][i],
+      //   results[4].forEach( function (spec) {
+      //     if (spec.part === item.part) {
+      //       item.spec = spec;
+      //     }
+      //   });
+      //   $ctrl.plant.stockItems[i].inventory = results[1][i];
+      // });
     }).catch( function (error) {
       console.log('failed to initialize main dashboard', error);
     });

@@ -46,10 +46,15 @@ function stockBoardController (PlantService, SpecService, $q, $scope, OrdersServ
     }).then( function (results) {
       // console.log(results);
       for (var i = 0; i < $ctrl.plant.stockItems.length; i++) {
-        $ctrl.plant.stockItems[i].spec = results[0][i],
+        // $ctrl.plant.stockItems[i].spec = results[0][i],
+        results[0].forEach( function (spec) {
+          if (spec.part === $ctrl.plant.stockItems[i].part) {
+            $ctrl.plant.stockItems[i].spec = spec;
+          }
+        })
         $ctrl.plant.stockItems[i].inventory = results[1][i];
-        OrdersService.updateStockStatus($ctrl.plant.stockItems[i]);
       };
+      OrdersService.updateStockStatus($ctrl.plant);
       // console.log($ctrl.plant.stockItems);
     });
   }

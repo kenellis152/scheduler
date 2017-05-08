@@ -39,13 +39,21 @@ function resinDashController ($scope, OrdersService, PlantService, $q, SpecServi
       stockParts.push(item.part);
     });
     promises[0] = SpecService.getSpecArray(stockParts);
+    console.log(stockParts);
     promises[1] = PlantService.getInventoryArray(stockParts, $ctrl.plantid);
     $q.all(promises).then( function (results) {
+      console.log(results[0]);
       for (var i = 0; i < $ctrl.plant.stockItems.length; i++) {
-        $ctrl.plant.stockItems[i].spec = results[0][i],
+        // $ctrl.plant.stockItems[i].spec = results[0][i],
+        results[0].forEach( function (spec) {
+          if (spec.part === $ctrl.plant.stockItems[i].part) {
+            $ctrl.plant.stockItems[i].spec = spec;
+          }
+        })
         $ctrl.plant.stockItems[i].inventory = results[1][i];
-        OrdersService.updateStockStatus($ctrl.plant.stockItems[i]);
       }
+      console.log($ctrl.plant);
+      OrdersService.updateStockStatus($ctrl.plant);
     });
   };
 
