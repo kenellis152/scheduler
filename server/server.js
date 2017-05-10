@@ -232,6 +232,18 @@ app.post('/resinspecs', (req, res) => {
   });
 });// End post resinspec array
 
+// ** add resin spec
+// Adds a resin spec
+// tests: done
+app.post('/resinspec', (req, res) => {
+  var spec = new Spec(req.body);
+  spec.save().then( (doc) => {
+    res.send(doc);
+  }, (err) => {
+    res.status(400).send(err);
+  });
+});
+
 // ** Get spec by part #
 // Take a part number and return the resin specs
 // tests: done
@@ -261,6 +273,53 @@ app.post('/resinspecs/partarray', (req, res) => {
       res.status(404).send();
     }
     res.send(results);
+  })
+  .catch((err) => {
+    res.status(400).send();
+    console.log(err);
+  });
+});// End get resin spec by part number
+
+// WORK IN PROGRESS - NOT FINISHED
+// Update spec by part #
+// tests: NOT DONE
+app.patch('/resinspec/:part', (req, res) => {
+  var {part} = req.params;
+  Spec.findOneAndUpdate({part: part}, {$set: req.body}, {new: true}).then( (spec) => {
+    if(!spec) {
+      return res.status(404).send();
+    }
+    res.send({spec})
+  }).catch( (e) => {
+    res.status(400).send();
+  })
+})
+// End update spec by id
+
+// NOT COMPLETE - NOT WORKING
+// ** Take array of parts, return array of true/false corresponding to whether or not each part exists
+// Take an array of part numbers, return array of true/false corresponding to whether or not each part exists
+// tests: NOT DONE
+app.post('/resinspecarraystatus/', (req, res) => {
+  var parts = req.body;
+  console.log(req.body);
+  return Spec.find({
+    part: {$in: parts}
+  })
+  .then( (results) => {
+    if (!results) {
+      res.status(404).send();
+    }
+    var status = [];
+    console.log(results.length);
+    results.forEach( (result) => {
+      if (result.part) {
+        status.push(true);
+      } else {
+        status.push(false);
+      }
+    });
+    res.send(status);
   })
   .catch((err) => {
     res.status(400).send();

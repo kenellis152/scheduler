@@ -240,7 +240,25 @@ describe('*** ResinSpec API ***', (done) => {
     });
 
   });
-});
+
+  // NOT COMPLETE - NOT WORKING
+  // ** Take array of parts, return array of true/false corresponding to whether or not each part exists
+  // app.get('/resinspecs/:pn', (req, res) => {
+  describe('POST /resinspecarraystatus/', (done) => {
+    it('should return [true, false] for array [155075, 645321]', (done) => {
+      request(app)
+        .post(`/resinspecarraystatus/`)
+        .send([155075, 645321])
+        .expect(200)
+        .expect( (res) => {
+          // expect(res.body.spec.description).toBe(resinSpecs[0].description);
+          console.log(res.body);
+        })
+        .end(done);
+    });
+  });//end describe
+
+});//end outer describe
 
 //*****************************
 //        Plant API

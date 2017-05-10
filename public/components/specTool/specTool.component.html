@@ -1,0 +1,53 @@
+<!-- This is a container for each line, and the floaters section -->
+<div class="wrapper wrapper-content animated fadeIn">
+
+  <agile-spinner ng-show="$ctrl.loading"></agile-spinner>
+
+  <div class="panel panel-success">
+      <div class="panel-heading">
+          <strong>Spec Tool</strong> -- Add or update resin specs from cartridge packaging chart
+      </div>
+      <div class="panel-body"> <!-- Start Body -->
+
+        <div class="ibox-title text-center">
+          <div class="col-md-9">
+            <h4>Paste spec from cartridge packaging chart below - must be the full row(s) from the spreadsheet - click parse, review, then click submit</h4>
+          </div>
+        </div>
+
+        <div class="ibox text-center main-dash-row-item ">
+          <div class="ibox-content">
+            {{$ctrl.result}}
+          </div>
+            <div class="ibox-content">
+              <textarea ng-model="$ctrl.inputData" style="width:1200px;height:250px;"></textarea><br>
+            </div>
+            <div layout="row" ng-repeat="row in $ctrl.rows" class='text-left'>
+              <div flex="15">
+                <strong>{{row.newPN}}:</strong>
+              </div>
+              <div flex="10">
+                {{row.part}}
+              </div>
+              <div flex="35">
+                {{row.description}}
+              </div>
+            </div>
+            <div layout="row" ng-hide="!$ctrl.loginStatus">
+              <div flex="60">
+              </div>
+              <div flex="40">
+                <md-button class="md-raised md-primary" ng-click="$ctrl.parse();" ng-disabled="!$ctrl.inputData">Parse Data</md-button>
+                <md-button class="md-raised md-primary" ng-click="$ctrl.submit();" ng-if="$ctrl.valid===true">Submit</md-button>
+              </div>
+            </div>
+        </div>
+      </div> <!-- Finish Body -->
+  </div><!-- Finish Panel -->
+
+
+  <!-- Modals -->
+  <change-plant plant="$ctrl.plant"></change-plant>
+  <adjust-inventory plant="$ctrl.plant" selection="$ctrl.selected"></adjust-inventory>
+
+</div>

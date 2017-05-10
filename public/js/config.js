@@ -135,6 +135,19 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $httpPr
               }
             }
         })
+        .state('index.utils', {
+            url: "/utils",
+            // templateUrl: "views/minor.html",
+            data: { pageTitle: 'Scheduler Utilities' },
+            views: {
+              'topnav': {
+                templateUrl: 'views/utils/utils.topbar.html'
+              },
+              'mainview': {
+                templateUrl: 'views/utils/utils.mainview.html',
+              }
+            }
+        })
 }
 angular
     .module('scheduler')

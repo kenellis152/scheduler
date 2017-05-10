@@ -17,7 +17,22 @@ function SpecService($http, ApiPath, $q) {
     return $http.get(fullPath).then( function (response) {
       // storeLocal(response.data);
       return response.data;
-    });
+    }).catch( function (err) {
+      return Promise.resolve(0);
+    })
+  };
+
+  // checks if the given part number exists. returns promise resolving to 1 if yes, 0 if no
+  service.checkPNExists = function(part) {
+    var local = findLocal(part);
+    if (local) return Promise.resolve(local);
+    var fullPath = ApiPath + '/resinspecs/' + part;
+    return $http.get(fullPath).then( function (response) {
+      // storeLocal(response.data);
+      return Promise.resolve(1);
+    }).catch( function (err) {
+      return Promise.resolve(0);
+    })
   };
 
   // takes an array of part numbers
@@ -52,6 +67,22 @@ function SpecService($http, ApiPath, $q) {
     });
     return result.promise;
   };
+
+  // takes a spec object
+  // updates it
+  service.updateSpec = function(spec) {
+    return $http.patch(ApiPath + '/resinspec/' + spec.part, spec).then( function(response) {
+      return response.data.spec;
+    });
+  }
+
+  // adds spec
+  service.addSpec = function(spec) {
+    return $http.post(ApiPath + '/resinspec/', spec).then( function (response) {
+      return response.data;
+    });
+  };
+
 
   // takes an array of order objects
   // returns array of order objects with specs attached to each object
