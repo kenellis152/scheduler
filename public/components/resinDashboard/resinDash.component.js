@@ -10,13 +10,14 @@ angular.module('scheduler')
   controller: resinDashController
 });
 
-resinDashController.$inject = ['$scope', 'OrdersService', 'PlantService', '$q', 'SpecService'];
-function resinDashController ($scope, OrdersService, PlantService, $q, SpecService) {
+resinDashController.$inject = ['$scope', 'OrdersService', 'PlantService', '$q', 'SpecService', '$timeout'];
+function resinDashController ($scope, OrdersService, PlantService, $q, SpecService, $timeout) {
   var $ctrl = this;
   $ctrl.id = 0;
 
   $ctrl.$onDestroy = function () {
     plantInfo();
+    listenSortableUpdate();
     updateDash();
   }
 
@@ -30,7 +31,12 @@ function resinDashController ($scope, OrdersService, PlantService, $q, SpecServi
     $ctrl.plant.shiftHours = data.shiftHours;
     $ctrl.plant.activeShifts = data.activeShifts;
     $ctrl.updateDash();
-  })
+  });
+
+  // recalculate line hours whenever agile board is changed
+  var listenSortableUpdate = $scope.$on('sortable:update', function (event, data) {
+    $timeout(getLineHrs, 500);
+  });
 
   $ctrl.updateDash = function () {
     var stockParts = [];
@@ -39,12 +45,11 @@ function resinDashController ($scope, OrdersService, PlantService, $q, SpecServi
       stockParts.push(item.part);
     });
     promises[0] = SpecService.getSpecArray(stockParts);
-    console.log(stockParts);
     promises[1] = PlantService.getInventoryArray(stockParts, $ctrl.plantid);
     $q.all(promises).then( function (results) {
-      console.log(results[0]);
       for (var i = 0; i < $ctrl.plant.stockItems.length; i++) {
         // $ctrl.plant.stockItems[i].spec = results[0][i],
+        // assign each spec to each stock Item
         results[0].forEach( function (spec) {
           if (spec.part === $ctrl.plant.stockItems[i].part) {
             $ctrl.plant.stockItems[i].spec = spec;
@@ -52,92 +57,27 @@ function resinDashController ($scope, OrdersService, PlantService, $q, SpecServi
         })
         $ctrl.plant.stockItems[i].inventory = results[1][i];
       }
-      console.log($ctrl.plant);
       OrdersService.updateStockStatus($ctrl.plant);
-    });
+
+      getLineHrs();
+
+    }); // end $q.all
   };
 
-  var data1 = [
-    [-8, 4],
-    [-7, 8],
-    [-6, 5],
-    [-5, 10],
-    [-4, 4],
-    [-3, 16],
-    [-2, 5],
-    [-1, 11],
-    [0, 6],
-    [1, 11],
-    [2, 30],
-    [3, 10],
-    [4, 13],
-    [5, 4],
-    [6, 3],
-    [7, 3],
-    [8, 6]
-];
-var data2 = [
-    [-8, 1],
-    [-7, 0],
-    [-6, 2],
-    [-5, 0],
-    [-4, 1],
-    [-3, 3],
-    [-2, 1],
-    [-1, 5],
-    [0, 2],
-    [1, 3],
-    [2, 2],
-    [3, 1],
-    [4, 0],
-    [5, 2],
-    [6, 8],
-    [7, 0],
-    [8, 0]
-];
+  var getLineHrs = function () {
+    // calculate scheduled hours for each line
+    // also estimates, for each order, if it will be late or not (WORK IN PROGRESS)
+    // CSS style for late order: // order.lateStyle = 'border-style: solid; border-width: medium; border-color: red;';
+    $ctrl.lineHrs = [];
+    for (var i = 0; i < 4; i++) {
+      var totalHrs = 0;
+      $ctrl.plant.lines[i].orders.forEach( function (order) {
+        totalHrs += OrdersService.computeRunTime(order);
+      });
+      $ctrl.lineHrs[i] = totalHrs;
 
-var options = {
-    series: {
-        lines: {
-            show: false,
-            fill: true
-        },
-        splines: {
-            show: true,
-            tension: 0.4,
-            lineWidth: 1,
-            fill: 0.4
-        },
-        points: {
-            radius: 0,
-            show: true
-        },
-        shadowSize: 2,
-        grow: {stepMode:"linear",stepDirection:"up",steps:80}
-    },
-    grow: {stepMode:"linear",stepDirection:"up",steps:80},
-    grid: {
-        hoverable: true,
-        clickable: true,
-        tickColor: "#d5d5d5",
-        borderWidth: 1,
-        color: '#d5d5d5'
-    },
-    colors: ["#1ab394", "#1C84C6"],
-    xaxis: {
-    },
-    yaxis: {
-        ticks: 4
-    },
-    tooltip: false
-};
-
-/**
- * Definition of variables
- * Flot chart
- */
-$ctrl.flotData = [data1, data2];
-$ctrl.flotOptions = options;
+    }
+  }
 
 }
 

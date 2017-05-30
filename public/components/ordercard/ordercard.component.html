@@ -1,5 +1,6 @@
 <!-- <div class="agile-detail" id="{{$ctrl.order._id}}" ng-click="$ctrl.clickProcess()"> -->
-<md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" id="{{$ctrl.order._id}}" ng-click="$ctrl.clickProcess()" md-theme-watch style="margin: 2px;">
+<md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" id="{{$ctrl.order._id}}" ng-click="$ctrl.clickProcess()" md-theme-watch
+    style="margin: 2px; $ctrl.order.lateStyle">
   <div layout="column">
     <div layout="row">
       <div class="col-md-12 cardcolumn {{$ctrl.speedClass}}">

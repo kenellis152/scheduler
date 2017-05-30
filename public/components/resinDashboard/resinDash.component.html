@@ -14,25 +14,17 @@
           5-day Demand Plant-Hours: {{$ctrl.demand.fivedayPlantHours | number: 1}}<br>
           5-day Demand Plant ({{$ctrl.plant.shiftHours}}-hr) Shifts: {{$ctrl.demand.fivedayShifts}}
       </div>
-      <!-- <div flex="50" id="dash-chart" class="border-bottom">
-        <div layout="row" layout-align="center center">
-          <span class="text-center">Placeholder chart - pallets and hrs demand goes here</span>
-        </div>
-        <div class="flot-chart dashboard-chart" style="margin-top: 3px;">
-            <div flot class="flot-chart-content" dataset="$ctrl.flotData" options="$ctrl.flotOptions"></div>
-        </div>
-      </div> -->
       <div flex="25" class="text-left">
         Overall Stock Level: {{$ctrl.plant.stockPallets / $ctrl.plant.targetPallets * 100 | number: 1}}% <br>
-        Stock Demand Pallets: {{$ctrl.plant.targetPallets - $ctrl.plant.stockPallets | number: 0}} <br>
+        Stock Demand Pallets: {{$ctrl.plant.stockVariancePallets | number: 0}} <br>
         Stock Demand Plant-Hours: {{$ctrl.plant.inventoryDemandHours / $ctrl.plant.numLines | number: 0 }} <br>
         Stock Demand Shifts: {{$ctrl.plant.inventoryDemandHours / $ctrl.plant.numLines / $ctrl.plant.shiftHours | number: 1}}
       </div>
-      <div flex="25" class="text-left">
-        Line 1 Scheduled Hrs: {{$ctrl.line1hrs}} <br>
-        Line 2 Scheduled Hrs: {{$ctrl.line2hrs}} <br>
-        Line 3 Scheduled Hrs: {{$ctrl.line3hrs}} <br>
-        Line 4 Scheduled Hrs: {{$ctrl.line4hrs}}
+      <div flex="50" class="text-left">
+        Line 1 Scheduled Hrs: {{$ctrl.lineHrs[0] | number: 1}} <br>
+        Line 2 Scheduled Hrs: {{$ctrl.lineHrs[1] | number: 1}} <br>
+        Line 3 Scheduled Hrs: {{$ctrl.lineHrs[2] | number: 1}} <br>
+        Line 4 Scheduled Hrs: {{$ctrl.lineHrs[3] | number: 1}}
       </div>
       <!-- <div flex="50">
         <flot-chart inputdata="$ctrl.data"></flot-chart>

@@ -249,9 +249,9 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     if(!order.spec) {
       return -1;
     }
-    const RUNRATEMODIFIER = 0.64; //to account for downtime and OEE
+    const RUNRATEMODIFIER = 0.64; //to account for downtime and OEE at 0.8 each
     var runRate = 134; //default to the highest possible run rate, and run all checks that may lower the run rate. This ensures that lower run rates override higher ones.
-    if (order.spec.formulation === 'H10') runRate = 120;
+    if (order.spec.formulation === 'H10') runRate = 120; // run rates are fpm
     if (order.spec.viscosity === 'TOOSPEEDIE') runRate = 118;
     if (order.spec.formulation === 'H5') runRate = 110;
     if (order.spec.mmCartridgeDiameter == 32) runRate = 95;
@@ -306,13 +306,13 @@ function OrdersService($http, ApiPath, SpecService, $q) {
     });
 
     result.fivedayLineHours = Math.round(result.fivedayLineHours * 10) / 10;
-    result.fivedayPlantHours = Math.round(result.fivedayLineHours * 10 / plant.lines.length) / 10;
+    result.fivedayPlantHours = Math.round(result.fivedayLineHours * 10 / plant.numLines) / 10;
     result.fivedayShifts = Math.round(result.fivedayPlantHours * 10 / plant.shiftHours) / 10;
     result.totalLineHours = Math.round(result.totalLineHours * 10) / 10;
-    result.totalPlantHours = Math.round(result.totalLineHours * 10 / plant.lines.length) / 10;
+    result.totalPlantHours = Math.round(result.totalLineHours * 10 / plant.numLines) / 10;
     result.totalShifts = Math.round(result.totalPlantHours * 10 / plant.shiftHours) / 10;
     result.inventoryLineHours = Math.round(result.inventoryLineHours * 10) / 10;
-    result.inventoryPlantHours = Math.round(result.inventoryLineHours * 10 / plant.lines.length) / 10;
+    result.inventoryPlantHours = Math.round(result.inventoryLineHours * 10 / plant.numLines) / 10;
     result.inventoryShifts = Math.round(result.inventoryPlantHours * 10 / plant.shiftHours) / 10;
     return result;
   }
@@ -328,10 +328,10 @@ function OrdersService($http, ApiPath, SpecService, $q) {
   // Attach computation of run time
   // tests: NOT DONE
   service.updateStockStatus = function (plant) {
-    console.log(plant);
     var targetPallets=0; //stores running total of total target pallets
     var stockPallets=0; //stores running total of total in-stock pallets
     var inventoryDemandHours=0; //stores running total of total line-hours to replenish inventory
+    var totalVariancePallets = 0;//stores running total of variance pallets
     plant.stockItems.forEach( function (stockItem) {
       stockItem.variance = stockItem.inventory - stockItem.quantity; //inventory is current inventory, quantity is target quantity
       // if (stockItem.variance < -stockItem.quantity) stockItem.variance = -stockItem.quantity;
@@ -354,11 +354,13 @@ function OrdersService($http, ApiPath, SpecService, $q) {
       stockPallets = stockPallets + stockItem.inventory / stockItem.spec.palletCount;
       targetPallets = targetPallets + stockItem.quantity / stockItem.spec.palletCount;
       inventoryDemandHours = inventoryDemandHours + stockItem.runTime;
+      totalVariancePallets = totalVariancePallets + stockItem.variancePallets;
     });
     plant.stockPallets = stockPallets;
     plant.targetPallets = targetPallets;
     plant.inventoryDemandHours = inventoryDemandHours;
-
+    plant.stockVariancePallets = totalVariancePallets;
+    // console.log(plant.stockPallets, plant.targetPallets, plant.inventoryDemandHours);
   }
 
 }

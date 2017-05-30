@@ -9,7 +9,7 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI);
 
-
+var newOrders = [];
 
 for (let order of history) {
   //convert Excel date to javascript date
@@ -21,11 +21,14 @@ for (let order of history) {
   }
   order.coNumber = order.coNumber.substr(3);
   order.createDate = new moment(order.createDate).toDate();
-  order = _.pick(order, ['part, quantity', 'coNumber', 'shipTo', 'plant', 'completed', 'customerNumber', 'createDate'])
+  order = _.pick(order, ['part', 'quantity', 'coNumber', 'shipTo', 'plant', 'completed', 'customerNumber', 'createDate', 'dueDate']);
+  if (order.part >= 100000 && order.part <= 999999) {
+    newOrders.push(order);
+  }
 }
 
 Order.remove({}).then( () => {
-  Order.insertMany(history).then( (result) => {
+  Order.insertMany(newOrders).then( (result) => {
     if(!result) {
       console.log("failure1");
     }

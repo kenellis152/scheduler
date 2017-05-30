@@ -33,10 +33,8 @@ function mainDashResinController ($scope, OrdersService, $timeout) {
   })
 
   var updateBoard = function () {
-    // console.log($ctrl.plant);
     $ctrl.demand = OrdersService.getDemand($ctrl.plant);
     OrdersService.updateStockStatus($ctrl.plant);
-    console.log($ctrl.plant);
   }
 
 

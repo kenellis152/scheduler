@@ -385,6 +385,12 @@ app.patch('/plants/:id', (req, res) => {
 });
 // End update order by id
 
+// Add stock item to plant
+
+// patch stock item for plant
+
+// Remove stock item for plant
+
 //*****************************
 //       Line API
 //*****************************

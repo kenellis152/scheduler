@@ -13,8 +13,8 @@ angular.module('scheduler')
 /**
  * agileBoard - Controller for agile Board view
  */
-  agileBoard.$inject = ['$scope', 'PlantService', 'OrdersService', 'SelectionService', 'Session'];
-  function agileBoard($scope, PlantService, OrdersService, SelectionService, Session) {
+  agileBoard.$inject = ['$scope', 'PlantService', 'OrdersService', 'SelectionService', 'Session', '$rootScope'];
+  function agileBoard($scope, PlantService, OrdersService, SelectionService, Session, $rootScope) {
       var $ctrl = this;
       $scope.lines = []; // for .connectWith to connect the separate ui-sortable lists
       $ctrl.changes = {}; // stores local changes to be saved if user decides to save
@@ -36,7 +36,10 @@ angular.module('scheduler')
             $ctrl.linenames.push(element.name);
           });
           $scope.sortableOptions = {
-              connectWith: ".connectList"
+              connectWith: ".connectList",
+              update: function () {
+                $rootScope.$broadcast('sortable:update');
+              }
           };
           $ctrl.loading = false;
         }).catch( function(plant) {
